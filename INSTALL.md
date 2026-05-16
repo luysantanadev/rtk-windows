@@ -41,28 +41,29 @@ If you accidentally installed Rust Type Kit:
 cargo uninstall rtk
 ```
 
-### Quick Install (Linux/macOS)
+### Windows Binary (recommended)
+
+Download `rtk-x86_64-pc-windows-msvc.zip` from [GitHub releases](https://github.com/rtk-ai/rtk/releases), extract `rtk.exe`, and place it in your PATH.
+
+### Alternative: Build from source (Windows/macOS/Linux)
+
+> **Note**: Pre-compiled binaries are available for Windows only. macOS and Linux users must compile from source.
+
+```powershell
+# Windows (PowerShell)
+cargo install --git https://github.com/rtk-ai/rtk
+```
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/master/install.sh | sh
+# macOS / Linux
+cargo install --path .
+# OR from git
+cargo install --git https://github.com/rtk-ai/rtk
 ```
 
 After installation, **verify you have the correct rtk**:
-```bash
+```powershell
 rtk gain  # Must show token savings stats (not "command not found")
-```
-
-### Alternative: Manual Installation
-
-```bash
-# From rtk-ai repository (NOT reachingforthejack!)
-cargo install --git https://github.com/rtk-ai/rtk
-
-# OR (if published and correct on crates.io)
-cargo install rtk
-
-# ALWAYS VERIFY after installation
-rtk gain  # MUST show token savings, not "command not found"
 ```
 
 ⚠️ **WARNING**: `cargo install rtk` from crates.io might install the wrong package. Always verify with `rtk gain`.

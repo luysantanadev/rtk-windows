@@ -5,6 +5,12 @@ All notable changes to rtk (Rust Token Killer) will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### BREAKING CHANGES
+
+* **release**: Pre-compiled binary distribution is now **Windows only** (`x86_64-pc-windows-msvc`). macOS (x86_64, aarch64) and Linux (musl, aarch64) pre-built artifacts are no longer published. Users on macOS/Linux should compile from source: `cargo install --path .` or `cargo install --git https://github.com/rtk-ai/rtk`. DEB and RPM packages are also discontinued.
+
 ## [0.36.0](https://github.com/rtk-ai/rtk/compare/v0.35.0...v0.36.0) (2026-04-13)
 
 
@@ -96,6 +102,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * **tracking:** use std::env::temp_dir() for compatibility (instead of unix tmp) ([e918661](https://github.com/rtk-ai/rtk/commit/e918661440d7b50321f0535032f52c5e87aaf3cb))
 
 ## [Unreleased]
+
+### Breaking Changes
+
+* **platform:** this fork becomes Windows-only starting with planned release `v0.37.0`
+* **platform:** Linux/macOS active support is removed from this fork; use upstream `rtk-ai/rtk` for those platforms
+* **ci:** validation pipeline for this fork is now focused on `windows-latest`
+
+### Migration
+
+* Linux/macOS users: migrate to upstream repository `https://github.com/rtk-ai/rtk`
+* Windows users: continue using this fork with PowerShell/cmd-native workflows and `rtk init --copilot` native hooks
 
 ### Bug Fixes
 
