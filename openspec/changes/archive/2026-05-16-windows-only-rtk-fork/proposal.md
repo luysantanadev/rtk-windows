@@ -28,5 +28,5 @@ Este fork já evoluiu para suporte nativo Windows (PowerShell + hooks Rust para 
 - Código: módulos de hooks, runner/spawn, scripts utilitários e testes com condicionais Unix serão simplificados ou removidos.
 - CI/CD: workflows e jobs serão reduzidos para execução focada em Windows.
 - Documentação: README principal, guias de agentes e docs de contribuição/uso terão instruções alinhadas a PowerShell/Windows.
-- Usuários: Linux/macOS deixam de ter suporte neste fork e devem usar upstream `rtk-ai/rtk`.
+- Usuários: Linux/macOS deixam de ter suporte neste fork e devem usar upstream `https://github.com/luysantanadev/rtk-windows.git`.
 - Release: incremento de versão com breaking change explícito e plano de migração do fork.

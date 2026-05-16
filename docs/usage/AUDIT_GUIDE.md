@@ -1,10 +1,10 @@
-# RTK Token Savings Audit Guide
+# rtk-windows Token Savings Audit Guide
 
-Complete guide to analyzing your rtk token savings with temporal breakdowns and data exports.
+Complete guide to analyzing your rtk-windows token savings with temporal breakdowns and data exports.
 
 ## Overview
 
-The `rtk gain` command provides comprehensive analytics for tracking your token savings across time periods.
+The `rtk-windows gain` command provides comprehensive analytics for tracking your token savings across time periods.
 
 **Database Location**: `~/.local/share/rtk/history.db`
 **Retention Policy**: 90 days
@@ -12,27 +12,27 @@ The `rtk gain` command provides comprehensive analytics for tracking your token 
 
 ## Quick Reference
 
-```bash
+```powershell
 # Default summary view
-rtk gain
+rtk-windows gain
 
 # Temporal breakdowns
-rtk gain --daily          # All days since tracking started
-rtk gain --weekly         # Aggregated by week
-rtk gain --monthly        # Aggregated by month
-rtk gain --all            # Show all breakdowns at once
+rtk-windows gain --daily          # All days since tracking started
+rtk-windows gain --weekly         # Aggregated by week
+rtk-windows gain --monthly        # Aggregated by month
+rtk-windows gain --all            # Show all breakdowns at once
 
 # Export formats
-rtk gain --all --format json > savings.json
-rtk gain --all --format csv > savings.csv
+rtk-windows gain --all --format json > savings.json
+rtk-windows gain --all --format csv > savings.csv
 
 # Combined flags
-rtk gain --graph --history --quota    # Classic view with extras
-rtk gain --daily --weekly --monthly   # Multiple breakdowns
+rtk-windows gain --graph --history --quota    # Classic view with extras
+rtk-windows gain --daily --weekly --monthly   # Multiple breakdowns
 
 # Reset all tracking data
-rtk gain --reset          # prompts [y/N] before deleting
-rtk gain --reset --yes    # skip prompt (CI/scripts)
+rtk-windows gain --reset          # prompts [y/N] before deleting
+rtk-windows gain --reset --yes    # skip prompt (CI/scripts)
 ```
 
 ## Command Options
@@ -89,9 +89,9 @@ TOTAL            196       1.3M      59.2K       1.2M   95.6%
 ```
 
 **Metrics explained:**
-- **Cmds**: Number of rtk commands executed
+- **Cmds**: Number of rtk-windows commands executed
 - **Input**: Estimated tokens from raw command output
-- **Output**: Actual tokens after rtk filtering
+- **Output**: Actual tokens after rtk-windows filtering
 - **Saved**: Input - Output (tokens prevented from reaching LLM)
 - **Save%**: Percentage reduction (Saved / Input × 100)
 
@@ -182,19 +182,19 @@ month,commands,input_tokens,output_tokens,saved_tokens,savings_pct
 
 ### Weekly Progress Tracking
 
-```bash
+```powershell
 # Generate weekly report every Monday
-rtk gain --weekly --format csv > reports/week-$(date +%Y-%W).csv
+rtk-windows gain --weekly --format csv > reports/week-$(date +%Y-%W).csv
 
 # Compare this week vs last week
-rtk gain --weekly | tail -3
+rtk-windows gain --weekly | tail -3
 ```
 
 ### Monthly Cost Analysis
 
-```bash
+```powershell
 # Export monthly data for budget review
-rtk gain --monthly --format json | jq '.monthly[] |
+rtk-windows gain --monthly --format json | jq '.monthly[] |
   {month, saved_tokens, quota_pct: (.saved_tokens / 6000000 * 100)}'
 ```
 
@@ -221,7 +221,7 @@ daily_df.plot(x='date', y='savings_pct', kind='line')
 
 ### Excel Analysis
 
-1. Export CSV: `rtk gain --all --format csv > rtk-data.csv`
+1. Export CSV: `rtk-windows gain --all --format csv > rtk-data.csv`
 2. Open in Excel
 3. Create pivot tables:
    - Daily trends (line chart)
@@ -230,9 +230,9 @@ daily_df.plot(x='date', y='savings_pct', kind='line')
 
 ### Dashboard Creation
 
-```bash
+```powershell
 # Generate dashboard data daily via cron
-0 0 * * * rtk gain --all --format json > /var/www/dashboard/rtk-stats.json
+0 0 * * * rtk-windows gain --all --format json > /var/www/dashboard/rtk-stats.json
 
 # Serve with static site
 cat > index.html <<'EOF'
@@ -261,7 +261,7 @@ EOF
 
 ### Token Estimation
 
-rtk estimates tokens using `text.len() / 4` (4 characters per token average).
+rtk-windows estimates tokens using `text.len() / 4` (4 characters per token average).
 
 **Accuracy**: ±10% compared to actual LLM tokenization (sufficient for trends).
 
@@ -278,19 +278,19 @@ Savings %       = (Saved / Input) × 100
 
 | Command | Typical Savings | Mechanism |
 |---------|----------------|-----------|
-| `rtk git status` | 77-93% | Compact stat format |
-| `rtk eslint` | 84% | Group by rule |
-| `rtk jest` | 94-99% | Show failures only |
-| `rtk vitest` | 94-99% | Show failures only |
-| `rtk find` | 75% | Tree format |
-| `rtk pnpm list` | 70-90% | Compact dependencies |
-| `rtk grep` | 70% | Truncate + group |
+| `rtk-windows git status` | 77-93% | Compact stat format |
+| `rtk-windows eslint` | 84% | Group by rule |
+| `rtk-windows jest` | 94-99% | Show failures only |
+| `rtk-windows vitest` | 94-99% | Show failures only |
+| `rtk-windows find` | 75% | Tree format |
+| `rtk-windows pnpm list` | 70-90% | Compact dependencies |
+| `rtk-windows grep` | 70% | Truncate + group |
 
 ## Database Management
 
 ### Inspect Raw Data
 
-```bash
+```powershell
 # Location
 ls -lh ~/.local/share/rtk/history.db
 
@@ -313,7 +313,7 @@ sqlite3 ~/.local/share/rtk/history.db \
 
 ### Backup & Restore
 
-```bash
+```powershell
 # Backup
 cp ~/.local/share/rtk/history.db ~/backups/rtk-history-$(date +%Y%m%d).db
 
@@ -326,14 +326,14 @@ sqlite3 ~/.local/share/rtk/history.db .dump > rtk-backup.sql
 
 ### Cleanup
 
-```bash
+```powershell
 # Manual cleanup (older than 90 days)
 sqlite3 ~/.local/share/rtk/history.db \
   "DELETE FROM commands WHERE timestamp < datetime('now', '-90 days')"
 
 # Reset all data
 rm ~/.local/share/rtk/history.db
-# Next rtk command will recreate database
+# Next rtk-windows command will recreate database
 ```
 
 ## Integration Examples
@@ -342,7 +342,7 @@ rm ~/.local/share/rtk/history.db
 
 ```yaml
 # .github/workflows/rtk-stats.yml
-name: RTK Stats Report
+name: rtk-windows Stats Report
 on:
   schedule:
     - cron: '0 0 * * 1'  # Weekly on Monday
@@ -351,15 +351,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install rtk
+      - name: Install rtk-windows
         run: cargo install --path .
       - name: Generate report
         run: |
-          rtk gain --weekly --format json > stats/week-$(date +%Y-%W).json
+          rtk-windows gain --weekly --format json > stats/week-$(date +%Y-%W).json
       - name: Commit stats
         run: |
           git add stats/
-          git commit -m "Weekly rtk stats"
+          git commit -m "Weekly rtk-windows stats"
           git push
 ```
 
@@ -376,7 +376,7 @@ def send_rtk_stats():
     data = json.loads(result.stdout)
 
     message = f"""
-    📊 *RTK Token Savings Report*
+    📊 *rtk-windows Token Savings Report*
 
     Total Saved: {data['summary']['total_saved']:,} tokens
     Savings Rate: {data['summary']['avg_savings_pct']:.1f}%
@@ -390,7 +390,7 @@ def send_rtk_stats():
 
 ### No data showing
 
-```bash
+```powershell
 # Check if database exists
 ls -lh ~/.local/share/rtk/history.db
 
@@ -398,42 +398,42 @@ ls -lh ~/.local/share/rtk/history.db
 sqlite3 ~/.local/share/rtk/history.db "SELECT COUNT(*) FROM commands"
 
 # Run a tracked command to generate data
-rtk git status
+rtk-windows git status
 ```
 
 ### Export fails
 
-```bash
+```powershell
 # Check for pipe errors
-rtk gain --format json 2>&1 | tee /tmp/rtk-debug.log | jq .
+rtk-windows gain --format json 2>&1 | tee /tmp/rtk-debug.log | jq .
 
 # Use release build to avoid warnings
 cargo build --release
-./target/release/rtk gain --format json
+./target/release/rtk-windows gain --format json
 ```
 
 ### Incorrect statistics
 
 Token estimation is a heuristic. For precise measurements:
 
-```bash
+```powershell
 # Install tiktoken
 pip install tiktoken
 
 # Validate estimation
-rtk git status > output.txt
+rtk-windows git status > output.txt
 python -c "
 import tiktoken
 enc = tiktoken.get_encoding('cl100k_base')
 text = open('output.txt').read()
 print(f'Actual tokens: {len(enc.encode(text))}')
-print(f'rtk estimate: {len(text) // 4}')
+print(f'rtk-windows estimate: {len(text) // 4}')
 "
 ```
 
 ## Best Practices
 
-1. **Regular Exports**: `rtk gain --all --format json > monthly-$(date +%Y%m).json`
+1. **Regular Exports**: `rtk-windows gain --all --format json > monthly-$(date +%Y%m).json`
 2. **Trend Analysis**: Compare week-over-week savings to identify optimization opportunities
 3. **Command Profiling**: Use `--history` to see which commands save the most
 4. **Backup Before Cleanup**: Always backup before manual database operations
@@ -441,6 +441,7 @@ print(f'rtk estimate: {len(text) // 4}')
 
 ## See Also
 
-- [README.md](../README.md) - Full rtk documentation
+- [README.md](../README.md) - Full rtk-windows documentation
 - [CLAUDE.md](../CLAUDE.md) - Claude Code integration guide
 - [ARCHITECTURE.md](../contributing/ARCHITECTURE.md) - Technical architecture
+

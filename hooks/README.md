@@ -2,7 +2,7 @@
 
 ## Scope
 
-Windows-only fork scope: these hook artifacts are documented for Windows-native usage in this repository. Linux/macOS users should use upstream docs at https://github.com/rtk-ai/rtk.
+Windows-only fork scope: these hook artifacts are documented for Windows-native usage in this repository. Linux/macOS users should use upstream docs at https://github.com/luysantanadev/rtk-windows.git.
 
 **Deployed hook artifacts** — the actual files installed on user machines by `rtk init`. These are native RTK hook commands, TypeScript plugins, and rules files. They are **thin delegates**: parse agent-specific JSON, call rewrite logic, and format agent-specific responses. Zero filtering logic lives here.
 

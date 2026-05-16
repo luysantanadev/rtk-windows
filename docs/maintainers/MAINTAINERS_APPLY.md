@@ -22,18 +22,18 @@ To apply, you should have:
 
 ### ✍️ How to Apply
 
-1. Open a discussion in [rtk-ai/rtk Maintainers Applications · Discussions · GitHub](https://github.com/rtk-ai/rtk/discussions/categories/maintainers-applications) titled **Maintainer Application: [Your GitHub Handle]**
+1. Open a discussion in [https://github.com/luysantanadev/rtk-windows.git Maintainers Applications · Discussions · GitHub](https://github.com/luysantanadev/rtk-windows.git/discussions/categories/maintainers-applications) titled **Maintainer Application: [Your GitHub Handle]**
 2. In your application, include:
    - The ecosystem(s) you're interested in
    - Your experience with those ecosystems
    - Links to your merged PRs and reviews
-   - Your Discord username (and make sure you've joined the server)
+   - Your preferred GitHub contact handle for maintainer follow-up
    - Your PRs that have been accepted in RTK
 3. For **Core Maintainer** applications, also include:
    - Your experience with Rust
    - Your experience with Open Source
 4. A Core Maintainer will get back to you as soon as possible
-5. If it's a good fit, we'll continue the conversation on Discord and guide you through the next steps
+5. If it's a good fit, we'll continue the conversation on GitHub Discussions and guide you through the next steps
 
 ---
 

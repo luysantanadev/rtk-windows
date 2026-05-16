@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://avatars.githubusercontent.com/u/258253854?v=4" alt="RTK - Rust Token Killer" width="500">
+  <img src="https://avatars.githubusercontent.com/u/258253854?v=4" alt="rtk-windows - Rust Token Killer" width="500">
 </p>
 
 <p align="center">
@@ -7,18 +7,16 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/rtk-ai/rtk/actions"><img src="https://github.com/rtk-ai/rtk/workflows/Security%20Check/badge.svg" alt="CI"></a>
-  <a href="https://github.com/rtk-ai/rtk/releases"><img src="https://img.shields.io/github/v/release/rtk-ai/rtk" alt="Release"></a>
+  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://github.com/luysantanadev/rtk-windows.git/workflows/Security%20Check/badge.svg" alt="CI"></a>
+  <a href="https://github.com/luysantanadev/rtk-windows.git/releases"><img src="https://img.shields.io/github/v/release/luysantanadev/rtk-windows" alt="Release"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-  <a href="https://discord.gg/RySmvNF5kF"><img src="https://img.shields.io/discord/1470188214710046894?label=Discord&logo=discord" alt="Discord"></a>
 </p>
 
 <p align="center">
   <a href="https://www.rtk-ai.app">Website</a> &bull;
   <a href="#installation">Install</a> &bull;
   <a href="https://www.rtk-ai.app/guide/troubleshooting">Troubleshooting</a> &bull;
-  <a href="docs/contributing/ARCHITECTURE.md">Architecture</a> &bull;
-  <a href="https://discord.gg/RySmvNF5kF">Discord</a>
+  <a href="docs/contributing/ARCHITECTURE.md">Architecture</a>
 </p>
 
 <p align="center">
@@ -32,14 +30,14 @@
 
 ---
 
-rtk filters and compresses command outputs before they reach your LLM context. Single Rust binary, 100+ supported commands, <10ms overhead.
+rtk-windows filters and compresses command outputs before they reach your LLM context. Single Rust binary, 100+ supported commands, <10ms overhead.
 
 > **Windows-only fork notice (BREAKING):** This repository supports **Windows native** only (PowerShell/cmd).
-> For Linux/macOS, use the upstream project at https://github.com/rtk-ai/rtk.
+> For Linux/macOS, use the upstream project at https://github.com/luysantanadev/rtk-windows.git.
 
 ## Token Savings (30-min Claude Code Session)
 
-| Operation | Frequency | Standard | rtk | Savings |
+| Operation | Frequency | Standard | rtk-windows | Savings |
 |-----------|-----------|----------|-----|---------|
 | `ls` / `tree` | 10x | 2,000 | 400 | -80% |
 | `cat` / `read` | 20x | 40,000 | 12,000 | -70% |
@@ -61,12 +59,12 @@ rtk filters and compresses command outputs before they reach your LLM context. S
 
 ### Windows binary (recommended)
 
-Download `rtk-x86_64-pc-windows-msvc.zip` from [releases](https://github.com/rtk-ai/rtk/releases), extract `rtk.exe`, and place it in your PATH.
+Download `rtk-windows-x86_64-pc-windows-msvc.zip` from [releases](https://github.com/luysantanadev/rtk-windows.git/releases), extract `rtk-windows.exe`, and place it in your PATH.
 
 ```powershell
 # Example user-scoped install directory
 New-Item -ItemType Directory -Force "$env:USERPROFILE\\bin" | Out-Null
-Copy-Item .\rtk.exe "$env:USERPROFILE\\bin\\rtk.exe" -Force
+Copy-Item .\rtk-windows.exe "$env:USERPROFILE\\bin\\rtk-windows.exe" -Force
 ```
 
 Add the install folder to PATH if needed:
@@ -82,58 +80,58 @@ Add the install folder to PATH if needed:
 ### Cargo
 
 ```powershell
-cargo install --git https://github.com/rtk-ai/rtk
+cargo install --git https://github.com/luysantanadev/rtk-windows.git
 ```
 
 ### Pre-built Binaries
 
-Download from [releases](https://github.com/rtk-ai/rtk/releases):
-- Windows: `rtk-x86_64-pc-windows-msvc.zip`
+Download from [releases](https://github.com/luysantanadev/rtk-windows.git/releases):
+- Windows: `rtk-windows-x86_64-pc-windows-msvc.zip`
 
-> Extract the zip and place `rtk.exe` somewhere in your PATH. Run RTK from **Command Prompt**, **PowerShell**, or **Windows Terminal**.
+> Extract the zip and place `rtk-windows.exe` somewhere in your PATH. Run rtk-windows from **Command Prompt**, **PowerShell**, or **Windows Terminal**.
 
 ### Linux/macOS users
 
 This fork is Windows-only. For Linux/macOS support, use upstream:
-https://github.com/rtk-ai/rtk
+https://github.com/luysantanadev/rtk-windows.git
 
 ### Verify Installation
 
 ```powershell
-rtk --version   # Should show "rtk 0.28.2"
-rtk gain        # Should show token savings stats
+rtk-windows --version   # Should show "rtk-windows 0.28.2"
+rtk-windows gain        # Should show token savings stats
 ```
 
-> **Name collision warning**: Another project named "rtk" (Rust Type Kit) exists on crates.io. If `rtk gain` fails, you have the wrong package. Use `cargo install --git` above instead.
+> **Name collision warning**: Another project named "rtk" (Rust Type Kit) exists on crates.io. If `rtk-windows gain` fails, you have the wrong package. Use `cargo install --git` above instead.
 
 ## Quick Start
 
 ```powershell
 # 1. Install for your AI tool
-rtk init -g                     # Claude Code / Copilot (default)
-rtk init -g --gemini            # Gemini CLI
-rtk init -g --codex             # Codex (OpenAI)
-rtk init -g --agent cursor      # Cursor
-rtk init --agent windsurf       # Windsurf
-rtk init --agent cline          # Cline / Roo Code
-rtk init --agent kilocode       # Kilo Code
-rtk init --agent antigravity    # Google Antigravity
-rtk init --agent hermes         # Hermes
+rtk-windows init -g                     # Claude Code / Copilot (default)
+rtk-windows init -g --gemini            # Gemini CLI
+rtk-windows init -g --codex             # Codex (OpenAI)
+rtk-windows init -g --agent cursor      # Cursor
+rtk-windows init --agent windsurf       # Windsurf
+rtk-windows init --agent cline          # Cline / Roo Code
+rtk-windows init --agent kilocode       # Kilo Code
+rtk-windows init --agent antigravity    # Google Antigravity
+rtk-windows init --agent hermes         # Hermes
 
 # 2. Restart your AI tool, then test
-git status  # Automatically rewritten to rtk git status
+git status  # Automatically rewritten to rtk-windows git status
 ```
 
-Hook-based agents rewrite PowerShell/cmd terminal commands (e.g., `git status` -> `rtk git status`) before execution. Plugin-based agents, including Hermes, use their plugin API to rewrite commands before execution. The agent receives compact output without needing to call `rtk` explicitly.
+Hook-based agents rewrite PowerShell/cmd terminal commands (e.g., `git status` -> `rtk-windows git status`) before execution. Plugin-based agents, including Hermes, use their plugin API to rewrite commands before execution. The agent receives compact output without needing to call `rtk-windows` explicitly.
 
-**Important:** the hook only runs on terminal tool calls. Claude Code built-in tools like `Read`, `Grep`, and `Glob` do not pass through the hook, so they are not auto-rewritten. To get RTK's compact output for those workflows, call `rtk read`, `rtk grep`, or `rtk find` directly.
+**Important:** the hook only runs on terminal tool calls. Claude Code built-in tools like `Read`, `Grep`, and `Glob` do not pass through the hook, so they are not auto-rewritten. To get RTK's compact output for those workflows, call `rtk-windows read`, `rtk-windows grep`, or `rtk-windows find` directly.
 
 ## Differences from Upstream
 
-This repository is a Windows-only fork of `rtk-ai/rtk`.
+This repository is a Windows-only fork of `https://github.com/luysantanadev/rtk-windows.git`.
 
 - Windows native support only (PowerShell/cmd) in this fork.
-- Linux/macOS support is maintained upstream at https://github.com/rtk-ai/rtk.
+- Linux/macOS support is maintained upstream at https://github.com/luysantanadev/rtk-windows.git.
 - CI validation in this fork is focused on `windows-latest`.
 
 ## How It Works
@@ -141,7 +139,7 @@ This repository is a Windows-only fork of `rtk-ai/rtk`.
 ```
   Without rtk:                                    With rtk:
 
-  Claude  --git status-->  shell  -->  git         Claude  --git status-->  RTK  -->  git
+  Claude  --git status-->  shell  -->  git         Claude  --git status-->  rtk-windows  -->  git
     ^                                   |            ^                      |          |
     |        ~2,000 tokens (raw)        |            |   ~200 tokens        | filter   |
     +-----------------------------------+            +------- (filtered) ---+----------+
@@ -157,124 +155,124 @@ Four strategies applied per command type:
 ## Commands
 
 ### Files
-```bash
-rtk ls .                        # Token-optimized directory tree
-rtk read file.rs                # Smart file reading
-rtk read file.rs -l aggressive  # Signatures only (strips bodies)
-rtk smart file.rs               # 2-line heuristic code summary
-rtk find "*.rs" .               # Compact find results
-rtk grep "pattern" .            # Grouped search results
-rtk diff file1 file2            # Condensed diff
+```powershell
+rtk-windows ls .                        # Token-optimized directory tree
+rtk-windows read file.rs                # Smart file reading
+rtk-windows read file.rs -l aggressive  # Signatures only (strips bodies)
+rtk-windows smart file.rs               # 2-line heuristic code summary
+rtk-windows find "*.rs" .               # Compact find results
+rtk-windows grep "pattern" .            # Grouped search results
+rtk-windows diff file1 file2            # Condensed diff
 ```
 
 ### Git
-```bash
-rtk git status                  # Compact status
-rtk git log -n 10               # One-line commits
-rtk git diff                    # Condensed diff
-rtk git add                     # -> "ok"
-rtk git commit -m "msg"         # -> "ok abc1234"
-rtk git push                    # -> "ok main"
-rtk git pull                    # -> "ok 3 files +10 -2"
+```powershell
+rtk-windows git status                  # Compact status
+rtk-windows git log -n 10               # One-line commits
+rtk-windows git diff                    # Condensed diff
+rtk-windows git add                     # -> "ok"
+rtk-windows git commit -m "msg"         # -> "ok abc1234"
+rtk-windows git push                    # -> "ok main"
+rtk-windows git pull                    # -> "ok 3 files +10 -2"
 ```
 
 ### GitHub CLI
-```bash
-rtk gh pr list                  # Compact PR listing
-rtk gh pr view 42               # PR details + checks
-rtk gh issue list               # Compact issue listing
-rtk gh run list                 # Workflow run status
+```powershell
+rtk-windows gh pr list                  # Compact PR listing
+rtk-windows gh pr view 42               # PR details + checks
+rtk-windows gh issue list               # Compact issue listing
+rtk-windows gh run list                 # Workflow run status
 ```
 
 ### Test Runners
-```bash
-rtk jest                        # Jest compact (failures only)
-rtk vitest                      # Vitest compact (failures only)
-rtk playwright test             # E2E results (failures only)
-rtk pytest                      # Python tests (-90%)
-rtk go test                     # Go tests (NDJSON, -90%)
-rtk cargo test                  # Cargo tests (-90%)
-rtk rake test                   # Ruby minitest (-90%)
-rtk rspec                       # RSpec tests (JSON, -60%+)
-rtk err <cmd>                   # Filter errors only from any command
-rtk test <cmd>                  # Generic test wrapper - failures only (-90%)
+```powershell
+rtk-windows jest                        # Jest compact (failures only)
+rtk-windows vitest                      # Vitest compact (failures only)
+rtk-windows playwright test             # E2E results (failures only)
+rtk-windows pytest                      # Python tests (-90%)
+rtk-windows go test                     # Go tests (NDJSON, -90%)
+rtk-windows cargo test                  # Cargo tests (-90%)
+rtk-windows rake test                   # Ruby minitest (-90%)
+rtk-windows rspec                       # RSpec tests (JSON, -60%+)
+rtk-windows err <cmd>                   # Filter errors only from any command
+rtk-windows test <cmd>                  # Generic test wrapper - failures only (-90%)
 ```
 
 ### Build & Lint
-```bash
-rtk lint                        # ESLint grouped by rule/file
-rtk lint biome                  # Supports other linters
-rtk tsc                         # TypeScript errors grouped by file
-rtk next build                  # Next.js build compact
-rtk prettier --check .          # Files needing formatting
-rtk cargo build                 # Cargo build (-80%)
-rtk cargo clippy                # Cargo clippy (-80%)
-rtk ruff check                  # Python linting (JSON, -80%)
-rtk golangci-lint run           # Go linting (JSON, -85%)
-rtk rubocop                     # Ruby linting (JSON, -60%+)
+```powershell
+rtk-windows lint                        # ESLint grouped by rule/file
+rtk-windows lint biome                  # Supports other linters
+rtk-windows tsc                         # TypeScript errors grouped by file
+rtk-windows next build                  # Next.js build compact
+rtk-windows prettier --check .          # Files needing formatting
+rtk-windows cargo build                 # Cargo build (-80%)
+rtk-windows cargo clippy                # Cargo clippy (-80%)
+rtk-windows ruff check                  # Python linting (JSON, -80%)
+rtk-windows golangci-lint run           # Go linting (JSON, -85%)
+rtk-windows rubocop                     # Ruby linting (JSON, -60%+)
 ```
 
 ### Package Managers
-```bash
-rtk pnpm list                   # Compact dependency tree
-rtk pip list                    # Python packages (auto-detect uv)
-rtk pip outdated                # Outdated packages
-rtk bundle install              # Ruby gems (strip Using lines)
-rtk prisma generate             # Schema generation (no ASCII art)
+```powershell
+rtk-windows pnpm list                   # Compact dependency tree
+rtk-windows pip list                    # Python packages (auto-detect uv)
+rtk-windows pip outdated                # Outdated packages
+rtk-windows bundle install              # Ruby gems (strip Using lines)
+rtk-windows prisma generate             # Schema generation (no ASCII art)
 ```
 
 ### AWS
-```bash
-rtk aws sts get-caller-identity # One-line identity
-rtk aws ec2 describe-instances  # Compact instance list
-rtk aws lambda list-functions   # Name/runtime/memory (strips secrets)
-rtk aws logs get-log-events     # Timestamped messages only
-rtk aws cloudformation describe-stack-events  # Failures first
-rtk aws dynamodb scan           # Unwraps type annotations
-rtk aws iam list-roles          # Strips policy documents
-rtk aws s3 ls                   # Truncated with tee recovery
+```powershell
+rtk-windows aws sts get-caller-identity # One-line identity
+rtk-windows aws ec2 describe-instances  # Compact instance list
+rtk-windows aws lambda list-functions   # Name/runtime/memory (strips secrets)
+rtk-windows aws logs get-log-events     # Timestamped messages only
+rtk-windows aws cloudformation describe-stack-events  # Failures first
+rtk-windows aws dynamodb scan           # Unwraps type annotations
+rtk-windows aws iam list-roles          # Strips policy documents
+rtk-windows aws s3 ls                   # Truncated with tee recovery
 ```
 
 ### Containers
-```bash
-rtk docker ps                   # Compact container list
-rtk docker images               # Compact image list
-rtk docker logs <container>     # Deduplicated logs
-rtk docker compose ps           # Compose services
-rtk kubectl pods                # Compact pod list
-rtk kubectl logs <pod>          # Deduplicated logs
-rtk kubectl services            # Compact service list
+```powershell
+rtk-windows docker ps                   # Compact container list
+rtk-windows docker images               # Compact image list
+rtk-windows docker logs <container>     # Deduplicated logs
+rtk-windows docker compose ps           # Compose services
+rtk-windows kubectl pods                # Compact pod list
+rtk-windows kubectl logs <pod>          # Deduplicated logs
+rtk-windows kubectl services            # Compact service list
 ```
 
 ### Data & Analytics
-```bash
-rtk json config.json            # Structure without values
-rtk deps                        # Dependencies summary
-rtk env -f AWS                  # Filtered env vars
-rtk log app.log                 # Deduplicated logs
-rtk curl <url>                  # Truncate + save full output
-rtk wget <url>                  # Download, strip progress bars
-rtk summary <long command>      # Heuristic summary
-rtk proxy <command>             # Raw passthrough + tracking
+```powershell
+rtk-windows json config.json            # Structure without values
+rtk-windows deps                        # Dependencies summary
+rtk-windows env -f AWS                  # Filtered env vars
+rtk-windows log app.log                 # Deduplicated logs
+rtk-windows curl <url>                  # Truncate + save full output
+rtk-windows wget <url>                  # Download, strip progress bars
+rtk-windows summary <long command>      # Heuristic summary
+rtk-windows proxy <command>             # Raw passthrough + tracking
 ```
 
 ### Token Savings Analytics
-```bash
-rtk gain                        # Summary stats
-rtk gain --graph                # ASCII graph (last 30 days)
-rtk gain --history              # Recent command history
-rtk gain --daily                # Day-by-day breakdown
-rtk gain --all --format json    # JSON export for dashboards
+```powershell
+rtk-windows gain                        # Summary stats
+rtk-windows gain --graph                # ASCII graph (last 30 days)
+rtk-windows gain --history              # Recent command history
+rtk-windows gain --daily                # Day-by-day breakdown
+rtk-windows gain --all --format json    # JSON export for dashboards
 
-rtk discover                    # Find missed savings opportunities
-rtk discover --all --since 7    # All projects, last 7 days
+rtk-windows discover                    # Find missed savings opportunities
+rtk-windows discover --all --since 7    # All projects, last 7 days
 
-rtk session                     # Show RTK adoption across recent sessions
+rtk-windows session                     # Show rtk-windows adoption across recent sessions
 ```
 
 ## Global Flags
 
-```bash
+```powershell
 -u, --ultra-compact    # ASCII icons, inline format (extra token savings)
 -v, --verbose          # Increase verbosity (-v, -vv, -vvv)
 ```
@@ -283,7 +281,7 @@ rtk session                     # Show RTK adoption across recent sessions
 
 **Directory listing:**
 ```
-# ls -la (45 lines, ~800 tokens)        # rtk ls (12 lines, ~150 tokens)
+# ls -la (45 lines, ~800 tokens)        # rtk-windows ls (12 lines, ~150 tokens)
 drwxr-xr-x  15 user staff 480 ...       my-project/
 -rw-r--r--   1 user staff 1234 ...       +-- src/ (8 files)
 ...                                      |   +-- main.rs
@@ -292,7 +290,7 @@ drwxr-xr-x  15 user staff 480 ...       my-project/
 
 **Git operations:**
 ```
-# git push (15 lines, ~200 tokens)       # rtk git push (1 line, ~10 tokens)
+# git push (15 lines, ~200 tokens)       # rtk-windows git push (1 line, ~10 tokens)
 Enumerating objects: 5, done.             ok main
 Counting objects: 100% (5/5), done.
 Delta compression using up to 8 threads
@@ -301,7 +299,7 @@ Delta compression using up to 8 threads
 
 **Test output:**
 ```
-# cargo test (200+ lines on failure)     # rtk test cargo test (~20 lines)
+# cargo test (200+ lines on failure)     # rtk-windows test cargo test (~20 lines)
 running 15 tests                          FAILED: 2/15 tests
 test utils::test_parse ... ok               test_edge_case: assertion failed
 test utils::test_format ... ok              test_overflow: panic at utils.rs:18
@@ -310,67 +308,67 @@ test utils::test_format ... ok              test_overflow: panic at utils.rs:18
 
 ## Auto-Rewrite Hook
 
-The most effective way to use rtk. The hook transparently intercepts terminal commands and rewrites them to rtk equivalents before execution.
+The most effective way to use rtk. The hook transparently intercepts terminal commands and rewrites them to rtk-windows equivalents before execution.
 
-**Result**: 100% rtk adoption across all conversations and subagents, zero token overhead.
+**Result**: 100% rtk-windows adoption across all conversations and subagents, zero token overhead.
 
-**Scope note:** this applies to terminal tool calls. Claude Code built-in tools such as `Read`, `Grep`, and `Glob` bypass the hook, so use explicit `rtk` commands when you want RTK filtering there.
+**Scope note:** this applies to terminal tool calls. Claude Code built-in tools such as `Read`, `Grep`, and `Glob` bypass the hook, so use explicit `rtk-windows` commands when you want rtk-windows filtering there.
 
 ### Setup
 
 ```powershell
-rtk init -g                 # Install hook + RTK.md (recommended)
-rtk init -g --opencode      # OpenCode plugin (instead of Claude Code)
-rtk init -g --auto-patch    # Non-interactive (CI/CD)
-rtk init -g --hook-only     # Hook only, no RTK.md
-rtk init --show             # Verify installation
+rtk-windows init -g                 # Install hook + RTK.md (recommended)
+rtk-windows init -g --opencode      # OpenCode plugin (instead of Claude Code)
+rtk-windows init -g --auto-patch    # Non-interactive (CI/CD)
+rtk-windows init -g --hook-only     # Hook only, no RTK.md
+rtk-windows init --show             # Verify installation
 ```
 
 After install, **restart Claude Code**.
 
 ## Windows
 
-RTK in this fork is Windows-native. Use PowerShell/cmd with native hook commands:
+rtk-windows in this fork is Windows-native. Use PowerShell/cmd with native hook commands:
 
 ```powershell
-# 1. Download and extract rtk-x86_64-pc-windows-msvc.zip from releases
-# 2. Add rtk.exe to your PATH
+# 1. Download and extract rtk-windows-x86_64-pc-windows-msvc.zip from releases
+# 2. Add rtk-windows.exe to your PATH
 # 3. Initialize
-rtk init -g
+rtk-windows init -g
 # 4. Use commands (hook can auto-rewrite in supported agents)
-rtk cargo test
-rtk git status
+rtk-windows cargo test
+rtk-windows git status
 ```
 
-**Important**: Do not double-click `rtk.exe` — it is a CLI tool that prints usage and exits immediately. Always run it from a terminal (Command Prompt, PowerShell, or Windows Terminal).
+**Important**: Do not double-click `rtk-windows.exe` — it is a CLI tool that prints usage and exits immediately. Always run it from a terminal (Command Prompt, PowerShell, or Windows Terminal).
 
 | Feature | Native Windows |
 |---------|----------------|
 | Filters (cargo, git, etc.) | Full |
 | Auto-rewrite hook | Full (agent-dependent) |
-| `rtk init -g` | Hook mode |
-| `rtk gain` / analytics | Full |
+| `rtk-windows init -g` | Hook mode |
+| `rtk-windows gain` / analytics | Full |
 
 ## Supported AI Tools
 
-RTK supports 13 AI coding tools. Each integration rewrites shell commands to `rtk` equivalents for 60-90% token savings where the agent supports command interception.
+rtk-windows supports 13 AI coding tools. Each integration rewrites shell commands to `rtk-windows` equivalents for 60-90% token savings where the agent supports command interception.
 
 | Tool | Install | Method |
 |------|---------|--------|
-| **Claude Code** | `rtk init -g` | PreToolUse hook |
-| **GitHub Copilot (VS Code)** | `rtk init -g --copilot` | PreToolUse hook — transparent rewrite |
-| **GitHub Copilot CLI** | `rtk init -g --copilot` | PreToolUse deny-with-suggestion (CLI limitation) |
-| **Cursor** | `rtk init -g --agent cursor` | preToolUse hook (hooks.json) |
-| **Gemini CLI** | `rtk init -g --gemini` | BeforeTool hook |
-| **Codex** | `rtk init -g --codex` | AGENTS.md + RTK.md instructions |
-| **Windsurf** | `rtk init --agent windsurf` | .windsurfrules (project-scoped) |
-| **Cline / Roo Code** | `rtk init --agent cline` | .clinerules (project-scoped) |
-| **OpenCode** | `rtk init -g --opencode` | Plugin TS (tool.execute.before) |
+| **Claude Code** | `rtk-windows init -g` | PreToolUse hook |
+| **GitHub Copilot (VS Code)** | `rtk-windows init -g --copilot` | PreToolUse hook — transparent rewrite |
+| **GitHub Copilot CLI** | `rtk-windows init -g --copilot` | PreToolUse deny-with-suggestion (CLI limitation) |
+| **Cursor** | `rtk-windows init -g --agent cursor` | preToolUse hook (hooks.json) |
+| **Gemini CLI** | `rtk-windows init -g --gemini` | BeforeTool hook |
+| **Codex** | `rtk-windows init -g --codex` | AGENTS.md + RTK.md instructions |
+| **Windsurf** | `rtk-windows init --agent windsurf` | .windsurfrules (project-scoped) |
+| **Cline / Roo Code** | `rtk-windows init --agent cline` | .clinerules (project-scoped) |
+| **OpenCode** | `rtk-windows init -g --opencode` | Plugin TS (tool.execute.before) |
 | **OpenClaw** | `openclaw plugins install ./openclaw` | Plugin TS (before_tool_call) |
-| **Hermes** | `rtk init --agent hermes` | Python plugin adapter (terminal command mutation via `rtk rewrite`) |
-| **Mistral Vibe** | Planned ([#800](https://github.com/rtk-ai/rtk/issues/800)) | Blocked on upstream |
-| **Kilo Code** | `rtk init --agent kilocode` | .kilocode/rules/rtk-rules.md (project-scoped) |
-| **Google Antigravity** | `rtk init --agent antigravity` | .agents/rules/antigravity-rtk-rules.md (project-scoped) |
+| **Hermes** | `rtk-windows init --agent hermes` | Python plugin adapter (terminal command mutation via `rtk-windows rewrite`) |
+| **Mistral Vibe** | Planned ([#800](https://github.com/luysantanadev/rtk-windows.git/issues/800)) | Blocked on upstream |
+| **Kilo Code** | `rtk-windows init --agent kilocode` | .kilocode/rules/rtk-rules.md (project-scoped) |
+| **Google Antigravity** | `rtk-windows init --agent antigravity` | .agents/rules/antigravity-rtk-rules.md (project-scoped) |
 
 For per-agent setup details, override controls, and graceful degradation, see the [Supported Agents guide](https://www.rtk-ai.app/guide/getting-started/supported-agents). The Hermes plugin source and tests live in `hooks/hermes/`; installed Hermes runtime files still live under `~/.hermes/plugins/rtk-rewrite/`.
 
@@ -387,7 +385,7 @@ enabled = true          # save raw output on failure (default: true)
 mode = "failures"       # "failures", "always", or "never"
 ```
 
-When a command fails, RTK saves the full unfiltered output so the LLM can read it without re-executing:
+When a command fails, rtk-windows saves the full unfiltered output so the LLM can read it without re-executing:
 
 ```
 FAILED: 2/15 tests
@@ -399,8 +397,8 @@ For the full config reference (all sections, env vars, per-project filters), see
 ### Uninstall
 
 ```powershell
-rtk init -g --uninstall     # Remove hook, RTK.md, settings.json entry
-cargo uninstall rtk          # Remove binary
+rtk-windows init -g --uninstall     # Remove hook, RTK.md, settings.json entry
+cargo uninstall rtk-windows          # Remove binary
 ```
 
 ## Documentation
@@ -413,37 +411,37 @@ cargo uninstall rtk          # Remove binary
 
 ## Privacy & Telemetry
 
-RTK can collect **anonymous, aggregate usage metrics** once per day. Telemetry is **disabled by default** and requires **explicit opt-in consent** (GDPR Art. 6, 7) during `rtk init` or via `rtk telemetry enable`. This data helps us build a better product: identifying which commands need filters, which filters need improvement, and how much value RTK delivers. For the full list of fields, data handling, and contributor guidelines, see **[docs/TELEMETRY.md](docs/TELEMETRY.md)**.
+rtk-windows can collect **anonymous, aggregate usage metrics** once per day. Telemetry is **disabled by default** and requires **explicit opt-in consent** (GDPR Art. 6, 7) during `rtk-windows init` or via `rtk-windows telemetry enable`. This data helps us build a better product: identifying which commands need filters, which filters need improvement, and how much value rtk-windows delivers. For the full list of fields, data handling, and contributor guidelines, see **[docs/TELEMETRY.md](docs/TELEMETRY.md)**.
 
 **What is collected and why:**
 
 | Category | Data | Why |
 |----------|------|-----|
 | Identity | Salted device hash (SHA-256, not reversible) | Count unique installations without tracking individuals |
-| Environment | RTK version, OS, architecture, install method | Know which platforms to support and test |
+| Environment | rtk-windows version, OS, architecture, install method | Know which platforms to support and test |
 | Usage volume | Command count (24h), total commands, tokens saved (24h/30d/total) | Measure adoption and value delivered |
 | Quality | Top 5 passthrough commands (0% savings), parse failure count, commands with <30% savings | Identify missing filters and weak ones to improve |
 | Ecosystem | Command category distribution (e.g. git 45%, cargo 20%, js 15%) | Prioritize filter development for popular ecosystems |
 | Retention | Days since first use, active days in last 30 | Understand engagement and detect churn |
 | Adoption | AI agent hook type (claude/gemini/codex), custom TOML filter count | Track integration coverage and DSL adoption |
 | Configuration | Whether config.toml exists, number of excluded commands, project count | Understand user maturity and customization patterns |
-| Features | Usage counts for meta-commands (gain, discover, proxy, verify) | Know which RTK features are valued vs unused |
-| Economics | Estimated USD savings (based on API token pricing) | Quantify the value RTK provides to users |
+| Features | Usage counts for meta-commands (gain, discover, proxy, verify) | Know which rtk-windows features are valued vs unused |
+| Economics | Estimated USD savings (based on API token pricing) | Quantify the value rtk-windows provides to users |
 
 All data is **aggregate counts or anonymized command names** (first 3 words, no arguments). Top commands report only tool names (e.g. "git", "cargo"), never full command lines.
 
 **What is NOT collected:** source code, file paths, command arguments, secrets, environment variables, personal data, or repository contents.
 
 **Manage telemetry:**
-```bash
-rtk telemetry status     # Check current consent state
-rtk telemetry enable     # Give consent (interactive prompt)
-rtk telemetry disable    # Withdraw consent — stops all collection immediately
-rtk telemetry forget     # Withdraw consent + delete all local data + request server-side erasure
+```powershell
+rtk-windows telemetry status     # Check current consent state
+rtk-windows telemetry enable     # Give consent (interactive prompt)
+rtk-windows telemetry disable    # Withdraw consent — stops all collection immediately
+rtk-windows telemetry forget     # Withdraw consent + delete all local data + request server-side erasure
 ```
 
 **Override via environment:**
-```bash
+```powershell
 export RTK_TELEMETRY_DISABLED=1   # Blocks telemetry regardless of consent
 ```
 
@@ -451,19 +449,19 @@ export RTK_TELEMETRY_DISABLED=1   # Blocks telemetry regardless of consent
 
 <a href="https://www.star-history.com/?repos=rtk-ai%2Frtk&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=rtk-ai/rtk&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=rtk-ai/rtk&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=rtk-ai/rtk&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=luysantanadev/rtk-windows&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=luysantanadev/rtk-windows&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=luysantanadev/rtk-windows&type=date&legend=top-left" />
  </picture>
 </a>
 
 ## StarMapper
 
-<a href="https://starmapper.bruniaux.com/rtk-ai/rtk">
+<a href="https://starmapper.bruniaux.com/luysantanadev/rtk-windows">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://starmapper.bruniaux.com/api/map-image/rtk-ai/rtk?theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://starmapper.bruniaux.com/api/map-image/rtk-ai/rtk?theme=light" />
-    <img alt="StarMapper" src="https://starmapper.bruniaux.com/api/map-image/rtk-ai/rtk" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://starmapper.bruniaux.com/api/map-image/luysantanadev/rtk-windows?theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://starmapper.bruniaux.com/api/map-image/luysantanadev/rtk-windows?theme=light" />
+    <img alt="StarMapper" src="https://starmapper.bruniaux.com/api/map-image/luysantanadev/rtk-windows" />
   </picture>
 </a>
 
@@ -478,9 +476,9 @@ export RTK_TELEMETRY_DISABLED=1   # Blocks telemetry regardless of consent
 
 ## Contributing
 
-Contributions welcome! Please open an issue or PR on [GitHub](https://github.com/rtk-ai/rtk).
+Contributions welcome! Please open an issue or PR on [GitHub](https://github.com/luysantanadev/rtk-windows.git).
 
-Join the community on [Discord](https://discord.gg/RySmvNF5kF).
+Join the community on [Discord]().
 
 ## License
 
@@ -489,3 +487,5 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## Disclaimer
 
 See [DISCLAIMER.md](DISCLAIMER.md).
+
+

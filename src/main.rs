@@ -1,6 +1,6 @@
 #[cfg(not(windows))]
 compile_error!(
-    "This fork is Windows-only. Use upstream https://github.com/rtk-ai/rtk for Linux/macOS."
+    "This fork is Windows-only. Use upstream https://github.com/luysantanadev/rtk-windows.git for Linux/macOS."
 );
 
 mod analytics;
@@ -3135,7 +3135,7 @@ mod tests {
 
     #[test]
     fn test_npx_unknown_tool_passthrough() {
-        // The bug (rtk-ai/rtk#815) was that unknown tools under `rtk npx`
+        // The bug (https://github.com/luysantanadev/rtk-windows.git#815) was that unknown tools under `rtk npx`
         // were dispatched to `npm` instead of `npx`. At the parse level, the
         // Npx variant must carry all args through unchanged so the dispatch
         // arm can forward them to npx.

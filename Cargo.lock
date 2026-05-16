@@ -891,8 +891,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "rtk"
-version = "0.34.3"
+name = "rtk-windows"
+version = "0.1.0"
 dependencies = [
  "anyhow",
  "automod",

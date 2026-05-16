@@ -129,4 +129,4 @@ enabled = false
 
 ## Per-project filters
 
-Create `.rtk/filters.toml` in your project root to add custom filters or override built-ins. See [`src/filters/README.md`](https://github.com/rtk-ai/rtk/blob/master/src/filters/README.md) for the full TOML DSL reference.
+Create `.rtk/filters.toml` in your project root to add custom filters or override built-ins. See [`src/filters/README.md`](https://github.com/luysantanadev/rtk-windows.git/blob/master/src/filters/README.md) for the full TOML DSL reference.

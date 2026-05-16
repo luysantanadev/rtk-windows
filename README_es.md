@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://avatars.githubusercontent.com/u/258253854?v=4" alt="RTK - Rust Token Killer" width="500">
+  <img src="https://avatars.githubusercontent.com/u/258253854?v=4" alt="rtk-windows - Rust Token Killer" width="500">
 </p>
 
 <p align="center">
@@ -7,19 +7,16 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/rtk-ai/rtk/actions"><img src="https://github.com/rtk-ai/rtk/workflows/Security%20Check/badge.svg" alt="CI"></a>
-  <a href="https://github.com/rtk-ai/rtk/releases"><img src="https://img.shields.io/github/v/release/rtk-ai/rtk" alt="Release"></a>
+  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://github.com/luysantanadev/rtk-windows.git/workflows/Security%20Check/badge.svg" alt="CI"></a>
+  <a href="https://github.com/luysantanadev/rtk-windows.git/releases"><img src="https://img.shields.io/github/v/release/luysantanadev/rtk-windows" alt="Release"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-  <a href="https://discord.gg/RySmvNF5kF"><img src="https://img.shields.io/discord/1478373640461488159?label=Discord&logo=discord" alt="Discord"></a>
-  <a href="https://formulae.brew.sh/formula/rtk"><img src="https://img.shields.io/homebrew/v/rtk" alt="Homebrew"></a>
 </p>
 
 <p align="center">
   <a href="https://www.rtk-ai.app">Sitio web</a> &bull;
   <a href="#instalacion">Instalar</a> &bull;
   <a href="docs/TROUBLESHOOTING.md">Solucion de problemas</a> &bull;
-  <a href="docs/contributing/ARCHITECTURE.md">Arquitectura</a> &bull;
-  <a href="https://discord.gg/RySmvNF5kF">Discord</a>
+  <a href="docs/contributing/ARCHITECTURE.md">Arquitectura</a>
 </p>
 
 <p align="center">
@@ -33,11 +30,11 @@
 
 ---
 
-rtk filtra y comprime las salidas de comandos antes de que lleguen al contexto de tu LLM. Binario Rust unico, cero dependencias, <10ms de overhead.
+rtk-windows filtra y comprime las salidas de comandos antes de que lleguen al contexto de tu LLM. Binario Rust unico, cero dependencias, <10ms de overhead.
 
 ## Ahorro de tokens (sesion de 30 min en Claude Code)
 
-| Operacion | Frecuencia | Estandar | rtk | Ahorro |
+| Operacion | Frecuencia | Estandar | rtk-windows | Ahorro |
 |-----------|------------|----------|-----|--------|
 | `ls` / `tree` | 10x | 2,000 | 400 | -80% |
 | `cat` / `read` | 20x | 40,000 | 12,000 | -70% |
@@ -48,39 +45,34 @@ rtk filtra y comprime las salidas de comandos antes de que lleguen al contexto d
 
 ## Instalacion
 
-### Homebrew (recomendado)
+### Windows binary (recommended)
 
-```bash
-brew install rtk
-```
-
-### Instalacion rapida (Linux/macOS)
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
-```
+```powershell
+# Download rtk-windows-x86_64-pc-windows-msvc.zip from Releases
+# Extract rtk-windows.exe and add it to PATH
+``` 
 
 ### Cargo
 
-```bash
-cargo install --git https://github.com/rtk-ai/rtk
+```powershell
+cargo install --git https://github.com/luysantanadev/rtk-windows.git
 ```
 
 ### Verificacion
 
-```bash
-rtk --version   # Debe mostrar "rtk 0.27.x"
-rtk gain        # Debe mostrar estadisticas de ahorro
+```powershell
+rtk-windows --version   # Debe mostrar "rtk-windows 0.27.x"
+rtk-windows gain        # Debe mostrar estadisticas de ahorro
 ```
 
 ## Inicio rapido
 
-```bash
+```powershell
 # 1. Instalar hook para Claude Code (recomendado)
-rtk init --global
+rtk-windows init --global
 
 # 2. Reiniciar Claude Code, luego probar
-git status  # Automaticamente reescrito a rtk git status
+git status  # Automaticamente reescrito a rtk-windows git status
 ```
 
 ## Como funciona
@@ -88,7 +80,7 @@ git status  # Automaticamente reescrito a rtk git status
 ```
   Sin rtk:                                         Con rtk:
 
-  Claude  --git status-->  shell  -->  git          Claude  --git status-->  RTK  -->  git
+  Claude  --git status-->  shell  -->  git          Claude  --git status-->  rtk-windows  -->  git
     ^                                   |             ^                      |          |
     |        ~2,000 tokens (crudo)      |             |   ~200 tokens        | filtro   |
     +-----------------------------------+             +------- (filtrado) ---+----------+
@@ -104,44 +96,44 @@ Cuatro estrategias:
 ## Comandos
 
 ### Archivos
-```bash
-rtk ls .                        # Arbol de directorios optimizado
-rtk read file.rs                # Lectura inteligente
-rtk find "*.rs" .               # Resultados compactos
-rtk grep "pattern" .            # Busqueda agrupada por archivo
+```powershell
+rtk-windows ls .                        # Arbol de directorios optimizado
+rtk-windows read file.rs                # Lectura inteligente
+rtk-windows find "*.rs" .               # Resultados compactos
+rtk-windows grep "pattern" .            # Busqueda agrupada por archivo
 ```
 
 ### Git
-```bash
-rtk git status                  # Estado compacto
-rtk git log -n 10               # Commits en una linea
-rtk git diff                    # Diff condensado
-rtk git push                    # -> "ok main"
+```powershell
+rtk-windows git status                  # Estado compacto
+rtk-windows git log -n 10               # Commits en una linea
+rtk-windows git diff                    # Diff condensado
+rtk-windows git push                    # -> "ok main"
 ```
 
 ### Tests
-```bash
-rtk jest                        # Jest compacto
-rtk vitest                      # Vitest compacto
-rtk pytest                      # Tests Python (-90%)
-rtk go test                     # Tests Go (-90%)
-rtk cargo test                  # Tests Rust (-90%)
-rtk test <cmd>                  # Solo fallos (-90%)
+```powershell
+rtk-windows jest                        # Jest compacto
+rtk-windows vitest                      # Vitest compacto
+rtk-windows pytest                      # Tests Python (-90%)
+rtk-windows go test                     # Tests Go (-90%)
+rtk-windows cargo test                  # Tests Rust (-90%)
+rtk-windows test <cmd>                  # Solo fallos (-90%)
 ```
 
 ### Build & Lint
-```bash
-rtk lint                        # ESLint agrupado por regla
-rtk tsc                         # Errores TypeScript agrupados
-rtk cargo build                 # Build Cargo (-80%)
-rtk ruff check                  # Lint Python (-80%)
+```powershell
+rtk-windows lint                        # ESLint agrupado por regla
+rtk-windows tsc                         # Errores TypeScript agrupados
+rtk-windows cargo build                 # Build Cargo (-80%)
+rtk-windows ruff check                  # Lint Python (-80%)
 ```
 
 ### Analiticas
-```bash
-rtk gain                        # Estadisticas de ahorro
-rtk gain --graph                # Grafico ASCII (30 dias)
-rtk discover                    # Descubrir ahorros perdidos
+```powershell
+rtk-windows gain                        # Estadisticas de ahorro
+rtk-windows gain --graph                # Grafico ASCII (30 dias)
+rtk-windows discover                    # Descubrir ahorros perdidos
 ```
 
 ## Documentacion
@@ -152,9 +144,9 @@ rtk discover                    # Descubrir ahorros perdidos
 
 ## Contribuir
 
-Las contribuciones son bienvenidas. Abre un issue o PR en [GitHub](https://github.com/rtk-ai/rtk).
+Las contribuciones son bienvenidas. Abre un issue o PR en [GitHub](https://github.com/luysantanadev/rtk-windows.git).
 
-Unete a la comunidad en [Discord](https://discord.gg/RySmvNF5kF).
+Unete a la comunidad en [Discord]().
 
 ## Licencia
 
@@ -163,3 +155,6 @@ Licencia MIT - ver [LICENSE](LICENSE) para detalles.
 ## Descargo de responsabilidad
 
 Ver [DISCLAIMER.md](DISCLAIMER.md).
+
+
+

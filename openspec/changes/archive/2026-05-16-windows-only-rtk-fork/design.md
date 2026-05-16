@@ -5,7 +5,7 @@ Este fork já consolidou partes críticas de operação Windows nativa, incluind
 - Atualizações de documentação e instruções para PowerShell.
 - Estabilização prévia de testes de stream/spawn no Windows (registrado em `roadmap.md`).
 
-Ao mesmo tempo, o repositório ainda mantém trilhas Linux/macOS em scripts, documentação, CI e partes de integração de hooks. Como Linux/macOS seguem no upstream (`rtk-ai/rtk`), manter paridade neste fork aumenta custo e risco sem benefício direto.
+Ao mesmo tempo, o repositório ainda mantém trilhas Linux/macOS em scripts, documentação, CI e partes de integração de hooks. Como Linux/macOS seguem no upstream (`https://github.com/luysantanadev/rtk-windows.git`), manter paridade neste fork aumenta custo e risco sem benefício direto.
 
 Restrições consideradas:
 - Não degradar funcionalidades já concluídas de Copilot Windows native, migração legada e idempotência.

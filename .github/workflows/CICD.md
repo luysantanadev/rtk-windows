@@ -64,7 +64,7 @@ Trigger: push to develop | workflow_dispatch (not master) | Concurrency: cancel-
               │
      ┌────────▼──────────────────┐
      │ Build (windows-latest)    │
-     │ rtk-x86_64-pc-windows-    │
+     │ rtk-windows-x86_64-pc-    │
      │ msvc.zip                  │
      └────────┬──────────────────┘
               │
@@ -106,7 +106,7 @@ Trigger: push to master (only) | Concurrency: never cancelled
                                  │
                         ┌────────▼───────────┐
                         │ Build              │
-                        │ rtk-x86_64-pc-     │
+                        │ rtk-windows-x86_64-│
                         │ windows-msvc.zip   │
                         └────────┬───────────┘
                                  │
@@ -140,3 +140,4 @@ Trigger: workflow_dispatch
      GitHub Release  GitHub Release
      (stable badge)  (pre-release badge)
 ```
+

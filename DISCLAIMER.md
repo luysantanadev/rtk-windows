@@ -10,7 +10,7 @@ In no event shall the authors or copyright holders be liable for any claim, dama
 
 ## Precompiled Binaries
 
-Precompiled binaries are provided solely for convenience and are covered by the same license as the source code (Apache License 2.0). They are provided without warranties or conditions of any kind. You are responsible for verifying the integrity and suitability of any binary before use. Always verify checksums when available.
+Precompiled binaries are provided solely for convenience and are covered by the same license as the source code (MIT). They are provided without warranties or conditions of any kind. You are responsible for verifying the integrity and suitability of any binary before use. Always verify checksums when available.
 
 ## Third-Party Dependencies
 
@@ -26,4 +26,5 @@ This software collects anonymous, aggregate usage metrics by default and can be 
 
 ---
 
-See [LICENSE](LICENSE) for the full terms of the Apache License 2.0 under which this software is distributed.
+See [LICENSE](LICENSE) for the full terms of the MIT license under which this software is distributed.
+

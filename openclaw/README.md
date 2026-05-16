@@ -19,7 +19,7 @@ RTK must be installed and available in `$PATH`:
 ```bash
 brew install rtk
 # or
-curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/luysantanadev/rtk-windows/refs/heads/master/install.sh | sh
 ```
 
 ### Install the plugin
@@ -61,7 +61,7 @@ In `openclaw.json`:
 
 ## What gets rewritten
 
-Everything that `rtk rewrite` supports (30+ commands). See the [full command list](https://github.com/rtk-ai/rtk#commands).
+Everything that `rtk rewrite` supports (30+ commands). See the [full command list](https://github.com/luysantanadev/rtk-windows.git#commands).
 
 ## What's NOT rewritten
 

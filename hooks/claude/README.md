@@ -2,7 +2,7 @@
 
 > Part of [`hooks/`](../README.md) — see also [`src/hooks/`](../../src/hooks/README.md) for installation code
 
-Windows-only fork note: this integration is documented for Windows-native use in this repository. For Linux/macOS guidance, use upstream: https://github.com/rtk-ai/rtk.
+Windows-only fork note: this integration is documented for Windows-native use in this repository. For Linux/macOS guidance, use upstream: https://github.com/luysantanadev/rtk-windows.git.
 
 ## Specifics
 

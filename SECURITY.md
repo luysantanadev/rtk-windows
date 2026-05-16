@@ -16,7 +16,7 @@ If you discover a security vulnerability in RTK, please report it to the maintai
 
 ## Security Review Process for Pull Requests
 
-RTK is a CLI tool that executes shell commands and handles user input. PRs from external contributors undergo enhanced security review to protect against:
+rtk-windows is a CLI tool that executes shell commands and handles user input. PRs from external contributors undergo enhanced security review to protect against:
 
 - **Shell injection** (command execution vulnerabilities)
 - **Supply chain attacks** (malicious dependencies)
@@ -82,7 +82,7 @@ The following files are considered **high-risk** and trigger mandatory 2-reviewe
 
 Use the comprehensive security review process:
 
-```bash
+```powershell
 # If Claude Code available, run the dedicated skill:
 /rtk-pr-security <PR_NUMBER>
 
@@ -114,7 +114,7 @@ bash scripts/detect-dangerous-patterns.sh /tmp/pr.diff
 | `SystemTime::now() > ...` | Logic bombs | Delayed malicious behavior |
 | Base64/hex strings | Obfuscation | Hides malicious URLs/commands |
 
-See [Dangerous Patterns Reference](https://github.com/rtk-ai/rtk/wiki/Dangerous-Patterns) for exploitation examples.
+See [Dangerous Patterns Reference](https://github.com/luysantanadev/rtk-windows.git/wiki/Dangerous-Patterns) for exploitation examples.
 
 ---
 
@@ -209,9 +209,10 @@ Critical vulnerabilities (remote code execution, data exfiltration) may be fast-
 ## Contact
 
 - **Security issues**: security@rtk-ai.app
-- **General questions**: https://github.com/rtk-ai/rtk/discussions
+- **General questions**: https://github.com/luysantanadev/rtk-windows.git/discussions
 - **Maintainers**: @FlorianBruniaux (active fork maintainer)
 
 ---
 
 **Last updated**: 2026-03-05
+

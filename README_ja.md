@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://avatars.githubusercontent.com/u/258253854?v=4" alt="RTK - Rust Token Killer" width="500">
+  <img src="https://avatars.githubusercontent.com/u/258253854?v=4" alt="rtk-windows - Rust Token Killer" width="500">
 </p>
 
 <p align="center">
@@ -7,19 +7,16 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/rtk-ai/rtk/actions"><img src="https://github.com/rtk-ai/rtk/workflows/Security%20Check/badge.svg" alt="CI"></a>
-  <a href="https://github.com/rtk-ai/rtk/releases"><img src="https://img.shields.io/github/v/release/rtk-ai/rtk" alt="Release"></a>
+  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://github.com/luysantanadev/rtk-windows.git/workflows/Security%20Check/badge.svg" alt="CI"></a>
+  <a href="https://github.com/luysantanadev/rtk-windows.git/releases"><img src="https://img.shields.io/github/v/release/luysantanadev/rtk-windows" alt="Release"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-  <a href="https://discord.gg/RySmvNF5kF"><img src="https://img.shields.io/discord/1478373640461488159?label=Discord&logo=discord" alt="Discord"></a>
-  <a href="https://formulae.brew.sh/formula/rtk"><img src="https://img.shields.io/homebrew/v/rtk" alt="Homebrew"></a>
 </p>
 
 <p align="center">
   <a href="https://www.rtk-ai.app">ウェブサイト</a> &bull;
   <a href="#インストール">インストール</a> &bull;
   <a href="docs/TROUBLESHOOTING.md">トラブルシューティング</a> &bull;
-  <a href="docs/contributing/ARCHITECTURE.md">アーキテクチャ</a> &bull;
-  <a href="https://discord.gg/RySmvNF5kF">Discord</a>
+  <a href="docs/contributing/ARCHITECTURE.md">アーキテクチャ</a>
 </p>
 
 <p align="center">
@@ -33,11 +30,11 @@
 
 ---
 
-rtk はコマンド出力を LLM コンテキストに届く前にフィルタリング・圧縮します。単一の Rust バイナリ、依存関係ゼロ、オーバーヘッド 10ms 未満。
+rtk-windows はコマンド出力を LLM コンテキストに届く前にフィルタリング・圧縮します。単一の Rust バイナリ、依存関係ゼロ、オーバーヘッド 10ms 未満。
 
 ## トークン節約（30分の Claude Code セッション）
 
-| 操作 | 頻度 | 標準 | rtk | 節約 |
+| 操作 | 頻度 | 標準 | rtk-windows | 節約 |
 |------|------|------|-----|------|
 | `ls` / `tree` | 10x | 2,000 | 400 | -80% |
 | `cat` / `read` | 20x | 40,000 | 12,000 | -70% |
@@ -48,47 +45,42 @@ rtk はコマンド出力を LLM コンテキストに届く前にフィルタ�
 
 ## インストール
 
-### Homebrew（推奨）
+### Windows binary (recommended)
 
-```bash
-brew install rtk
-```
-
-### クイックインストール（Linux/macOS）
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
-```
+```powershell
+# Download rtk-windows-x86_64-pc-windows-msvc.zip from Releases
+# Extract rtk-windows.exe and add it to PATH
+``` 
 
 ### Cargo
 
-```bash
-cargo install --git https://github.com/rtk-ai/rtk
+```powershell
+cargo install --git https://github.com/luysantanadev/rtk-windows.git
 ```
 
 ### 確認
 
-```bash
-rtk --version   # "rtk 0.27.x" と表示されるはず
-rtk gain        # トークン節約統計が表示されるはず
+```powershell
+rtk-windows --version   # "rtk-windows 0.27.x" と表示されるはず
+rtk-windows gain        # トークン節約統計が表示されるはず
 ```
 
 ## クイックスタート
 
-```bash
+```powershell
 # 1. Claude Code 用フックをインストール（推奨）
-rtk init --global
+rtk-windows init --global
 
 # 2. Claude Code を再起動してテスト
-git status  # 自動的に rtk git status に書き換え
+git status  # 自動的に rtk-windows git status に書き換え
 ```
 
 ## 仕組み
 
 ```
-  rtk なし：                                       rtk あり：
+  rtk-windows なし：                                       rtk-windows あり：
 
-  Claude  --git status-->  shell  -->  git          Claude  --git status-->  RTK  -->  git
+  Claude  --git status-->  shell  -->  git          Claude  --git status-->  rtk-windows  -->  git
     ^                                   |             ^                      |          |
     |        ~2,000 tokens（生出力）     |             |   ~200 tokens        | フィルタ |
     +-----------------------------------+             +------- （圧縮済）----+----------+
@@ -104,43 +96,43 @@ git status  # 自動的に rtk git status に書き換え
 ## コマンド
 
 ### ファイル
-```bash
-rtk ls .                        # 最適化されたディレクトリツリー
-rtk read file.rs                # スマートファイル読み取り
-rtk find "*.rs" .               # コンパクトな検索結果
-rtk grep "pattern" .            # ファイル別グループ化検索
+```powershell
+rtk-windows ls .                        # 最適化されたディレクトリツリー
+rtk-windows read file.rs                # スマートファイル読み取り
+rtk-windows find "*.rs" .               # コンパクトな検索結果
+rtk-windows grep "pattern" .            # ファイル別グループ化検索
 ```
 
 ### Git
-```bash
-rtk git status                  # コンパクトなステータス
-rtk git log -n 10               # 1行コミット
-rtk git diff                    # 圧縮された diff
-rtk git push                    # -> "ok main"
+```powershell
+rtk-windows git status                  # コンパクトなステータス
+rtk-windows git log -n 10               # 1行コミット
+rtk-windows git diff                    # 圧縮された diff
+rtk-windows git push                    # -> "ok main"
 ```
 
 ### テスト
-```bash
-rtk jest                        # Jest コンパクト
-rtk vitest                      # Vitest コンパクト
-rtk pytest                      # Python テスト（-90%）
-rtk go test                     # Go テスト（-90%）
-rtk test <cmd>                  # 失敗のみ表示（-90%）
+```powershell
+rtk-windows jest                        # Jest コンパクト
+rtk-windows vitest                      # Vitest コンパクト
+rtk-windows pytest                      # Python テスト（-90%）
+rtk-windows go test                     # Go テスト（-90%）
+rtk-windows test <cmd>                  # 失敗のみ表示（-90%）
 ```
 
 ### ビルド & リント
-```bash
-rtk lint                        # ESLint ルール別グループ化
-rtk tsc                         # TypeScript エラーグループ化
-rtk cargo build                 # Cargo ビルド（-80%）
-rtk ruff check                  # Python リント（-80%）
+```powershell
+rtk-windows lint                        # ESLint ルール別グループ化
+rtk-windows tsc                         # TypeScript エラーグループ化
+rtk-windows cargo build                 # Cargo ビルド（-80%）
+rtk-windows ruff check                  # Python リント（-80%）
 ```
 
 ### 分析
-```bash
-rtk gain                        # 節約統計
-rtk gain --graph                # ASCII グラフ（30日間）
-rtk discover                    # 見逃した節約機会を発見
+```powershell
+rtk-windows gain                        # 節約統計
+rtk-windows gain --graph                # ASCII グラフ（30日間）
+rtk-windows discover                    # 見逃した節約機会を発見
 ```
 
 ## ドキュメント
@@ -151,9 +143,9 @@ rtk discover                    # 見逃した節約機会を発見
 
 ## コントリビュート
 
-コントリビューション歓迎！[GitHub](https://github.com/rtk-ai/rtk) で issue または PR を作成してください。
+コントリビューション歓迎！[GitHub](https://github.com/luysantanadev/rtk-windows.git) で issue または PR を作成してください。
 
-[Discord](https://discord.gg/RySmvNF5kF) コミュニティに参加。
+[Discord]() コミュニティに参加。
 
 ## ライセンス
 
@@ -162,3 +154,6 @@ MIT ライセンス - 詳細は [LICENSE](LICENSE) を参照。
 ## 免責事項
 
 詳細は [DISCLAIMER.md](DISCLAIMER.md) を参照。
+
+
+

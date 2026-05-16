@@ -1,4 +1,4 @@
-# RTK Tracking API Documentation
+# rtk-windows Tracking API Documentation
 
 Comprehensive documentation for RTK's token savings tracking system.
 
@@ -26,7 +26,7 @@ RTK's tracking system records every command execution to provide analytics on to
 ### Data Flow
 
 ```
-rtk command execution
+rtk-windows command execution
   ↓
 TimedExecution::start()
   ↓
@@ -40,14 +40,12 @@ SQLite database (~/.local/share/rtk/tracking.db)
   ↓
 Aggregation APIs (get_summary, get_all_days, etc.)
   ↓
-CLI output (rtk gain) or JSON/CSV export
+CLI output (rtk-windows gain) or JSON/CSV export
 ```
 
 ### Storage Location
 
-- **Linux**: `~/.local/share/rtk/tracking.db`
-- **macOS**: `~/Library/Application Support/rtk/tracking.db`
-- **Windows**: `%APPDATA%\rtk\tracking.db`
+- **Windows**: `$env:APPDATA\\rtk\\tracking.db`
 
 ### Data Retention
 
@@ -74,7 +72,7 @@ impl Tracker {
     pub fn record(
         &self,
         original_cmd: &str,      // Standard command (e.g., "ls -la")
-        rtk_cmd: &str,            // RTK command (e.g., "rtk ls")
+        rtk_cmd: &str,            // rtk-windows command (e.g., "rtk-windows ls")
         input_tokens: usize,      // Estimated input tokens
         output_tokens: usize,     // Actual output tokens
         exec_time_ms: u64,        // Execution time in milliseconds
@@ -177,7 +175,7 @@ Individual command record from history.
 ```rust
 pub struct CommandRecord {
     pub timestamp: DateTime<Utc>, // UTC timestamp
-    pub rtk_cmd: String,           // RTK command used
+    pub rtk_cmd: String,           // rtk-windows command used
     pub saved_tokens: usize,       // Tokens saved
     pub savings_pct: f64,          // Savings percentage
 }
@@ -234,7 +232,7 @@ fn main() -> anyhow::Result<()> {
     let output = execute_rtk_command()?;
 
     // Track execution
-    timer.track("ls -la", "rtk ls", &input, &output);
+    timer.track("ls -la", "rtk-windows ls", &input, &output);
 
     Ok(())
 }
@@ -286,7 +284,7 @@ fn main() -> anyhow::Result<()> {
     execute_streaming_command()?;
 
     // Track timing only (input_tokens=0, output_tokens=0)
-    timer.track_passthrough("git tag --list", "rtk git tag --list");
+    timer.track_passthrough("git tag --list", "rtk-windows git tag --list");
 
     Ok(())
 }
@@ -357,7 +355,7 @@ date,commands,input_tokens,output_tokens,saved_tokens,savings_pct,total_time_ms,
 
 ```yaml
 # .github/workflows/track-rtk-savings.yml
-name: Track RTK Savings
+name: Track rtk-windows Savings
 
 on:
   schedule:
@@ -368,12 +366,12 @@ jobs:
   track-savings:
     runs-on: ubuntu-latest
     steps:
-      - name: Install RTK
-        run: cargo install --git https://github.com/rtk-ai/rtk
+      - name: Install rtk-windows
+        run: cargo install --git https://github.com/luysantanadev/rtk-windows.git
 
       - name: Export weekly stats
         run: |
-          rtk gain --weekly --format json > rtk-weekly.json
+          rtk-windows gain --weekly --format json > rtk-weekly.json
           cat rtk-weekly.json
 
       - name: Upload artifact
@@ -390,7 +388,7 @@ jobs:
           SAVINGS=$(jq -r '.[0].saved_tokens' rtk-weekly.json)
           PCT=$(jq -r '.[0].savings_pct' rtk-weekly.json)
           curl -X POST -H 'Content-type: application/json' \
-            --data "{\"text\":\"📊 RTK Weekly: ${SAVINGS} tokens saved (${PCT}%)\"}" \
+            --data "{\"text\":\"📊 rtk-windows Weekly: ${SAVINGS} tokens saved (${PCT}%)\"}" \
             $SLACK_WEBHOOK
 ```
 
@@ -399,14 +397,14 @@ jobs:
 ```python
 #!/usr/bin/env python3
 """
-Export RTK metrics to Grafana/Datadog/etc.
+Export rtk-windows metrics to Grafana/Datadog/etc.
 """
 import json
 import subprocess
 from datetime import datetime
 
 def get_rtk_metrics():
-    """Fetch RTK metrics as JSON."""
+    """Fetch rtk-windows metrics as JSON."""
     result = subprocess.run(
         ["rtk", "gain", "--all", "--format", "json"],
         capture_output=True,
@@ -439,12 +437,12 @@ if __name__ == "__main__":
     print(f"Exported {len(metrics.get('daily', []))} days to Datadog")
 ```
 
-### Rust Integration (Using RTK as Library)
+### Rust Integration (Using rtk-windows as Library)
 
 ```rust
 // In your Cargo.toml
 // [dependencies]
-// rtk = { git = "https://github.com/rtk-ai/rtk" }
+// rtk-windows = { git = "https://github.com/luysantanadev/rtk-windows.git" }
 
 use rtk::tracking::{Tracker, TimedExecution};
 use anyhow::Result;
@@ -490,7 +488,7 @@ CREATE TABLE commands (
     id INTEGER PRIMARY KEY,
     timestamp TEXT NOT NULL,           -- RFC3339 UTC timestamp
     original_cmd TEXT NOT NULL,        -- Original command (e.g., "ls -la")
-    rtk_cmd TEXT NOT NULL,             -- RTK command (e.g., "rtk ls")
+    rtk_cmd TEXT NOT NULL,             -- rtk-windows command (e.g., "rtk-windows ls")
     input_tokens INTEGER NOT NULL,     -- Estimated input tokens
     output_tokens INTEGER NOT NULL,    -- Actual output tokens
     saved_tokens INTEGER NOT NULL,     -- input_tokens - output_tokens
@@ -539,7 +537,7 @@ let _ = conn.execute(
 ## Security & Privacy
 
 - **Local storage only**: Tracking database never leaves the machine
-- **Telemetry requires consent**: RTK can send a daily anonymous usage ping (version, OS, command counts, token savings). Disabled by default, requires explicit consent via `rtk init` or `rtk telemetry enable`. Manage with `rtk telemetry status/disable/forget`. Override: `RTK_TELEMETRY_DISABLED=1`
+- **Telemetry requires consent**: rtk-windows can send a daily anonymous usage ping (version, OS, command counts, token savings). Disabled by default, requires explicit consent via `rtk-windows init` or `rtk-windows telemetry enable`. Manage with `rtk-windows telemetry status/disable/forget`. Override: `RTK_TELEMETRY_DISABLED=1`
 - **User control**: Users can delete `~/.local/share/rtk/tracking.db` anytime
 - **90-day retention**: Old data automatically purged
 
@@ -548,15 +546,15 @@ let _ = conn.execute(
 ### Database locked error
 
 If you see "database is locked" errors:
-- Ensure only one RTK process writes at a time
+- Ensure only one rtk-windows process writes at a time
 - Check file permissions on `~/.local/share/rtk/tracking.db`
-- Delete and recreate: `rm ~/.local/share/rtk/tracking.db && rtk gain`
+- Delete and recreate: `rm ~/.local/share/rtk/tracking.db && rtk-windows gain`
 
 ### Missing exec_time_ms column
 
-Older databases may not have the `exec_time_ms` column. RTK automatically migrates on first use, but you can force it:
+Older databases may not have the `exec_time_ms` column. rtk-windows automatically migrates on first use, but you can force it:
 
-```bash
+```powershell
 sqlite3 ~/.local/share/rtk/tracking.db \
   "ALTER TABLE commands ADD COLUMN exec_time_ms INTEGER DEFAULT 0"
 ```
@@ -579,5 +577,6 @@ Planned improvements (contributions welcome):
 ## See Also
 
 - [README.md](../README.md) - Main project documentation
-- [COMMAND_AUDIT.md](../claudedocs/COMMAND_AUDIT.md) - List of all RTK commands
+- [COMMAND_AUDIT.md](../claudedocs/COMMAND_AUDIT.md) - List of all rtk-windows commands
 - [Rust docs](https://docs.rs/) - Run `cargo doc --open` for API docs
+

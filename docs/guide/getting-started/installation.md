@@ -11,13 +11,13 @@ sidebar:
 
 Two unrelated projects share the name `rtk`. Make sure you install the right one:
 
-- **Rust Token Killer** (`rtk-ai/rtk`) — this project, a token-saving CLI proxy
+- **Rust Token Killer** (`https://github.com/luysantanadev/rtk-windows.git`) — this project, a token-saving CLI proxy
 - **Rust Type Kit** (`reachingforthejack/rtk`) — a different tool for generating Rust types
 
 The easiest way to verify you have the correct one: run `rtk gain`. It should display token savings stats. If it returns "command not found", you either have the wrong package or RTK is not installed.
 
 > Windows-only fork notice: this repository supports Windows native only.
-> For Linux/macOS, use upstream: https://github.com/rtk-ai/rtk
+> For Linux/macOS, use upstream: https://github.com/luysantanadev/rtk-windows.git
 
 ## Check before installing
 
@@ -30,7 +30,7 @@ If both commands work, RTK is already installed. Skip to [Project initialization
 
 ## Windows binary (recommended)
 
-Download `rtk-x86_64-pc-windows-msvc.zip` from [GitHub releases](https://github.com/rtk-ai/rtk/releases), extract `rtk.exe`, and place it in a folder on your PATH.
+Download `rtk-x86_64-pc-windows-msvc.zip` from [GitHub releases](https://github.com/luysantanadev/rtk-windows.git/releases), extract `rtk.exe`, and place it in a folder on your PATH.
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:USERPROFILE\\bin" | Out-Null
@@ -54,20 +54,20 @@ If needed, add the install folder to PATH:
 :::
 
 ```powershell
-cargo install --git https://github.com/rtk-ai/rtk rtk
+cargo install --git https://github.com/luysantanadev/rtk-windows.git rtk
 ```
 
 ## Pre-built binaries
 
-Download from [GitHub releases](https://github.com/rtk-ai/rtk/releases):
+Download from [GitHub releases](https://github.com/luysantanadev/rtk-windows.git/releases):
 - Windows: `rtk-x86_64-pc-windows-msvc.zip`
 
 Extract the zip and place `rtk.exe` in a directory on your PATH. Run RTK from Command Prompt, PowerShell, or Windows Terminal.
 
 ## Linux/macOS users
 
-This fork does not provide Linux/macOS support. Use upstream `rtk-ai/rtk`:
-https://github.com/rtk-ai/rtk
+This fork does not provide Linux/macOS support. Use upstream `https://github.com/luysantanadev/rtk-windows.git`:
+https://github.com/luysantanadev/rtk-windows.git
 
 ## Verify installation
 

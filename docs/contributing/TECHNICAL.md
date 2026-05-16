@@ -199,12 +199,12 @@ Result: "rtk cargo fmt --all && rtk cargo test 2>&1 | tail -20"
   |
   v
 LLM Agent executes rewritten command
-  (bash handles && and |, each rtk invocation is a separate process)
+  (the command shell handles && and |, each rtk invocation is a separate process)
 ```
 
 Key design decisions:
 - **Lexer-based tokenization**: A single-pass state machine (`lexer.rs`) handles all shell constructs (quotes, escapes, redirects, operators). Used for both compound splitting and redirect stripping.
-- **Segment-level rewriting**: Compound commands are split by operators, each segment rewritten independently. Bash recombines them at execution time.
+- **Segment-level rewriting**: Compound commands are split by operators, each segment rewritten independently. The shell recombines them at execution time.
 - **Pipe semantics**: Only the left side of `|` is rewritten. The pipe consumer (grep, head, wc) runs raw. `find`/`fd` before a pipe is never rewritten (output format incompatible with xargs).
 - **Double env prefix handling**: `classify_command()` strips env prefixes to match the underlying command against rules. `rewrite_segment()` extracts the same prefix separately to re-prepend it to the rewritten command.
 - **Fallback contract**: If any segment fails to match, it stays raw. `rewrite_command()` returns `None` only when zero segments were rewritten.

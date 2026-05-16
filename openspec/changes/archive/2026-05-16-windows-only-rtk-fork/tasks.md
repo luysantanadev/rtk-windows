@@ -31,7 +31,7 @@
 
 - [x] 5.1 Atualizar README principal e guias para afirmar suporte Windows-only com exemplos PowerShell/cmd.
 - [x] 5.2 Atualizar docs de hooks/agentes para remover instruções de suporte ativo Linux/macOS neste fork.
-- [x] 5.3 Adicionar seção "Diferenças do fork vs upstream" com redirecionamento explícito de usuários Linux/macOS para `rtk-ai/rtk`.
+- [x] 5.3 Adicionar seção "Diferenças do fork vs upstream" com redirecionamento explícito de usuários Linux/macOS para `https://github.com/luysantanadev/rtk-windows.git`.
 - [x] 5.4 Revisar documentação para eliminar inconsistências de plataforma e validar links/comandos.
 
 ## 6. Release and Breaking-change Communication

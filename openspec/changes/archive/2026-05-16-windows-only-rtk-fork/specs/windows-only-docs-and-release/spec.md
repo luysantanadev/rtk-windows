@@ -8,7 +8,7 @@ Primary documentation MUST state that this fork is Windows-only and uses PowerSh
 - **THEN** the guidance SHALL prioritize Windows-native commands and SHALL not present Linux/macOS as actively supported platforms here
 
 ### Requirement: Fork vs upstream differentiation
-Documentation SHALL include a dedicated section that explains differences between this fork and upstream `rtk-ai/rtk`.
+Documentation SHALL include a dedicated section that explains differences between this fork and upstream `https://github.com/luysantanadev/rtk-windows.git`.
 
 #### Scenario: Linux/macOS user discovers fork docs
 - **WHEN** a Linux/macOS user checks support status in this fork
