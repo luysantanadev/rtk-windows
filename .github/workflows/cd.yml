@@ -36,20 +36,21 @@ jobs:
         run: |
           LATEST_TAG=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-version:refname | grep -v '-' | head -1)
           if [ -z "$LATEST_TAG" ]; then
-            # No stable release tag yet — bootstrap from Cargo.toml version
-            CARGO_VERSION=$(grep '^version' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
-            LATEST_TAG="v${CARGO_VERSION}"
-            echo "No release tag found — using Cargo.toml baseline: $LATEST_TAG"
+            # No stable release tag yet — bootstrap at v0.0.0 so first release lands on v0.1.0
+            LATEST_VERSION="0.0.0"
+            echo "No release tag found — bootstrapping at v0.0.0 (first release will be v0.1.0+)"
+            COMMITS=$(git log HEAD --format="%s")
+          else
+            LATEST_VERSION="${LATEST_TAG#v}"
+            echo "Latest release: $LATEST_TAG"
+            COMMITS=$(git log "${LATEST_TAG}..HEAD" --format="%s")
           fi
-          LATEST_VERSION="${LATEST_TAG#v}"
-          echo "Latest release: $LATEST_TAG"
 
-          # ── Analyse conventional commits since that tag ──
-          COMMITS=$(git log "${LATEST_TAG}..HEAD" --format="%s")
+          # ── Analyse conventional commits ──
           HAS_BREAKING=$(echo "$COMMITS" | grep -cE '^[a-z]+(\(.+\))?!:' || true)
           HAS_FEAT=$(echo "$COMMITS"    | grep -cE '^feat(\(.+\))?:'     || true)
           HAS_FIX=$(echo "$COMMITS"     | grep -cE '^fix(\(.+\))?:'      || true)
-          echo "Commits since ${LATEST_TAG} — breaking=$HAS_BREAKING feat=$HAS_FEAT fix=$HAS_FIX"
+          echo "Commits since v${LATEST_VERSION} — breaking=$HAS_BREAKING feat=$HAS_FEAT fix=$HAS_FIX"
 
           # ── Compute next version (matches release-please observed behaviour) ──
           # Pre-1.0 with bump-minor-pre-major: breaking → minor, feat → minor, fix → patch
