@@ -1003,7 +1003,8 @@ fn insert_hook_entry(root: &mut serde_json::Value, hook_command: &str) -> Result
         "hooks": [{
             "type": "command",
             "command": hook_command
-        }]
+        }],
+        "rtk_hook_version": super::constants::CURRENT_BINARY_HOOK_VERSION
     }));
     Ok(())
 }
@@ -1019,15 +1020,59 @@ fn hook_already_present(root: &serde_json::Value, hook_command: &str) -> bool {
         Some(arr) => arr,
         None => return false,
     };
+    let current_version = super::constants::CURRENT_BINARY_HOOK_VERSION;
 
-    pre_tool_use_array
+    // Check if any entry matches the hook command (legacy or new)
+    let has_matching_command = pre_tool_use_array
         .iter()
         .filter_map(|entry| entry.get("hooks")?.as_array())
         .flatten()
         .filter_map(|hook| hook.get("command")?.as_str())
         .any(|cmd| {
             cmd == hook_command || cmd == CLAUDE_HOOK_COMMAND || cmd.contains(REWRITE_HOOK_FILE)
-        })
+        });
+
+    if !has_matching_command {
+        return false;
+    }
+
+    // For legacy hooks (rtk-rewrite.sh), consider them "already present"
+    // For new binary hooks, require matching version
+    let has_legacy_hook = pre_tool_use_array
+        .iter()
+        .filter_map(|entry| entry.get("hooks")?.as_array())
+        .flatten()
+        .filter_map(|hook| hook.get("command")?.as_str())
+        .any(|cmd| cmd.contains(REWRITE_HOOK_FILE));
+
+    if has_legacy_hook {
+        return true;
+    }
+
+    // New binary hook: check version matches (or accept if no version field for backward compat)
+    pre_tool_use_array.iter().any(|entry| {
+        let has_binary_hook = entry
+            .get("hooks")
+            .and_then(|h| h.as_array())
+            .map(|hooks| {
+                hooks.iter().any(|hook| {
+                    hook.get("command")
+                        .and_then(|c| c.as_str())
+                        .is_some_and(|cmd| cmd == CLAUDE_HOOK_COMMAND)
+                })
+            })
+            .unwrap_or(false);
+
+        if !has_binary_hook {
+            return false;
+        }
+
+        // If version field exists, it must match; otherwise accept for backward compat
+        match entry.get("rtk_hook_version").and_then(|v| v.as_u64()) {
+            Some(v) => v == current_version as u64,
+            None => true, // No version field = old installation, accept it
+        }
+    })
 }
 
 /// Default mode: hook + slim RTK.md + @RTK.md reference

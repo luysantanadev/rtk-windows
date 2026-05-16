@@ -1,8 +1,8 @@
 //! Detects whether RTK hooks are installed and warns if they are outdated.
 
 use super::constants::{
-    CLAUDE_DIR, CLAUDE_HOOK_COMMAND, HOOKS_SUBDIR, PRE_TOOL_USE_KEY, REWRITE_HOOK_FILE,
-    SETTINGS_JSON,
+    CLAUDE_DIR, CLAUDE_HOOK_COMMAND, CURRENT_BINARY_HOOK_VERSION, HOOKS_SUBDIR, PRE_TOOL_USE_KEY,
+    REWRITE_HOOK_FILE, SETTINGS_JSON,
 };
 use crate::core::constants::RTK_DATA_DIR;
 use std::path::PathBuf;
@@ -35,14 +35,19 @@ pub fn status() -> HookStatus {
     }
 
     // Check for new binary command in settings.json first
-    if binary_hook_registered(&claude_dir) {
-        // If old script file still exists alongside new command, report Outdated
-        // (migration not complete — user should run `rtk init -g` to clean up)
-        let old_hook = claude_dir.join(HOOKS_SUBDIR).join(REWRITE_HOOK_FILE);
-        if old_hook.exists() {
+    if let Some(registered_version) = binary_hook_version(&claude_dir) {
+        if registered_version >= CURRENT_BINARY_HOOK_VERSION {
+            // Binary hook registered with current or newer version
+            // If old script still exists alongside new command, report Outdated
+            let old_hook = claude_dir.join(HOOKS_SUBDIR).join(REWRITE_HOOK_FILE);
+            if old_hook.exists() {
+                return HookStatus::Outdated;
+            }
+            return HookStatus::Ok;
+        } else {
+            // Binary hook registered but with outdated version
             return HookStatus::Outdated;
         }
-        return HookStatus::Ok;
     }
 
     // Fall back to legacy script file check
@@ -59,31 +64,49 @@ pub fn status() -> HookStatus {
     }
 }
 
-/// Check if the native binary command is registered in settings.json
+/// Check if the native binary command is registered in settings.json.
+/// Delegates to `binary_hook_version` — returns true if any version is registered.
+#[allow(dead_code)]
 fn binary_hook_registered(claude_dir: &std::path::Path) -> bool {
+    binary_hook_version(claude_dir).is_some()
+}
+
+/// Read the registered binary hook version from settings.json.
+/// Returns `None` if the hook is not registered or the version field is missing.
+pub fn binary_hook_version(claude_dir: &std::path::Path) -> Option<u8> {
     let settings_path = claude_dir.join(SETTINGS_JSON);
-    let content = match std::fs::read_to_string(&settings_path) {
-        Ok(c) if !c.trim().is_empty() => c,
-        _ => return false,
-    };
-    let root: serde_json::Value = match serde_json::from_str(&content) {
-        Ok(v) => v,
-        Err(_) => return false,
-    };
-    let pre_tool_use = match root
+    let content = std::fs::read_to_string(&settings_path).ok()?;
+    if content.trim().is_empty() {
+        return None;
+    }
+    let root: serde_json::Value = serde_json::from_str(&content).ok()?;
+    let pre_tool_use = root
         .get("hooks")
         .and_then(|h| h.get(PRE_TOOL_USE_KEY))
-        .and_then(|p| p.as_array())
-    {
-        Some(arr) => arr,
-        None => return false,
-    };
+        .and_then(|p| p.as_array())?;
+    // Find the entry with CLAUDE_HOOK_COMMAND and read its version
     pre_tool_use
         .iter()
-        .filter_map(|entry| entry.get("hooks")?.as_array())
-        .flatten()
-        .filter_map(|hook| hook.get("command")?.as_str())
-        .any(|cmd| cmd == CLAUDE_HOOK_COMMAND)
+        .filter_map(|entry| {
+            let has_hook = entry
+                .get("hooks")
+                .and_then(|h| h.as_array())
+                .map(|hooks| {
+                    hooks.iter().any(|hook| {
+                        hook.get("command")
+                            .and_then(|c| c.as_str())
+                            .is_some_and(|cmd| cmd == CLAUDE_HOOK_COMMAND)
+                    })
+                })
+                .unwrap_or(false);
+            if has_hook {
+                entry.get("rtk_hook_version").and_then(|v| v.as_u64())
+            } else {
+                None
+            }
+        })
+        .next()
+        .map(|v| v as u8)
 }
 
 /// Check if the installed hook is missing or outdated, warn once per day.
@@ -119,6 +142,15 @@ fn check_and_warn() -> Option<()> {
     let _ = std::fs::write(&marker, b"");
 
     Some(())
+}
+
+/// Check if the registered binary hook version is outdated.
+/// Returns `true` if the hook is registered but with an older version.
+pub fn is_binary_hook_outdated(claude_dir: &std::path::Path) -> bool {
+    match binary_hook_version(claude_dir) {
+        Some(registered) => registered < CURRENT_BINARY_HOOK_VERSION,
+        None => false, // Not registered — not outdated, just missing
+    }
 }
 
 pub fn parse_hook_version(content: &str) -> u8 {
@@ -319,5 +351,87 @@ mod tests {
             "Expected valid HookStatus variant, got {:?}",
             s
         );
+    }
+
+    #[test]
+    fn test_binary_hook_version_reads_from_settings() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let settings = tmp.path().join(SETTINGS_JSON);
+        let content = serde_json::json!({
+            "hooks": {
+                "PreToolUse": [{
+                    "matcher": "Bash",
+                    "hooks": [{"type": "command", "command": "rtk hook claude"}],
+                    "rtk_hook_version": 4
+                }]
+            }
+        });
+        std::fs::write(&settings, content.to_string()).unwrap();
+        let version = binary_hook_version(tmp.path());
+        assert_eq!(version, Some(4));
+    }
+
+    #[test]
+    fn test_binary_hook_version_missing_field() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let settings = tmp.path().join(SETTINGS_JSON);
+        let content = serde_json::json!({
+            "hooks": {
+                "PreToolUse": [{
+                    "matcher": "Bash",
+                    "hooks": [{"type": "command", "command": "rtk hook claude"}]
+                }]
+            }
+        });
+        std::fs::write(&settings, content.to_string()).unwrap();
+        let version = binary_hook_version(tmp.path());
+        assert_eq!(version, None);
+    }
+
+    #[test]
+    fn test_binary_hook_version_not_registered() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let version = binary_hook_version(tmp.path());
+        assert_eq!(version, None);
+    }
+
+    #[test]
+    fn test_is_binary_hook_outdated_current_version() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let settings = tmp.path().join(SETTINGS_JSON);
+        let content = serde_json::json!({
+            "hooks": {
+                "PreToolUse": [{
+                    "matcher": "Bash",
+                    "hooks": [{"type": "command", "command": "rtk hook claude"}],
+                    "rtk_hook_version": CURRENT_BINARY_HOOK_VERSION
+                }]
+            }
+        });
+        std::fs::write(&settings, content.to_string()).unwrap();
+        assert!(!is_binary_hook_outdated(tmp.path()));
+    }
+
+    #[test]
+    fn test_is_binary_hook_outdated_old_version() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let settings = tmp.path().join(SETTINGS_JSON);
+        let content = serde_json::json!({
+            "hooks": {
+                "PreToolUse": [{
+                    "matcher": "Bash",
+                    "hooks": [{"type": "command", "command": "rtk hook claude"}],
+                    "rtk_hook_version": 1
+                }]
+            }
+        });
+        std::fs::write(&settings, content.to_string()).unwrap();
+        assert!(is_binary_hook_outdated(tmp.path()));
+    }
+
+    #[test]
+    fn test_is_binary_hook_outdated_not_registered() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        assert!(!is_binary_hook_outdated(tmp.path()));
     }
 }

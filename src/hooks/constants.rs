@@ -13,6 +13,10 @@ pub const CLAUDE_HOOK_COMMAND: &str = "rtk hook claude";
 /// Native Rust hook command for Cursor (replaces rtk-rewrite.sh).
 pub const CURSOR_HOOK_COMMAND: &str = "rtk hook cursor";
 
+/// Current version of the binary hook registration in settings.json.
+/// Increment when the hook entry structure changes (e.g., new fields added).
+pub const CURRENT_BINARY_HOOK_VERSION: u8 = 4;
+
 pub const CONFIG_DIR: &str = ".config";
 pub const OPENCODE_SUBDIR: &str = "opencode";
 pub const PLUGIN_SUBDIR: &str = "plugins";
