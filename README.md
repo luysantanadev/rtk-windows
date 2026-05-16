@@ -11,7 +11,6 @@
   <a href="https://github.com/rtk-ai/rtk/releases"><img src="https://img.shields.io/github/v/release/rtk-ai/rtk" alt="Release"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
   <a href="https://discord.gg/RySmvNF5kF"><img src="https://img.shields.io/discord/1470188214710046894?label=Discord&logo=discord" alt="Discord"></a>
-  <a href="https://formulae.brew.sh/formula/rtk"><img src="https://img.shields.io/homebrew/v/rtk" alt="Homebrew"></a>
 </p>
 
 <p align="center">
@@ -35,6 +34,9 @@
 
 rtk filters and compresses command outputs before they reach your LLM context. Single Rust binary, 100+ supported commands, <10ms overhead.
 
+> **Windows-only fork notice (BREAKING):** This repository supports **Windows native** only (PowerShell/cmd).
+> For Linux/macOS, use the upstream project at https://github.com/rtk-ai/rtk.
+
 ## Token Savings (30-min Claude Code Session)
 
 | Operation | Frequency | Standard | rtk | Savings |
@@ -57,41 +59,47 @@ rtk filters and compresses command outputs before they reach your LLM context. S
 
 ## Installation
 
-### Homebrew (recommended)
+### Windows binary (recommended)
 
-```bash
-brew install rtk
+Download `rtk-x86_64-pc-windows-msvc.zip` from [releases](https://github.com/rtk-ai/rtk/releases), extract `rtk.exe`, and place it in your PATH.
+
+```powershell
+# Example user-scoped install directory
+New-Item -ItemType Directory -Force "$env:USERPROFILE\\bin" | Out-Null
+Copy-Item .\rtk.exe "$env:USERPROFILE\\bin\\rtk.exe" -Force
 ```
 
-### Quick Install (Linux/macOS)
+Add the install folder to PATH if needed:
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
+```powershell
+[Environment]::SetEnvironmentVariable(
+  "Path",
+  $env:Path + ";$env:USERPROFILE\\bin",
+  "User"
+)
 ```
-
-> Installs to `~/.local/bin`. Add to PATH if needed:
-> ```bash
-> echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc  # or ~/.zshrc
-> ```
 
 ### Cargo
 
-```bash
+```powershell
 cargo install --git https://github.com/rtk-ai/rtk
 ```
 
 ### Pre-built Binaries
 
 Download from [releases](https://github.com/rtk-ai/rtk/releases):
-- macOS: `rtk-x86_64-apple-darwin.tar.gz` / `rtk-aarch64-apple-darwin.tar.gz`
-- Linux: `rtk-x86_64-unknown-linux-musl.tar.gz` / `rtk-aarch64-unknown-linux-gnu.tar.gz`
 - Windows: `rtk-x86_64-pc-windows-msvc.zip`
 
-> **Windows users**: Extract the zip and place `rtk.exe` somewhere in your PATH (e.g. `C:\Users\<you>\.local\bin`). Run RTK from **Command Prompt**, **PowerShell**, or **Windows Terminal** — do not double-click the `.exe` (it will flash and close). For the best experience, use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) where the full hook system works natively. See [Windows setup](#windows) below for details.
+> Extract the zip and place `rtk.exe` somewhere in your PATH. Run RTK from **Command Prompt**, **PowerShell**, or **Windows Terminal**.
+
+### Linux/macOS users
+
+This fork is Windows-only. For Linux/macOS support, use upstream:
+https://github.com/rtk-ai/rtk
 
 ### Verify Installation
 
-```bash
+```powershell
 rtk --version   # Should show "rtk 0.28.2"
 rtk gain        # Should show token savings stats
 ```
@@ -100,7 +108,7 @@ rtk gain        # Should show token savings stats
 
 ## Quick Start
 
-```bash
+```powershell
 # 1. Install for your AI tool
 rtk init -g                     # Claude Code / Copilot (default)
 rtk init -g --gemini            # Gemini CLI
@@ -116,9 +124,17 @@ rtk init --agent hermes         # Hermes
 git status  # Automatically rewritten to rtk git status
 ```
 
-Hook-based agents rewrite Bash commands (e.g., `git status` -> `rtk git status`) before execution. Plugin-based agents, including Hermes, use their plugin API to rewrite commands before execution. The agent receives compact output without needing to call `rtk` explicitly.
+Hook-based agents rewrite PowerShell/cmd terminal commands (e.g., `git status` -> `rtk git status`) before execution. Plugin-based agents, including Hermes, use their plugin API to rewrite commands before execution. The agent receives compact output without needing to call `rtk` explicitly.
 
-**Important:** the hook only runs on Bash tool calls. Claude Code built-in tools like `Read`, `Grep`, and `Glob` do not pass through the Bash hook, so they are not auto-rewritten. To get RTK's compact output for those workflows, use shell commands (`cat`/`head`/`tail`, `rg`/`grep`, `find`) or call `rtk read`, `rtk grep`, or `rtk find` directly.
+**Important:** the hook only runs on terminal tool calls. Claude Code built-in tools like `Read`, `Grep`, and `Glob` do not pass through the hook, so they are not auto-rewritten. To get RTK's compact output for those workflows, call `rtk read`, `rtk grep`, or `rtk find` directly.
+
+## Differences from Upstream
+
+This repository is a Windows-only fork of `rtk-ai/rtk`.
+
+- Windows native support only (PowerShell/cmd) in this fork.
+- Linux/macOS support is maintained upstream at https://github.com/rtk-ai/rtk.
+- CI validation in this fork is focused on `windows-latest`.
 
 ## How It Works
 
@@ -294,15 +310,15 @@ test utils::test_format ... ok              test_overflow: panic at utils.rs:18
 
 ## Auto-Rewrite Hook
 
-The most effective way to use rtk. The hook transparently intercepts Bash commands and rewrites them to rtk equivalents before execution.
+The most effective way to use rtk. The hook transparently intercepts terminal commands and rewrites them to rtk equivalents before execution.
 
 **Result**: 100% rtk adoption across all conversations and subagents, zero token overhead.
 
-**Scope note:** this only applies to Bash tool calls. Claude Code built-in tools such as `Read`, `Grep`, and `Glob` bypass the hook, so use shell commands or explicit `rtk` commands when you want RTK filtering there.
+**Scope note:** this applies to terminal tool calls. Claude Code built-in tools such as `Read`, `Grep`, and `Glob` bypass the hook, so use explicit `rtk` commands when you want RTK filtering there.
 
 ### Setup
 
-```bash
+```powershell
 rtk init -g                 # Install hook + RTK.md (recommended)
 rtk init -g --opencode      # OpenCode plugin (instead of Claude Code)
 rtk init -g --auto-patch    # Non-interactive (CI/CD)
@@ -314,40 +330,26 @@ After install, **restart Claude Code**.
 
 ## Windows
 
-RTK works on Windows with some limitations. The auto-rewrite hook (`rtk-rewrite.sh`) requires a Unix shell, so on native Windows RTK falls back to **CLAUDE.md injection mode** — your AI assistant receives RTK instructions but commands are not rewritten automatically.
-
-### Recommended: WSL (full support)
-
-For the best experience, use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) (Windows Subsystem for Linux). Inside WSL, RTK works exactly like Linux — full hook support, auto-rewrite, everything:
-
-```bash
-# Inside WSL
-curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
-rtk init -g
-```
-
-### Native Windows (limited support)
-
-On native Windows (cmd.exe / PowerShell), RTK filters work but the hook does not auto-rewrite commands:
+RTK in this fork is Windows-native. Use PowerShell/cmd with native hook commands:
 
 ```powershell
 # 1. Download and extract rtk-x86_64-pc-windows-msvc.zip from releases
 # 2. Add rtk.exe to your PATH
-# 3. Initialize (falls back to CLAUDE.md injection)
+# 3. Initialize
 rtk init -g
-# 4. Use rtk explicitly
+# 4. Use commands (hook can auto-rewrite in supported agents)
 rtk cargo test
 rtk git status
 ```
 
 **Important**: Do not double-click `rtk.exe` — it is a CLI tool that prints usage and exits immediately. Always run it from a terminal (Command Prompt, PowerShell, or Windows Terminal).
 
-| Feature | WSL | Native Windows |
-|---------|-----|----------------|
-| Filters (cargo, git, etc.) | Full | Full |
-| Auto-rewrite hook | Yes | No (CLAUDE.md fallback) |
-| `rtk init -g` | Hook mode | CLAUDE.md mode |
-| `rtk gain` / analytics | Full | Full |
+| Feature | Native Windows |
+|---------|----------------|
+| Filters (cargo, git, etc.) | Full |
+| Auto-rewrite hook | Full (agent-dependent) |
+| `rtk init -g` | Hook mode |
+| `rtk gain` / analytics | Full |
 
 ## Supported AI Tools
 
@@ -355,7 +357,7 @@ RTK supports 13 AI coding tools. Each integration rewrites shell commands to `rt
 
 | Tool | Install | Method |
 |------|---------|--------|
-| **Claude Code** | `rtk init -g` | PreToolUse hook (bash) |
+| **Claude Code** | `rtk init -g` | PreToolUse hook |
 | **GitHub Copilot (VS Code)** | `rtk init -g --copilot` | PreToolUse hook — transparent rewrite |
 | **GitHub Copilot CLI** | `rtk init -g --copilot` | PreToolUse deny-with-suggestion (CLI limitation) |
 | **Cursor** | `rtk init -g --agent cursor` | preToolUse hook (hooks.json) |
@@ -374,7 +376,7 @@ For per-agent setup details, override controls, and graceful degradation, see th
 
 ## Configuration
 
-`~/.config/rtk/config.toml` (macOS: `~/Library/Application Support/rtk/config.toml`):
+`%USERPROFILE%/.config/rtk/config.toml`:
 
 ```toml
 [hooks]
@@ -396,10 +398,9 @@ For the full config reference (all sections, env vars, per-project filters), see
 
 ### Uninstall
 
-```bash
+```powershell
 rtk init -g --uninstall     # Remove hook, RTK.md, settings.json entry
 cargo uninstall rtk          # Remove binary
-brew uninstall rtk           # If installed via Homebrew
 ```
 
 ## Documentation

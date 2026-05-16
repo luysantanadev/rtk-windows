@@ -188,13 +188,6 @@ pub fn status_to_exit_code(status: std::process::ExitStatus) -> i32 {
     if let Some(code) = status.code() {
         return code;
     }
-    #[cfg(unix)]
-    {
-        use std::os::unix::process::ExitStatusExt;
-        if let Some(sig) = status.signal() {
-            return 128 + sig;
-        }
-    }
     1
 }
 
@@ -545,15 +538,6 @@ pub(crate) mod tests {
             Command::new("false").status().unwrap()
         };
         assert_eq!(status_to_exit_code(status), 1);
-    }
-
-    #[cfg(unix)]
-    #[test]
-    fn test_exit_code_signal_kill() {
-        let mut child = Command::new("sleep").arg("60").spawn().unwrap();
-        child.kill().unwrap();
-        let status = child.wait().unwrap();
-        assert_eq!(status_to_exit_code(status), 137);
     }
 
     #[test]

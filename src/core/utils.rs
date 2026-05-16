@@ -193,14 +193,6 @@ pub fn exit_code_from_output(output: &std::process::Output, label: &str) -> i32 
     match output.status.code() {
         Some(code) => code,
         None => {
-            #[cfg(unix)]
-            {
-                use std::os::unix::process::ExitStatusExt;
-                if let Some(sig) = output.status.signal() {
-                    eprintln!("[rtk] {}: process terminated by signal {}", label, sig);
-                    return 128 + sig;
-                }
-            }
             eprintln!("[rtk] {}: process terminated by signal", label);
             1
         }
@@ -214,14 +206,6 @@ pub fn exit_code_from_status(status: &std::process::ExitStatus, label: &str) -> 
     match status.code() {
         Some(code) => code,
         None => {
-            #[cfg(unix)]
-            {
-                use std::os::unix::process::ExitStatusExt;
-                if let Some(sig) = status.signal() {
-                    eprintln!("[rtk] {}: process terminated by signal {}", label, sig);
-                    return 128 + sig;
-                }
-            }
             eprintln!("[rtk] {}: process terminated by signal", label);
             1
         }

@@ -69,6 +69,7 @@ pub fn hash_path_for(hook_path: &Path) -> PathBuf {
 /// against casual modification. Not a security boundary — an
 /// attacker with write access can chmod it — but forces a
 /// deliberate action rather than accidental overwrite.
+#[allow(clippy::permissions_set_readonly_false)]
 pub fn store_hash(hook_path: &Path) -> Result<()> {
     let hash = compute_hash(hook_path)?;
     let hash_file = hash_path(hook_path);
@@ -80,27 +81,32 @@ pub fn store_hash(hook_path: &Path) -> Result<()> {
     let content = format!("{}  {}\n", hash, filename);
 
     // If hash file exists and is read-only, make it writable first
-    #[cfg(unix)]
     if hash_file.exists() {
-        use std::os::unix::fs::PermissionsExt;
-        let _ = fs::set_permissions(&hash_file, fs::Permissions::from_mode(0o644));
+        if let Ok(metadata) = fs::metadata(&hash_file) {
+            let mut permissions = metadata.permissions();
+            if permissions.readonly() {
+                permissions.set_readonly(false);
+                let _ = fs::set_permissions(&hash_file, permissions);
+            }
+        }
     }
 
     fs::write(&hash_file, &content)
         .with_context(|| format!("Failed to write hash to {}", hash_file.display()))?;
 
     // Set read-only
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::PermissionsExt;
-        fs::set_permissions(&hash_file, fs::Permissions::from_mode(0o444))
-            .with_context(|| format!("Failed to set permissions on {}", hash_file.display()))?;
-    }
+    let mut permissions = fs::metadata(&hash_file)
+        .with_context(|| format!("Failed to stat {}", hash_file.display()))?
+        .permissions();
+    permissions.set_readonly(true);
+    fs::set_permissions(&hash_file, permissions)
+        .with_context(|| format!("Failed to set permissions on {}", hash_file.display()))?;
 
     Ok(())
 }
 
 /// Remove stored hash file (called during uninstall)
+#[allow(clippy::permissions_set_readonly_false)]
 pub fn remove_hash(hook_path: &Path) -> Result<bool> {
     let hash_file = hash_path(hook_path);
 
@@ -109,10 +115,12 @@ pub fn remove_hash(hook_path: &Path) -> Result<bool> {
     }
 
     // Make writable before removing
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::PermissionsExt;
-        let _ = fs::set_permissions(&hash_file, fs::Permissions::from_mode(0o644));
+    if let Ok(metadata) = fs::metadata(&hash_file) {
+        let mut permissions = metadata.permissions();
+        if permissions.readonly() {
+            permissions.set_readonly(false);
+            let _ = fs::set_permissions(&hash_file, permissions);
+        }
     }
 
     fs::remove_file(&hash_file)
@@ -467,10 +475,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(unix)]
     fn test_hash_file_permissions() {
-        use std::os::unix::fs::PermissionsExt;
-
         let temp = TempDir::new().unwrap();
         let hook = temp.path().join("rtk-rewrite.sh");
         fs::write(&hook, "test").unwrap();
@@ -479,7 +484,7 @@ mod tests {
 
         let hash_file = temp.path().join(".rtk-hook.sha256");
         let perms = fs::metadata(&hash_file).unwrap().permissions();
-        assert_eq!(perms.mode() & 0o777, 0o444, "Hash file should be read-only");
+        assert!(perms.readonly(), "Hash file should be read-only");
     }
 
     #[test]

@@ -15,15 +15,8 @@ pub fn run(command: &str, verbose: u8) -> Result<i32> {
         eprintln!("Running and summarizing: {}", command);
     }
 
-    let mut cmd = if cfg!(target_os = "windows") {
-        let mut c = Command::new("cmd");
-        c.args(["/C", command]);
-        c
-    } else {
-        let mut c = Command::new("sh");
-        c.args(["-c", command]);
-        c
-    };
+    let mut cmd = Command::new("cmd");
+    cmd.args(["/C", command]);
     let result = exec_capture(&mut cmd).context("Failed to execute command")?;
 
     let raw = format!("{}\n{}", result.stdout, result.stderr);

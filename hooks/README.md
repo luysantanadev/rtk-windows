@@ -2,7 +2,9 @@
 
 ## Scope
 
-**Deployed hook artifacts** — the actual files installed on user machines by `rtk init`. These are shell scripts, TypeScript plugins, and rules files that run outside the Rust binary. They are **thin delegates**: parse agent-specific JSON, call `rtk rewrite` as a subprocess, format agent-specific response. Zero filtering logic lives here.
+Windows-only fork scope: these hook artifacts are documented for Windows-native usage in this repository. Linux/macOS users should use upstream docs at https://github.com/rtk-ai/rtk.
+
+**Deployed hook artifacts** — the actual files installed on user machines by `rtk init`. These are native RTK hook commands, TypeScript plugins, and rules files. They are **thin delegates**: parse agent-specific JSON, call rewrite logic, and format agent-specific responses. Zero filtering logic lives here.
 
 Owns: per-agent hook scripts and configuration files for 8 supported agents (Claude Code, Copilot, Cursor, Cline, Windsurf, Codex, OpenCode, Hermes).
 
@@ -33,9 +35,9 @@ All rewrite logic lives in the Rust binary (`src/discover/registry.rs`). Hook sc
 
 Each agent subdirectory has its own README with hook-specific details:
 
-- **[`claude/`](claude/README.md)** — Shell hook, `PreToolUse` JSON format, `settings.json` patching, test script
+- **[`claude/`](claude/README.md)** — Native Rust hook command, `PreToolUse` JSON format, `settings.json` patching
 - **[`copilot/`](copilot/README.md)** — Rust binary hook, dual format (VS Code Chat vs Copilot CLI), deny-with-suggestion fallback
-- **[`cursor/`](cursor/README.md)** — Shell hook, Cursor JSON format, empty `{}` response requirement
+- **[`cursor/`](cursor/README.md)** — Native Rust hook command, Cursor JSON format, empty `{}` response requirement
 - **[`cline/`](cline/README.md)** — Rules file (prompt-level), `.clinerules` project-local installation
 - **[`windsurf/`](windsurf/README.md)** — Rules file (prompt-level), `.windsurfrules` workspace-scoped
 - **[`codex/`](codex/README.md)** — Awareness document, `AGENTS.md` integration, `$CODEX_HOME` or `~/.codex/` location
@@ -46,10 +48,10 @@ Each agent subdirectory has its own README with hook-specific details:
 
 | Agent | Mechanism | Hook Type | Can Modify Command? |
 |-------|-----------|-----------|---------------------|
-| Claude Code | Shell hook (`PreToolUse`) | Transparent rewrite | Yes (`updatedInput`) |
+| Claude Code | Rust binary (`rtk hook claude`) | Transparent rewrite | Yes (`updatedInput`) |
 | VS Code Copilot Chat | Rust binary (`rtk hook copilot`) | Transparent rewrite | Yes (`updatedInput`) |
 | GitHub Copilot CLI | Rust binary (`rtk hook copilot`) | Deny-with-suggestion | No (agent retries) |
-| Cursor | Shell hook (`preToolUse`) | Transparent rewrite | Yes (`updated_input`) |
+| Cursor | Rust binary (`rtk hook cursor`) | Transparent rewrite | Yes (`updated_input`) |
 | Gemini CLI | Rust binary (`rtk hook gemini`) | Transparent rewrite | Yes (`hookSpecificOutput`) |
 | Cline / Roo Code | Custom instructions (rules file) | Prompt-level guidance | N/A |
 | Windsurf | Custom instructions (rules file) | Prompt-level guidance | N/A |
@@ -59,7 +61,7 @@ Each agent subdirectory has its own README with hook-specific details:
 
 ## JSON Formats by Agent
 
-### Claude Code (Shell Hook)
+### Claude Code (Native Rust Hook)
 
 **Input** (stdin):
 ```json
@@ -81,7 +83,7 @@ Each agent subdirectory has its own README with hook-specific details:
 }
 ```
 
-### Cursor (Shell Hook)
+### Cursor (Native Rust Hook)
 
 **Input**: Same as Claude Code.
 
@@ -229,7 +231,7 @@ New integrations must follow the [Exit Code Contract](#exit-code-contract) and [
 
 | Tier | Mechanism | Maintenance | Examples |
 |------|-----------|-------------|----------|
-| **Full hook** | Shell script or Rust binary, intercepts commands via agent's hook API | High — must track agent API changes | Claude Code, Cursor, Copilot, Gemini |
+| **Full hook** | Rust binary hook command, intercepts commands via agent's hook API | High — must track agent API changes | Claude Code, Cursor, Copilot, Gemini |
 | **Plugin** | TypeScript/JS/Python plugin in agent's plugin system | Medium — agent manages loading | OpenCode, Hermes |
 | **Rules file** | Prompt-level instructions the agent reads | Low — no code to break | Cline, Windsurf, Codex |
 

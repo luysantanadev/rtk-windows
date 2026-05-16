@@ -3,7 +3,7 @@ name = "rtk"
 version = "0.34.3"
 edition = "2021"
 authors = ["Patrick Szymkowiak"]
-description = "Rust Token Killer - High-performance CLI proxy to minimize LLM token consumption"
+description = "Rust Token Killer (Windows-only fork) - High-performance CLI proxy to minimize LLM token consumption"
 license = "MIT"
 homepage = "https://www.rtk-ai.app"
 repository = "https://github.com/rtk-ai/rtk"
@@ -33,9 +33,6 @@ flate2 = "1.0"
 quick-xml = "0.37"
 which = "8"
 automod = "1"
-
-[target.'cfg(unix)'.dependencies]
-libc = "0.2"
 
 [build-dependencies]
 toml = "0.8"

@@ -1,3 +1,8 @@
+#[cfg(not(windows))]
+compile_error!(
+    "This fork is Windows-only. Use upstream https://github.com/rtk-ai/rtk for Linux/macOS."
+);
+
 mod analytics;
 mod cmds;
 mod core;

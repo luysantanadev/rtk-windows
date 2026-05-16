@@ -99,15 +99,9 @@ impl StreamFilter for ErrorStreamFilter {
 }
 
 fn build_shell_command(command: &str) -> Command {
-    if cfg!(target_os = "windows") {
-        let mut c = Command::new("cmd");
-        c.args(["/C", command]);
-        c
-    } else {
-        let mut c = Command::new("sh");
-        c.args(["-c", command]);
-        c
-    }
+    let mut c = Command::new("cmd");
+    c.args(["/C", command]);
+    c
 }
 
 /// Run a command and filter output to show only errors/warnings
