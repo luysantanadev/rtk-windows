@@ -1,0 +1,475 @@
+
+=== DIRECTORY TREE (max depth 3, source files only) ===
+.claude
+.claude\agents
+.claude\agents\code-reviewer.md
+.claude\agents\debugger.md
+.claude\agents\rtk-testing-specialist.md
+.claude\agents\rust-rtk.md
+.claude\agents\system-architect.md
+.claude\agents\technical-writer.md
+.claude\commands
+.claude\commands\clean-worktree.md
+.claude\commands\clean-worktrees.md
+.claude\commands\diagnose.md
+.claude\commands\tech
+.claude\commands\tech\audit-codebase.md
+.claude\commands\tech\clean-worktree.md
+.claude\commands\tech\clean-worktrees.md
+.claude\commands\tech\codereview.md
+.claude\commands\tech\remove-worktree.md
+.claude\commands\tech\worktree-status.md
+.claude\commands\tech\worktree.md
+.claude\commands\test-routing.md
+.claude\commands\worktree-status.md
+.claude\commands\worktree.md
+.claude\hooks
+.claude\hooks\bash
+.claude\hooks\bash\pre-commit-format.sh
+.claude\hooks\rtk-rewrite.sh
+.claude\hooks\rtk-suggest.sh
+.claude\rules
+.claude\rules\cli-testing.md
+.claude\rules\rust-patterns.md
+.claude\rules\search-strategy.md
+.claude\skills
+.claude\skills\code-simplifier
+.claude\skills\code-simplifier\SKILL.md
+.claude\skills\design-patterns
+.claude\skills\design-patterns\SKILL.md
+.claude\skills\issue-triage
+.claude\skills\issue-triage\SKILL.md
+.claude\skills\issue-triage\templates
+.claude\skills\performance
+.claude\skills\performance\SKILL.md
+.claude\skills\pr-review
+.claude\skills\pr-review\SKILL.md
+.claude\skills\pr-triage
+.claude\skills\pr-triage\SKILL.md
+.claude\skills\pr-triage\templates
+.claude\skills\repo-recap
+.claude\skills\repo-recap\SKILL.md
+.claude\skills\rtk-tdd
+.claude\skills\rtk-tdd\references
+.claude\skills\rtk-tdd\SKILL.md
+.claude\skills\rtk-triage
+.claude\skills\rtk-triage\SKILL.md
+.claude\skills\security-guardian
+.claude\skills\security-guardian\SKILL.md
+.claude\skills\ship
+.claude\skills\ship\SKILL.md
+.claude\skills\tdd-rust
+.claude\skills\tdd-rust\SKILL.md
+.github
+.github\agents
+.github\agents\context7.agent.md
+.github\copilot-instructions.md
+.github\dependabot.yml
+.github\docs-pipeline-contract.md
+.github\hooks
+.github\hooks\rtk-rewrite.json
+.github\instructions
+.github\instructions\agent-safety.instructions.md
+.github\instructions\agent-skills.instructions.md
+.github\instructions\agents.instructions.md
+.github\instructions\ai-prompt-engineering-safety-best-practices.instructions.md
+.github\instructions\caveman-mode.instructions.md
+.github\instructions\code-review-generic.instructions.md
+.github\instructions\containerization-docker-best-practices.instructions.md
+.github\instructions\context-engineering.instructions.md
+.github\instructions\context7.instructions.md
+.github\instructions\csharp.instructions.md
+.github\instructions\dotnet-architecture-good-practices.instructions.md
+.github\instructions\hooks.instructions.md
+.github\instructions\instructions.instructions.md
+.github\instructions\memory-bank.instructions.md
+.github\instructions\powershell.instructions.md
+.github\instructions\prompt.instructions.md
+.github\instructions\rust.instructions.md
+.github\instructions\security-and-owasp.instructions.md
+.github\instructions\self-explanatory-code-commenting.instructions.md
+.github\PULL_REQUEST_TEMPLATE.md
+.github\skills
+.github\skills\acquire-codebase-knowledge
+.github\skills\acquire-codebase-knowledge\assets
+.github\skills\acquire-codebase-knowledge\references
+.github\skills\acquire-codebase-knowledge\scripts
+.github\skills\acquire-codebase-knowledge\SKILL.md
+.github\workflows
+.github\workflows\cd.yml
+.github\workflows\ci.yml
+.github\workflows\CICD.md
+.github\workflows\next-release.yml
+.github\workflows\pr-target-check.yml
+.github\workflows\release.yml
+.gitignore
+.release-please-manifest.json
+.rtk
+.rtk\filters.toml
+.semgrep.yml
+build.rs
+Cargo.lock
+Cargo.toml
+CHANGELOG.md
+CLAUDE.md
+CONTRIBUTING.md
+DISCLAIMER.md
+docs
+docs\codebase
+docs\codebase\.codebase-scan.txt
+docs\contributing
+docs\contributing\ARCHITECTURE.md
+docs\contributing\CODING_PRACTICES.md
+docs\contributing\TECHNICAL.md
+docs\guide
+docs\guide\analytics
+docs\guide\analytics\discover.md
+docs\guide\analytics\gain.md
+docs\guide\getting-started
+docs\guide\getting-started\configuration.md
+docs\guide\getting-started\installation.md
+docs\guide\getting-started\quick-start.md
+docs\guide\getting-started\supported-agents.md
+docs\guide\index.md
+docs\guide\resources
+docs\guide\resources\telemetry.md
+docs\guide\resources\troubleshooting.md
+docs\guide\resources\what-rtk-covers.md
+docs\maintainers
+docs\maintainers\MAINTAINERS_APPLY.md
+docs\TELEMETRY.md
+docs\usage
+docs\usage\AUDIT_GUIDE.md
+docs\usage\FEATURES.md
+docs\usage\TRACKING.md
+Formula
+Formula\rtk.rb
+hooks
+hooks\antigravity
+hooks\antigravity\README.md
+hooks\antigravity\rules.md
+hooks\claude
+hooks\claude\README.md
+hooks\claude\rtk-awareness.md
+hooks\claude\rtk-rewrite.sh
+hooks\claude\test-rtk-rewrite.sh
+hooks\cline
+hooks\cline\README.md
+hooks\cline\rules.md
+hooks\codex
+hooks\codex\README.md
+hooks\codex\rtk-awareness.md
+hooks\copilot
+hooks\copilot\README.md
+hooks\copilot\rtk-awareness.md
+hooks\copilot\test-rtk-rewrite.sh
+hooks\cursor
+hooks\cursor\README.md
+hooks\cursor\rtk-rewrite.sh
+hooks\hermes
+hooks\hermes\README.md
+hooks\hermes\rtk-rewrite
+hooks\hermes\rtk-rewrite\__init__.py
+hooks\hermes\rtk-rewrite\plugin.yaml
+hooks\hermes\tests
+hooks\hermes\tests\__init__.py
+hooks\hermes\tests\test_rtk_rewrite_plugin.py
+hooks\kilocode
+hooks\kilocode\README.md
+hooks\kilocode\rules.md
+hooks\opencode
+hooks\opencode\README.md
+hooks\opencode\rtk.ts
+hooks\README.md
+hooks\windsurf
+hooks\windsurf\README.md
+hooks\windsurf\rules.md
+INSTALL.md
+install.sh
+LICENSE
+openclaw
+openclaw\index.ts
+openclaw\openclaw.plugin.json
+openclaw\package.json
+openclaw\README.md
+README.md
+README_es.md
+README_fr.md
+README_ja.md
+README_ko.md
+README_zh.md
+release-please-config.json
+scripts
+
+=== STACK DETECTION (manifest files) ===
+
+--- Cargo.lock ---
+# This file is automatically @generated by Cargo.
+# It is not intended for manual editing.
+version = 4
+
+[[package]]
+name = "adler2"
+version = "2.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "320119579fcad9c21884f5c4861d16174d0e06250625266f50fe6898340abefa"
+
+[[package]]
+name = "ahash"
+version = "0.8.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5a15f179cd60c4584b8a8c596927aadc462e27f2ca70c04e0071964a73ba7a75"
+dependencies = [
+ "cfg-if",
+ "once_cell",
+ "version_check",
+ "zerocopy",
+]
+
+[[package]]
+name = "aho-corasick"
+version = "1.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ddd31a130427c27518df266943a5308ed92d4b226cc639f5a8f1002816174301"
+dependencies = [
+ "memchr",
+]
+
+[[package]]
+name = "android_system_properties"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "819e7219dbd41043ac279b19830f2efc897156490d7fd6ea916720117ee66311"
+dependencies = [
+ "libc",
+]
+
+[[package]]
+name = "anstream"
+version = "0.6.21"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "43d5b281e737544384e969a5ccad3f1cdd24b48086a0fc1b2a5262a26b8f4f4a"
+dependencies = [
+ "anstyle",
+ "anstyle-parse",
+ "anstyle-query",
+ "anstyle-wincon",
+ "colorchoice",
+ "is_terminal_polyfill",
+ "utf8parse",
+]
+
+[[package]]
+name = "anstyle"
+version = "1.0.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5192cca8006f1fd4f7237516f40fa183bb07f8fbdfedaa0036de5ea9b0b45e78"
+
+[[package]]
+name = "anstyle-parse"
+version = "0.2.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4e7644824f0aa2c7b9384579234ef10eb7efb6a0deb83f9630a49594dd9c15c2"
+dependencies = [
+ "utf8parse",
+]
+
+[[package]]
+name = "anstyle-query"
+version = "1.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "40c48f72fd53cd289104fc64099abca73db4166ad86ea0b4341abe65af83dadc"
+dependencies = [
+ "windows-sys 0.61.2",
+]
+
+[[package]]
+
+[TRUNCATED] Showing first 80 of 1869 lines.
+--- Cargo.toml ---
+[package]
+name = "rtk"
+version = "0.34.3"
+edition = "2021"
+authors = ["Patrick Szymkowiak"]
+description = "Rust Token Killer - High-performance CLI proxy to minimize LLM token consumption"
+license = "MIT"
+homepage = "https://www.rtk-ai.app"
+repository = "https://github.com/rtk-ai/rtk"
+readme = "README.md"
+keywords = ["cli", "llm", "token", "filter", "productivity"]
+categories = ["command-line-utilities", "development-tools"]
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+anyhow = "1.0"
+ignore = "0.4"
+walkdir = "2"
+regex = "1"
+lazy_static = "1.4"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+colored = "2"
+dirs = "5"
+rusqlite = { version = "0.31", features = ["bundled"] }
+toml = "0.8"
+chrono = "0.4"
+tempfile = "3"
+sha2 = "0.10"
+ureq = "2"
+getrandom = "0.4"
+flate2 = "1.0"
+quick-xml = "0.37"
+which = "8"
+automod = "1"
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[build-dependencies]
+toml = "0.8"
+
+[dev-dependencies]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+# cargo-deb configuration
+[package.metadata.deb]
+maintainer = "Patrick Szymkowiak"
+copyright = "2024 Patrick Szymkowiak"
+license-file = ["LICENSE", "0"]
+extended-description = "rtk filters and compresses command outputs before they reach your LLM context, saving 60-90% of tokens."
+section = "utility"
+priority = "optional"
+assets = [
+    ["target/release/rtk", "usr/bin/", "755"],
+]
+# cargo-generate-rpm configuration
+[package.metadata.generate-rpm]
+assets = [
+    { source = "target/release/rtk", dest = "/usr/bin/rtk", mode = "755" },
+]
+
+[lints.rust]
+unsafe_code = "deny"
+warnings = "deny"
+
+
+=== ENTRY POINTS ===
+Found: src/main.rs
+
+=== LINTING AND FORMATTING CONFIG ===
+No linting or formatting config files found in project root.
+
+=== ENVIRONMENT VARIABLE TEMPLATES ===
+No .env.example or .env.template found. Identify required environment variables by searching the code and config for environment variable reads.
+
+=== TODO / FIXME / HACK (production code only, test dirs excluded) ===
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:28: TODO_LIMIT = 60
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:291: """Search for TODO/FIXME/HACK comments."""
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:291: """Search for TODO/FIXME/HACK comments."""
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:291: """Search for TODO/FIXME/HACK comments."""
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:293: patterns = ["TODO", "FIXME", "HACK"]
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:293: patterns = ["TODO", "FIXME", "HACK"]
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:293: patterns = ["TODO", "FIXME", "HACK"]
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:320: return todos[:TODO_LIMIT]
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:617: # TODOs
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:620: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", todos, output_file)
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:620: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", todos, output_file)
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:620: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", todos, output_file)
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:622: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", ["None found."], output_file)
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:622: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", ["None found."], output_file)
+.github\skills\acquire-codebase-knowledge\scripts\scan.py:622: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", ["None found."], output_file)
+src\main.rs:1327: // FIXME: if filters are present, we should find out which workspaces are selected before running rtk dedicated commands
+src\analytics\session_cmd.rs:381: r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t2","name":"Grep","input":{"pattern":"TODO"}}]}}"#,
+src\cmds\system\pipe_cmd.rs:498: savings >= 40.0, // TODO: grep pipe filter below 60% target — improve grouping
+src\cmds\system\pipe_cmd.rs:519: savings >= 40.0, // TODO: find pipe filter below 60% target — improve grouping
+
+=== GIT RECENT COMMITS (last 20) ===
+5f1d8b0 Merge pull request #1885 from rtk-ai/fix/compose-logs-tail-flag-v2
+b70b0fe fix(docker): forward --tail flag in compose logs
+3ba1634 Merge pull request #991 from em0t/fix/git-completeness
+e827184 Merge pull request #1368 from ousamabenyounes/fix/issue-1250
+fef1ba5 Merge pull request #1874 from rtk-ai/fix/cicd/spelling-branch-fr-en
+7e418fd Update pr-target-check.yml
+54d1f87 Merge pull request #1871 from rtk-ai/fix/cicd-runners/insecure-tmp-lock-workflow
+26b96ec fix(security): pin workflow actions to SHA, clean up tempfile on failure
+cd6ac2f fix(security): replace insecure tmp, lock git workflow perm
+55f998d Merge pull request #1614 from Kayphoon/feat/hermes-integration
+f7c4bf6 style(hooks): format BOM helper assertion
+9d3b99d feat(hermes): add rtk integration
+2d6e10a Merge pull request #1718 from kamilkaczmareksolutions/fix/cursor-hook-permission-ask
+107b3d3 Merge pull request #1776 from KuSh/fix-clippy-0.1.95
+70b9f38 chore(ci): deny warnings and make clippy pass mandatory in ci
+f005dbf chore: fix clippy 0.1.95 warnings
+858d0d9 Merge pull request #1764 from sadikkuzu/update-telemetry-docs-link
+0a55201 Merge pull request #1791 from xdm67x/refactor/unused-error-warning-fix
+2a41e03 Merge pull request #1767 from swseverance/fix/links
+172ec54 Merge pull request #1032 from hed0rah/feat/init-dry-run
+
+=== HIGH-CHURN FILES (last 90 days, top 20) ===
+  92 src/main.rs
+  56 src/discover/registry.rs
+  55 CHANGELOG.md
+  54 README.md
+  52 Cargo.toml
+  47 Cargo.lock
+  37 .release-please-manifest.json
+  28 src/hooks/init.rs
+  25 src/discover/rules.rs
+  25 src/git.rs
+  24 CLAUDE.md
+  24 ARCHITECTURE.md
+  21 src/init.rs
+  17 src/cmds/go/go_cmd.rs
+  16 src/hooks/hook_cmd.rs
+  16 src/core/stream.rs
+  15 src/cmds/git/git.rs
+  15 CONTRIBUTING.md
+  14 src/cmds/system/ls.rs
+  13 src/cmds/rust/cargo_cmd.rs
+
+=== MONOREPO SIGNALS ===
+No monorepo signals detected.
+
+=== CODE METRICS ===
+Total files scanned: 369
+Total lines of code: 68886
+
+Files by language:
+  Other: 251
+  Rust: 104
+  TypeScript: 8
+  Python: 5
+  Ruby: 1
+
+Top 10 largest files:
+src\hooks\init.rs: 194.6KB
+src\discover\registry.rs: 117.4KB
+src\main.rs: 106.1KB
+src\cmds\cloud\aws_cmd.rs: 103.2KB
+src\cmds\git\git.rs: 95.5KB
+src\cmds\dotnet\dotnet_cmd.rs: 83.4KB
+CHANGELOG.md: 74.4KB
+src\cmds\rust\cargo_cmd.rs: 74.0KB
+src\core\tracking.rs: 59.5KB
+src\cmds\dotnet\binlog.rs: 56.2KB
+
+=== CI/CD PIPELINES ===
+CI/CD: GitHub Actions
+
+=== CONTAINERS & ORCHESTRATION ===
+No containerization configs detected.
+
+=== SECURITY & COMPLIANCE ===
+Security: SECURITY.md
+
+=== PERFORMANCE & TESTING ===
+No performance testing configs detected.
+
+=== SCAN COMPLETE ===

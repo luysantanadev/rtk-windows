@@ -1,0 +1,9 @@
+{
+  "Tool": "Rustup (Rust + Cargo)",
+  "WingetId": "Rustlang.Rustup",
+  "WingetName": "Rustup",
+  "ChocoPackage": "rustup.install",
+  "ScoopPackage": "rustup",
+  "InstalledAt": "2026-05-16T11:57:10.8993167-03:00",
+  "InstalledBy": "installed-winget"
+}

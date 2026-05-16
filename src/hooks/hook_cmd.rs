@@ -37,6 +37,18 @@ enum HookFormat {
     PassThrough,
 }
 
+enum CopilotOutcome {
+    PassThrough,
+    Deny {
+        original: String,
+    },
+    Rewrite {
+        original: String,
+        rewritten: String,
+        output: Value,
+    },
+}
+
 /// Run the Copilot preToolUse hook.
 /// Auto-detects VS Code Copilot Chat vs Copilot CLI format.
 pub fn run_copilot() -> Result<()> {
@@ -121,15 +133,35 @@ fn get_rewritten(cmd: &str) -> Option<String> {
 }
 
 fn handle_vscode(cmd: &str) -> Result<()> {
+    match compute_vscode_outcome(cmd) {
+        CopilotOutcome::PassThrough => Ok(()),
+        CopilotOutcome::Deny { original } => {
+            audit_log("deny", &original, "");
+            Ok(())
+        }
+        CopilotOutcome::Rewrite {
+            original,
+            rewritten,
+            output,
+        } => {
+            audit_log("rewrite", &original, &rewritten);
+            let _ = writeln!(io::stdout(), "{output}");
+            Ok(())
+        }
+    }
+}
+
+fn compute_vscode_outcome(cmd: &str) -> CopilotOutcome {
     let verdict = permissions::check_command(cmd);
     if verdict == PermissionVerdict::Deny {
-        audit_log("deny", cmd, "");
-        return Ok(());
+        return CopilotOutcome::Deny {
+            original: cmd.to_string(),
+        };
     }
 
     let rewritten = match get_rewritten(cmd) {
         Some(r) => r,
-        None => return Ok(()),
+        None => return CopilotOutcome::PassThrough,
     };
 
     // Allow (explicit rule matched): auto-allow the rewritten command.
@@ -139,32 +171,52 @@ fn handle_vscode(cmd: &str) -> Result<()> {
         _ => "ask",
     };
 
-    audit_log("rewrite", cmd, &rewritten);
-
     let output = json!({
         "hookSpecificOutput": {
             "hookEventName": PRE_TOOL_USE_KEY,
             "permissionDecision": decision,
             "permissionDecisionReason": "RTK auto-rewrite",
-            "updatedInput": { "command": rewritten }
+            "updatedInput": { "command": rewritten.clone() }
         }
     });
-    let _ = writeln!(io::stdout(), "{output}");
-    Ok(())
+
+    CopilotOutcome::Rewrite {
+        original: cmd.to_string(),
+        rewritten,
+        output,
+    }
 }
 
 fn handle_copilot_cli(cmd: &str) -> Result<()> {
+    match compute_copilot_cli_outcome(cmd) {
+        CopilotOutcome::PassThrough => Ok(()),
+        CopilotOutcome::Deny { original } => {
+            audit_log("deny", &original, "");
+            Ok(())
+        }
+        CopilotOutcome::Rewrite {
+            original,
+            rewritten,
+            output,
+        } => {
+            audit_log("rewrite", &original, &rewritten);
+            let _ = writeln!(io::stdout(), "{output}");
+            Ok(())
+        }
+    }
+}
+
+fn compute_copilot_cli_outcome(cmd: &str) -> CopilotOutcome {
     if permissions::check_command(cmd) == PermissionVerdict::Deny {
-        audit_log("deny", cmd, "");
-        return Ok(());
+        return CopilotOutcome::Deny {
+            original: cmd.to_string(),
+        };
     }
 
     let rewritten = match get_rewritten(cmd) {
         Some(r) => r,
-        None => return Ok(()),
+        None => return CopilotOutcome::PassThrough,
     };
-
-    audit_log("rewrite", cmd, &rewritten);
 
     let output = json!({
         "permissionDecision": "deny",
@@ -173,8 +225,12 @@ fn handle_copilot_cli(cmd: &str) -> Result<()> {
             rewritten
         )
     });
-    let _ = writeln!(io::stdout(), "{output}");
-    Ok(())
+
+    CopilotOutcome::Rewrite {
+        original: cmd.to_string(),
+        rewritten,
+        output,
+    }
 }
 
 // ── Gemini hook ───────────────────────────────────────────────
@@ -527,6 +583,20 @@ fn run_cursor_inner_with_rules(
 mod tests {
     use super::*;
 
+    fn run_copilot_inner(input: &str) -> Option<String> {
+        let v: Value = serde_json::from_str(input).ok()?;
+        let out = match detect_format(&v) {
+            HookFormat::VsCode { command } => compute_vscode_outcome(&command),
+            HookFormat::CopilotCli { command } => compute_copilot_cli_outcome(&command),
+            HookFormat::PassThrough => CopilotOutcome::PassThrough,
+        };
+
+        match out {
+            CopilotOutcome::Rewrite { output, .. } => Some(output.to_string()),
+            _ => None,
+        }
+    }
+
     fn rewrite_command_no_prefixes(cmd: &str, excluded: &[String]) -> Option<String> {
         crate::discover::registry::rewrite_command(cmd, excluded, &[])
     }
@@ -543,6 +613,51 @@ mod tests {
     fn copilot_cli_input(cmd: &str) -> Value {
         let args = serde_json::to_string(&json!({ "command": cmd })).unwrap();
         json!({ "toolName": "bash", "toolArgs": args })
+    }
+
+    // --- Copilot parity (legacy shell suite migrated to Rust tests) ---
+
+    #[test]
+    fn test_copilot_cli_denies_with_rtk_suggestion() {
+        let output = run_copilot_inner(&copilot_cli_input("git status").to_string()).unwrap();
+        let v: Value = serde_json::from_str(&output).unwrap();
+        assert_eq!(v["permissionDecision"], "deny");
+        let reason = v["permissionDecisionReason"].as_str().unwrap();
+        assert!(reason.contains("rtk git status"));
+    }
+
+    #[test]
+    fn test_copilot_cli_passthrough_already_rtk() {
+        assert!(run_copilot_inner(&copilot_cli_input("rtk git status").to_string()).is_none());
+    }
+
+    #[test]
+    fn test_copilot_cli_passthrough_non_bash_tool() {
+        let input = json!({ "toolName": "view", "toolArgs": "{}" }).to_string();
+        assert!(run_copilot_inner(&input).is_none());
+    }
+
+    #[test]
+    fn test_copilot_cli_passthrough_invalid_tool_args_json() {
+        let input = json!({ "toolName": "bash", "toolArgs": "{not-json" }).to_string();
+        assert!(run_copilot_inner(&input).is_none());
+    }
+
+    #[test]
+    fn test_vscode_rewrites_with_updated_input() {
+        let output = run_copilot_inner(&vscode_input("Bash", "git status").to_string()).unwrap();
+        let v: Value = serde_json::from_str(&output).unwrap();
+        let hook = &v["hookSpecificOutput"];
+        assert_eq!(hook["hookEventName"], PRE_TOOL_USE_KEY);
+        assert_eq!(hook["permissionDecisionReason"], "RTK auto-rewrite");
+        let decision = hook["permissionDecision"].as_str().unwrap();
+        assert!(matches!(decision, "ask" | "allow"));
+        assert_eq!(hook["updatedInput"]["command"], "rtk git status");
+    }
+
+    #[test]
+    fn test_vscode_passthrough_non_bash_tool() {
+        assert!(run_copilot_inner(&json!({ "tool_name": "editFiles" }).to_string()).is_none());
     }
 
     #[test]

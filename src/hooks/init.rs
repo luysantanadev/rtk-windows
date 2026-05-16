@@ -3711,13 +3711,37 @@ rtk proxy <cmd>       # Run raw (no filtering) but track usage
 
 /// Entry point for `rtk init --copilot`
 pub fn run_copilot(ctx: InitContext) -> Result<()> {
-    let InitContext { dry_run, .. } = ctx;
+    let InitContext {
+        dry_run, verbose, ..
+    } = ctx;
     // Install in current project's .github/ directory
     let github_dir = Path::new(".github");
     let hooks_dir = github_dir.join("hooks");
 
     if !dry_run {
         fs::create_dir_all(&hooks_dir).context("Failed to create .github/hooks/ directory")?;
+    }
+
+    // 0. Detect and migrate legacy script hook if present
+    let legacy_script = hooks_dir.join("rtk-rewrite.sh");
+    let mut migrated_from_legacy = false;
+    if legacy_script.exists() {
+        migrated_from_legacy = true;
+        if dry_run {
+            println!(
+                "[dry-run] would migrate legacy Copilot hook: {}",
+                legacy_script.display()
+            );
+        } else {
+            // nosemgrep: filesystem-deletion
+            let _ = fs::remove_file(&legacy_script);
+            if verbose > 0 {
+                eprintln!(
+                    "  [ok] Removed legacy Copilot hook: {}",
+                    legacy_script.display()
+                );
+            }
+        }
     }
 
     // 1. Write hook config
@@ -3739,6 +3763,9 @@ pub fn run_copilot(ctx: InitContext) -> Result<()> {
         println!("\nGitHub Copilot integration installed (project-scoped).\n");
         println!("  Hook config:    {}", hook_path.display());
         println!("  Instructions:   {}", instructions_path.display());
+        if migrated_from_legacy {
+            println!("\n  [ok] Migrated: replaced legacy hook script with Rust native hook");
+        }
         println!("\n  Works with VS Code Copilot Chat (transparent rewrite)");
         println!("  and Copilot CLI (deny-with-suggestion).");
         println!("\n  Restart your IDE or Copilot CLI session to activate.\n");
@@ -5632,6 +5659,33 @@ mod tests {
         assert!(
             !cleaned.contains(RTK_BLOCK_END),
             "RTK end marker must be removed"
+        );
+    }
+
+    #[test]
+    fn test_run_copilot_dry_run_writes_nothing() {
+        let tmp = TempDir::new().unwrap();
+        let cwd = std::env::current_dir().unwrap();
+        std::env::set_current_dir(tmp.path()).unwrap();
+
+        let result = run_copilot(InitContext {
+            dry_run: true,
+            ..Default::default()
+        });
+
+        std::env::set_current_dir(&cwd).unwrap();
+        result.unwrap();
+
+        assert!(
+            !tmp.path().join(".github").join("hooks").exists(),
+            "dry-run must not create .github/hooks"
+        );
+        assert!(
+            !tmp.path()
+                .join(".github")
+                .join("copilot-instructions.md")
+                .exists(),
+            "dry-run must not create copilot instructions"
         );
     }
 }

@@ -26,21 +26,21 @@ Agent runs "cargo test"
 
 ## Supported agents
 
-| Agent | Integration tier | Can rewrite transparently? |
-|-------|-----------------|---------------------------|
-| Claude Code | Shell hook (`PreToolUse`) | Yes |
-| VS Code Copilot Chat | Shell hook (`PreToolUse`) | Yes |
-| GitHub Copilot CLI | Shell hook (deny-with-suggestion) | No (agent retries) |
-| Cursor | Shell hook (`preToolUse`) | Yes |
-| Gemini CLI | Rust binary (`BeforeTool`) | Yes |
-| OpenCode | TypeScript plugin (`tool.execute.before`) | Yes |
-| OpenClaw | TypeScript plugin (`before_tool_call`) | Yes |
-| Hermes | Python plugin (`terminal` command mutation) | Yes |
-| Cline / Roo Code | Rules file (prompt-level) | N/A |
-| Windsurf | Rules file (prompt-level) | N/A |
-| Codex CLI | AGENTS.md instructions | N/A |
-| Kilo Code | Rules file (prompt-level) | N/A |
-| Google Antigravity | Rules file (prompt-level) | N/A |
+| Agent | Integration tier | Can rewrite transparently? | Windows native? |
+|-------|-----------------|---------------------------|-------------|
+| Claude Code | Shell hook (`PreToolUse`) | Yes | ⚠️ Fallback mode (instructions only) |
+| VS Code Copilot Chat | Rust binary (`PreToolUse`) | Yes | ✅ Full support |
+| GitHub Copilot CLI | Rust binary (deny-with-suggestion) | No (agent retries) | ✅ Full support |
+| Cursor | Shell hook (`preToolUse`) | Yes | ⚠️ Fallback mode |
+| Gemini CLI | Rust binary (`BeforeTool`) | Yes | ✅ Full support |
+| OpenCode | TypeScript plugin (`tool.execute.before`) | Yes | ✅ Full support |
+| OpenClaw | TypeScript plugin (`before_tool_call`) | Yes | ✅ Full support |
+| Hermes | Python plugin (`terminal` command mutation) | Yes | ✅ Full support |
+| Cline / Roo Code | Rules file (prompt-level) | N/A | ✅ Full support |
+| Windsurf | Rules file (prompt-level) | N/A | ✅ Full support |
+| Codex CLI | AGENTS.md instructions | N/A | ✅ Full support |
+| Kilo Code | Rules file (prompt-level) | N/A | ✅ Full support |
+| Google Antigravity | Rules file (prompt-level) | N/A | ✅ Full support |
 | Mistral Vibe | Planned ([#800](https://github.com/rtk-ai/rtk/issues/800)) | Pending upstream |
 
 ## Installation by agent
@@ -155,13 +155,27 @@ Rules file integrations (Cline, Windsurf, Codex, Kilo Code, Antigravity) rely on
 
 ## Windows support
 
-The shell hook (`rtk-rewrite.sh`) requires a Unix shell. On native Windows:
+### Full native Windows support (RTK 0.34.0+)
 
-- `rtk init -g` automatically falls back to **CLAUDE.md injection mode** (prompt-level instructions)
+**VS Code Copilot Chat** and **Copilot CLI** now use Rust-native hooks (`rtk hook copilot`) — full transparent rewrite on Windows.
+
+```powershell
+rtk init -g --copilot    # Full native Windows support
+```
+
+Other agents fallback to **CLAUDE.md injection mode** (prompt-level instructions) on native Windows:
+
+- `rtk init -g` (Claude Code) → instructions only, no auto-rewrite
 - Filters work normally (`rtk cargo test`, `rtk git status`)
-- Auto-rewrite does not work — the AI assistant is instructed to use RTK but commands are not intercepted
 
-For full hook support on Windows, use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install). Inside WSL, all agents with shell hook integration (Claude Code, Cursor, Gemini) work identically to Linux.
+### WSL: Full feature parity with Linux/macOS
+
+For full hook support on all agents (Claude Code, Cursor, Gemini), use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install). Inside WSL, all agents work identically to Linux:
+
+```bash
+# Inside WSL terminal
+rtk init -g    # Full auto-rewrite for all agents
+```
 
 ## Graceful degradation
 
