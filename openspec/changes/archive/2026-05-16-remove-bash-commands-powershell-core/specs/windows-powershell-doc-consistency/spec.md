@@ -1,3 +1,5 @@
+## MODIFIED Requirements
+
 ### Requirement: PowerShell Core-first command documentation
 All user-facing documentation SHALL present PowerShell Core command examples as the default execution model for this fork, and SHALL avoid Bash-first command guidance in maintained materials.
 
@@ -15,16 +17,3 @@ All user-facing documentation SHALL present PowerShell Core command examples as 
 - **WHEN** maintained workflow documentation describes repository automation commands
 - **THEN** command examples use PowerShell Core invocations
 - **AND** Bash command variants are not presented as supported defaults
-
-### Requirement: Documentation platform language consistency
-Documentation language SHALL consistently identify the project as a Windows-only fork unless explicitly describing upstream or historical context.
-
-#### Scenario: Platform support statement
-- **WHEN** support scope is documented
-- **THEN** it states Windows-only distribution and execution support for this fork
-- **AND** avoids ambiguous multi-platform claims
-
-#### Scenario: Cross-language README alignment
-- **WHEN** localized README files are updated
-- **THEN** platform support wording remains semantically consistent across locales
-- **AND** command examples remain PowerShell Core-first

@@ -89,7 +89,7 @@ Use the comprehensive security review process:
 # Manual review (without Claude):
 gh pr view <PR_NUMBER>
 gh pr diff <PR_NUMBER> > /tmp/pr.diff
-bash scripts/detect-dangerous-patterns.sh /tmp/pr.diff
+pwsh -NoProfile -Command "Get-Content /tmp/pr.diff | Select-String -Pattern 'Command::new\(\"sh\"\)|LD_PRELOAD|unsafe \{|SystemTime::now\(\)'"
 ```
 
 **Review checklist:**

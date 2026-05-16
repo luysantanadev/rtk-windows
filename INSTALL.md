@@ -90,9 +90,11 @@ rtk-windows gain  # Must show token savings stats (not "command not found")
 
 **Best for: All projects, automatic rtk-windows usage**
 
+**Prerequisite:** Use PowerShell Core (`pwsh`) for repository scripts and maintenance commands.
+
 ```powershell
 rtk-windows init -g
-# → Installs hook to ~/.claude/hooks/rtk-rewrite.sh
+# → Installs hook to ~/.claude/hooks/rtk-rewrite.json
 # → Creates ~/.claude/RTK.md (10 lines, meta commands only)
 # → Adds @RTK.md reference to ~/.claude/CLAUDE.md
 # → Prompts: "Patch settings.json? [y/N]"
@@ -112,7 +114,7 @@ rtk-windows init --show  # Check hook is installed and executable
 Claude Code's hook registry. rtk-windows adds a PreToolUse hook that rewrites commands transparently. Without this, Claude won't invoke the hook automatically.
 
 ```
-  Claude Code          settings.json        rtk-rewrite.sh        rtk-windows binary
+   Claude Code          settings.json        rtk-rewrite.json      rtk-windows binary
        │                    │                     │                    │
        │  "git status"      │                     │                    │
        │ ──────────────────►│                     │                    │
@@ -196,7 +198,7 @@ rtk-windows init -g
 rtk-windows init -g --auto-patch
 
 # Verify in scripts
-rtk-windows init --show | grep "Hook:"
+rtk-windows init --show | Select-String "Hook:"
 ```
 
 ### Conservative User (Manual Control)
@@ -246,7 +248,7 @@ rtk-windows vitest
 rtk-windows init -g --uninstall
 
 # What gets removed:
-#   - Hook: ~/.claude/hooks/rtk-rewrite.sh
+#   - Hook: ~/.claude/hooks/rtk-rewrite.json
 #   - Context: ~/.claude/RTK.md
 #   - Reference: @RTK.md line from ~/.claude/CLAUDE.md
 #   - Registration: rtk-windows hook entry from settings.json

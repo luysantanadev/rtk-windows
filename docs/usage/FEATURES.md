@@ -1181,7 +1181,7 @@ rtk-windows hook-audit --since 0              # Tout l'historique
 
 ### Fonctionnement
 
-Le hook rtk-windows intercepte les commandes Bash dans Claude Code **avant leur execution** et les reecrit automatiquement en equivalent RTK.
+Le hook rtk-windows intercepte les commandes dans Claude Code **avant leur execution** et les reecrit automatiquement en equivalent RTK.
 
 **Flux :**
 ```
@@ -1191,7 +1191,7 @@ Claude Code "git status"
 settings.json -> PreToolUse hook
     |
     v
-rtk-rewrite.sh (bash)
+rtk-rewrite.json (commande `rtk hook copilot`)
     |
     v
 rtk-windows rewrite "git status"  ->  "rtk-windows git status"
@@ -1205,7 +1205,7 @@ Sortie filtree retournee a Claude (~10 tokens vs ~200)
 
 **Points cles :**
 - Claude ne voit jamais la recriture -- il recoit simplement une sortie optimisee
-- Le hook est un delegateur leger (~50 lignes bash) qui appelle `rtk-windows rewrite`
+- Le hook est un delegateur leger base sur `pwsh`/JSON qui appelle `rtk-windows rewrite`
 - Toute la logique de recriture est dans le registre Rust (`src/discover/registry.rs`)
 - Les commandes deja prefixees par `rtk-windows` passent sans modification
 - Les heredocs (`<<`) ne sont pas modifies
@@ -1225,7 +1225,7 @@ rtk-windows init -g --uninstall         # Desinstaller
 
 | Fichier | Description |
 |---------|-------------|
-| `~/.claude/hooks/rtk-rewrite.sh` | Script hook (delegue a `rtk-windows rewrite`) |
+| `~/.claude/hooks/rtk-rewrite.json` | Definition hook (delegue a `rtk-windows rewrite`) |
 | `~/.claude/RTK.md` | Instructions minimales pour le LLM |
 | `~/.claude/settings.json` | Enregistrement du hook PreToolUse |
 

@@ -13,7 +13,7 @@
 | src/hooks/ | Hook install/runtime logic in Rust | src/main.rs, src/hooks/rewrite_cmd.rs |
 | hooks/ | Agent-specific deployed hook artifacts and plugins | hooks/README.md |
 | tests/fixtures/ | Real command output fixtures used by module tests | docs/contributing/TECHNICAL.md, tests/fixtures/* |
-| scripts/ | Utility scripts for smoke tests, benchmarks, installation checks | scripts/test-all.sh, scripts/benchmark.sh |
+| scripts/ | Utility scripts for smoke tests, benchmarks, installation checks | scripts/test-all.ps1, scripts/benchmark.ps1 |
 | docs/ | User/contributor documentation and architecture guides | docs/contributing/TECHNICAL.md, docs/contributing/ARCHITECTURE.md |
 | .github/workflows/ | CI/CD pipelines and security/test gates | .github/workflows/ci.yml |
 

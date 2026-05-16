@@ -161,7 +161,7 @@ Glob tests/fixtures/*.txt | wc -l
 Grep "count_tokens\|savings" src/ --glob "*.rs" --output_mode count
 
 # Smoke tests OK
-ls scripts/test-all.sh 2>/dev/null && echo "Smoke tests present" || echo "Missing"
+ls scripts/test-all.ps1 2>/dev/null && echo "Smoke tests present" || echo "Missing"
 ```
 
 | Coverage %         | Score | Tier |

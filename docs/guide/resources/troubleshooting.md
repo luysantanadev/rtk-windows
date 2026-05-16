@@ -18,9 +18,9 @@ rtk: 'gain' is not a rtk command. See 'rtk --help'.
 **Cause:** You installed **Rust Type Kit** (`reachingforthejack/rtk`) instead of **Rust Token Killer** (`https://github.com/luysantanadev/rtk-windows.git`). They share the same binary name.
 
 **Fix:**
-```bash
+```powershell
 cargo uninstall rtk
-curl -fsSL https://raw.githubusercontent.com/luysantanadev/rtk-windows/master/install.sh | sh
+cargo install --git https://github.com/luysantanadev/rtk-windows.git --force
 rtk gain    # should now show token savings stats
 ```
 
@@ -107,12 +107,12 @@ rtk --version
 
 **Symptom:** `rtk init -g` shows "Falling back to --claude-md mode" on Windows.
 
-**Cause:** The auto-rewrite hook (`rtk-rewrite.sh`) requires a Unix shell. Native Windows doesn't have one.
+**Cause:** Hook registration is missing or outdated in `settings.json`.
 
-**Fix:** Use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) for full hook support:
-```bash
+**Fix:** Re-run hook setup in PowerShell:
+```powershell
 # Inside WSL
-curl -fsSL https://raw.githubusercontent.com/luysantanadev/rtk-windows/refs/heads/master/install.sh | sh
+cargo install --git https://github.com/luysantanadev/rtk-windows.git --force
 rtk init -g    # full hook mode works in WSL
 ```
 
@@ -129,7 +129,7 @@ Error: program not found
 **Cause:** On Windows, Node.js tools are installed as `.CMD`/`.BAT` wrappers. Older RTK versions couldn't find them.
 
 **Fix:** Update to RTK v0.23.1+:
-```bash
+```powershell
 cargo install --git https://github.com/luysantanadev/rtk-windows.git
 rtk --version    # should be 0.23.1+
 ```
@@ -168,8 +168,8 @@ cargo install --git https://github.com/luysantanadev/rtk-windows.git
 
 From the RTK repository root:
 
-```bash
-bash scripts/check-installation.sh
+```powershell
+pwsh ./scripts/check-installation.ps1
 ```
 
 Checks:

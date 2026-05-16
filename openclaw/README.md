@@ -2,7 +2,7 @@
 
 Transparently rewrites shell commands executed via OpenClaw's `exec` tool to their RTK equivalents, achieving 60-90% LLM token savings.
 
-This is the OpenClaw equivalent of the Claude Code hooks in `hooks/rtk-rewrite.sh`.
+This is the OpenClaw equivalent of the Claude Code hook flow (`rtk hook copilot`).
 
 ## How it works
 
@@ -16,10 +16,8 @@ All rewrite logic lives in RTK itself (`rtk rewrite`). This plugin is a thin del
 
 RTK must be installed and available in `$PATH`:
 
-```bash
-brew install rtk
-# or
-curl -fsSL https://raw.githubusercontent.com/luysantanadev/rtk-windows/refs/heads/master/install.sh | sh
+```powershell
+cargo install --git https://github.com/luysantanadev/rtk-windows.git --force
 ```
 
 ### Install the plugin

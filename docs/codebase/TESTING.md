@@ -11,11 +11,11 @@
   - [TODO] Snapshot tooling is documented as insta in CONTRIBUTING docs, but current source search did not find assert_snapshot!/insta usage in src/*.rs.
 - Commands:
 
-```bash
+```powershell
 cargo test --all
 cargo test <module_or_test_name>
 cargo test --ignored
-bash scripts/test-all.sh
+pwsh ./scripts/test-all.ps1
 ```
 
 ### 2) Test Layout
@@ -23,7 +23,7 @@ bash scripts/test-all.sh
 - Test file placement pattern:
   - Most tests are inline inside source modules under #[cfg(test)].
   - Fixture files live in tests/fixtures/ (including ecosystem subfolders).
-  - Additional smoke/integration scripts exist under scripts/ and hooks/*/test-*.sh.
+  - Additional smoke/integration scripts exist under scripts/ and hooks/*/tests.
 - Naming convention:
   - Rust test names use snake_case with test_ prefix.
   - Fixture names end with _raw and format extension (example: glab_issue_list_raw.json).
@@ -50,15 +50,15 @@ bash scripts/test-all.sh
 - Coverage tool + threshold: [TODO] No repository-level coverage tool or threshold config found.
 - Current reported coverage: [TODO] Not published in scanned CI outputs/files.
 - Known gaps/flaky areas:
-  - Some smoke tests intentionally tolerate non-zero outputs (example: cargo test in scripts/test-all.sh) due pre-existing failures in target commands.
+  - Some smoke tests intentionally tolerate non-zero outputs (example: cargo test in scripts/test-all.ps1) due pre-existing failures in target commands.
   - Snapshot testing is documented, but direct code evidence in src/ for insta usage was not found in this pass.
 
 ### 6) Evidence
 
 - CONTRIBUTING.md
 - docs/contributing/TECHNICAL.md
-- scripts/test-all.sh
-- scripts/check-test-presence.sh
+- scripts/test-all.ps1
+- scripts/check-test-presence.ps1
 - .github/workflows/ci.yml
 - src/cmds/go/golangci_cmd.rs
 - src/cmds/git/glab_cmd.rs

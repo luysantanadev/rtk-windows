@@ -53,5 +53,5 @@ if frontmatter is missing or malformed.
 - **Diagrams**: Mermaid in fenced code blocks
 - **Code samples**: always specify the language (`rust`, `toml`, `bash`)
 - **Language**: English only
-- **No `rtk <cmd>` syntax**: users never type `rtk` — hooks rewrite commands transparently.
-  Only `rtk gain`, `rtk init`, `rtk verify`, and `rtk proxy` appear as user-typed commands.
+- **No `rtk-windows <cmd>` syntax**: users never type the wrapper prefix manually — hooks rewrite commands transparently.
+  Only `rtk-windows gain`, `rtk-windows init`, `rtk-windows verify`, and `rtk-windows proxy` appear as user-typed commands.
