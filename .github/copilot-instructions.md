@@ -6,6 +6,8 @@
 
 Always prefix shell commands with `rtk`:
 
+### Bash / Linux / macOS / WSL
+
 ```bash
 # Instead of:              Use:
 git status                 rtk git status
@@ -13,6 +15,19 @@ git log -10                rtk git log -10
 cargo test                 rtk cargo test
 docker ps                  rtk docker ps
 kubectl get pods           rtk kubectl pods
+```
+
+### PowerShell / Windows
+
+```powershell
+# Instead of:                        Use:
+git status                           rtk git status
+git log -10                          rtk git log -10
+cargo test                           rtk cargo test
+docker ps                            rtk docker ps
+Get-ChildItem                        rtk ls
+Get-Process | Select-Object Name     rtk ps
+dotnet test                          rtk dotnet test
 ```
 
 ## Meta commands (use directly)

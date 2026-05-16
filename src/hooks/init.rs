@@ -3690,6 +3690,8 @@ const COPILOT_INSTRUCTIONS: &str = r#"# RTK — Token-Optimized CLI
 
 Always prefix shell commands with `rtk`:
 
+### Bash / Linux / macOS / WSL
+
 ```bash
 # Instead of:              Use:
 git status                 rtk git status
@@ -3697,6 +3699,19 @@ git log -10                rtk git log -10
 cargo test                 rtk cargo test
 docker ps                  rtk docker ps
 kubectl get pods           rtk kubectl pods
+```
+
+### PowerShell / Windows
+
+```powershell
+# Instead of:                        Use:
+git status                           rtk git status
+git log -10                          rtk git log -10
+cargo test                           rtk cargo test
+docker ps                            rtk docker ps
+Get-ChildItem                        rtk ls
+Get-Process | Select-Object Name     rtk ps
+dotnet test                          rtk dotnet test
 ```
 
 ## Meta commands (use directly)
@@ -5379,6 +5394,7 @@ mod tests {
 
     use std::sync::Mutex;
     static CLAUDE_DIR_LOCK: Mutex<()> = Mutex::new(());
+    static CWD_LOCK: Mutex<()> = Mutex::new(());
 
     fn with_claude_dir_override<F: FnOnce(&Path)>(tmp: &TempDir, f: F) {
         let _guard = CLAUDE_DIR_LOCK.lock().unwrap_or_else(|e| e.into_inner());
@@ -5392,6 +5408,14 @@ mod tests {
             Some(v) => std::env::set_var("RTK_CLAUDE_DIR", v),
             None => std::env::remove_var("RTK_CLAUDE_DIR"),
         }
+    }
+
+    fn with_temp_cwd<F: FnOnce()>(tmp: &TempDir, f: F) {
+        let _guard = CWD_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        let cwd = std::env::current_dir().unwrap();
+        std::env::set_current_dir(tmp.path()).unwrap();
+        f();
+        std::env::set_current_dir(&cwd).unwrap();
     }
 
     #[test]
@@ -5665,16 +5689,13 @@ mod tests {
     #[test]
     fn test_run_copilot_dry_run_writes_nothing() {
         let tmp = TempDir::new().unwrap();
-        let cwd = std::env::current_dir().unwrap();
-        std::env::set_current_dir(tmp.path()).unwrap();
-
-        let result = run_copilot(InitContext {
-            dry_run: true,
-            ..Default::default()
+        with_temp_cwd(&tmp, || {
+            run_copilot(InitContext {
+                dry_run: true,
+                ..Default::default()
+            })
+            .unwrap();
         });
-
-        std::env::set_current_dir(&cwd).unwrap();
-        result.unwrap();
 
         assert!(
             !tmp.path().join(".github").join("hooks").exists(),
@@ -5687,5 +5708,85 @@ mod tests {
                 .exists(),
             "dry-run must not create copilot instructions"
         );
+    }
+
+    #[test]
+    fn test_run_copilot_writes_project_artifacts() {
+        let tmp = TempDir::new().unwrap();
+        with_temp_cwd(&tmp, || {
+            run_copilot(InitContext::default()).unwrap();
+        });
+
+        let hook_path = tmp
+            .path()
+            .join(".github")
+            .join("hooks")
+            .join("rtk-rewrite.json");
+        let instructions_path = tmp.path().join(".github").join("copilot-instructions.md");
+
+        assert!(hook_path.exists(), "Copilot hook config must be created");
+        assert!(
+            instructions_path.exists(),
+            "Copilot instructions must be created"
+        );
+        assert_eq!(fs::read_to_string(&hook_path).unwrap(), COPILOT_HOOK_JSON);
+        assert_eq!(
+            fs::read_to_string(&instructions_path).unwrap(),
+            COPILOT_INSTRUCTIONS
+        );
+    }
+
+    #[test]
+    fn test_run_copilot_migrates_legacy_script_to_rust_hook() {
+        let tmp = TempDir::new().unwrap();
+        let hooks_dir = tmp.path().join(".github").join("hooks");
+        fs::create_dir_all(&hooks_dir).unwrap();
+        let legacy_script = hooks_dir.join("rtk-rewrite.sh");
+        fs::write(&legacy_script, "#!/bin/sh\necho legacy\n").unwrap();
+
+        with_temp_cwd(&tmp, || {
+            run_copilot(InitContext::default()).unwrap();
+        });
+
+        assert!(
+            !legacy_script.exists(),
+            "legacy Copilot shell hook must be removed during migration"
+        );
+        assert!(hooks_dir.join("rtk-rewrite.json").exists());
+        assert!(tmp
+            .path()
+            .join(".github")
+            .join("copilot-instructions.md")
+            .exists());
+    }
+
+    #[test]
+    fn test_run_copilot_is_idempotent() {
+        let tmp = TempDir::new().unwrap();
+        let hook_path = tmp
+            .path()
+            .join(".github")
+            .join("hooks")
+            .join("rtk-rewrite.json");
+        let instructions_path = tmp.path().join(".github").join("copilot-instructions.md");
+        let (first_hook, first_instructions) = {
+            let mut first_hook = String::new();
+            let mut first_instructions = String::new();
+            with_temp_cwd(&tmp, || {
+                run_copilot(InitContext::default()).unwrap();
+                first_hook = fs::read_to_string(&hook_path).unwrap();
+                first_instructions = fs::read_to_string(&instructions_path).unwrap();
+                run_copilot(InitContext::default()).unwrap();
+            });
+            (first_hook, first_instructions)
+        };
+
+        assert_eq!(fs::read_to_string(&hook_path).unwrap(), first_hook);
+        assert_eq!(
+            fs::read_to_string(&instructions_path).unwrap(),
+            first_instructions
+        );
+        assert_eq!(first_hook, COPILOT_HOOK_JSON);
+        assert_eq!(first_instructions, COPILOT_INSTRUCTIONS);
     }
 }
