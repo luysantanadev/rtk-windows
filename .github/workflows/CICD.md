@@ -52,25 +52,26 @@ Trigger: push to develop | workflow_dispatch (not master) | Concurrency: cancel-
      │ pre-release                │
      │ compute next version      │
      │ from conventional commits │
-     │ tag = v{next}-rc.{run}    │
+     │ baseline: v0.0.0 if no tag│
+     │ tag = dev-{next}-rc.{run} │
      └────────┬──────────────────┘
               │
      ┌────────▼──────────────────┐
      │ release.yml               │
+     │ Windows x86_64 only       │
      │ prerelease = true         │
      └────────┬──────────────────┘
               │
      ┌────────▼──────────────────┐
-     │ Build                     │
-     │ 5 platforms + DEB + RPM   │
+     │ Build (windows-latest)    │
+     │ rtk-x86_64-pc-windows-    │
+     │ msvc.zip                  │
      └────────┬──────────────────┘
               │
      ┌────────▼──────────────────┐
      │ GitHub Release            │
      │ (pre-release badge)       │
-     │                           │
-     │ Discord:  SKIPPED         │
-     │ Homebrew: SKIPPED         │
+     │ token: GITHUB_TOKEN       │
      └──────────────────────────┘
 ```
 
@@ -84,34 +85,36 @@ Trigger: push to master (only) | Concurrency: never cancelled
      └────────┬─────────┘
               │
      ┌────────▼──────────────────┐
-     │ release-please            │
-     │ analyze conventional      │
-     │ commits                   │
+     │ stable-release             │
+     │ compute next version      │
+     │ from conventional commits │
+     │ baseline: v0.0.0 if no tag│
+     │ tag = v{MAJOR}.{MINOR}.   │
+     │       {PATCH}             │
      └────────┬──────────────────┘
               │
-         ┌────┴────────────────┐
-         │                     │
-    no release           release created
-         │                     │
-         ▼                     ▼
-  ┌──────────────┐    ┌───────────────────────┐
-  │ create/update│    │ release.yml            │
-  │ release PR   │    │ prerelease = false     │
-  └──────────────┘    └───────────┬───────────┘
-                                  │
-                     ┌────────────▼────────────┐
-                     │ Build                   │
-                     │ 5 platforms + DEB + RPM  │
-                     └────────────┬────────────┘
-                                  │
-                     ┌────────────▼────────────┐
-                     │ GitHub Release           │
-                     │ (stable, "Latest" badge) │
-                     └──┬─────────┬─────────┬──┘
-                        │         │         │
-                        ▼         ▼         ▼
-                    Discord   Homebrew   latest
-                    notify    tap update  tag
+         ┌────┴──────────────────┐
+         │                       │
+    tag exists               new tag
+    (idempotent)                 │
+         │                       ▼
+         ▼              ┌────────────────────┐
+      skipped           │ release.yml        │
+                        │ Windows x86_64 only│
+                        │ prerelease = false │
+                        └────────┬───────────┘
+                                 │
+                        ┌────────▼───────────┐
+                        │ Build              │
+                        │ rtk-x86_64-pc-     │
+                        │ windows-msvc.zip   │
+                        └────────┬───────────┘
+                                 │
+                        ┌────────▼───────────┐
+                        │ GitHub Release     │
+                        │ (stable badge)     │
+                        │ token: GITHUB_TOKEN│
+                        └────────────────────┘
 ```
 
 ## Manual release (release.yml)
@@ -125,8 +128,8 @@ Trigger: workflow_dispatch
      └───────────┬────────────┘
                  │
      ┌───────────▼────────────┐
-     │ Full build pipeline     │
-     │ 5 platforms + DEB + RPM │
+     │ Build pipeline          │
+     │ Windows x86_64 only     │
      └───────────┬────────────┘
                  │
           ┌──────┴──────┐
@@ -134,7 +137,6 @@ Trigger: workflow_dispatch
    prerelease=false  prerelease=true
           │             │
           ▼             ▼
-     Discord        pre-release
-     Homebrew       badge only
-     latest tag
+     GitHub Release  GitHub Release
+     (stable badge)  (pre-release badge)
 ```
