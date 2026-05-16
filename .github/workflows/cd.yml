@@ -36,8 +36,10 @@ jobs:
         run: |
           LATEST_TAG=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-version:refname | grep -v '-' | head -1)
           if [ -z "$LATEST_TAG" ]; then
-            echo "::error::No stable release tag found"
-            exit 1
+            # No stable release tag yet — bootstrap from Cargo.toml version
+            CARGO_VERSION=$(grep '^version' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
+            LATEST_TAG="v${CARGO_VERSION}"
+            echo "No release tag found — using Cargo.toml baseline: $LATEST_TAG"
           fi
           LATEST_VERSION="${LATEST_TAG#v}"
           echo "Latest release: $LATEST_TAG"
