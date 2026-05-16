@@ -33,7 +33,7 @@
 rtk-windows filters and compresses command outputs before they reach your LLM context. Single Rust binary, 100+ supported commands, <10ms overhead.
 
 > **Windows-only fork notice (BREAKING):** This repository supports **Windows native** only (PowerShell/cmd).
-> For Linux/macOS, use the upstream project at https://github.com/luysantanadev/rtk-windows.git.
+> For Linux/macOS, use the upstream project at https://github.com/rtk-ai/rtk.
 
 ## Token Savings (30-min Claude Code Session)
 
@@ -93,7 +93,7 @@ Download from [releases](https://github.com/luysantanadev/rtk-windows.git/releas
 ### Linux/macOS users
 
 This fork is Windows-only. For Linux/macOS support, use upstream:
-https://github.com/luysantanadev/rtk-windows.git
+https://github.com/rtk-ai/rtk
 
 ### Verify Installation
 
@@ -128,10 +128,10 @@ Hook-based agents rewrite PowerShell/cmd terminal commands (e.g., `git status` -
 
 ## Differences from Upstream
 
-This repository is a Windows-only fork of `https://github.com/luysantanadev/rtk-windows.git`.
+This repository is a Windows-only fork of `https://github.com/rtk-ai/rtk`.
 
 - Windows native support only (PowerShell/cmd) in this fork.
-- Linux/macOS support is maintained upstream at https://github.com/luysantanadev/rtk-windows.git.
+- Linux/macOS support is maintained upstream at https://github.com/rtk-ai/rtk.
 - CI validation in this fork is focused on `windows-latest`.
 
 ## How It Works
