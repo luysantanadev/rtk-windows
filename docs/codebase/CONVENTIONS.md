@@ -9,7 +9,7 @@
 | Files | Rust files generally use snake_case; command wrappers often use *_cmd.rs | src/core/toml_filter.rs, src/cmds/git/glab_cmd.rs | docs/codebase/.codebase-scan.txt |
 | Functions/methods | snake_case naming for functions | run_cli, run_filtered, classify_command | src/main.rs, src/core/runner.rs, src/discover/registry.rs |
 | Types/interfaces | PascalCase for enums/structs | Cli, Commands, RunOptions, Classification | src/main.rs, src/core/runner.rs, src/discover/registry.rs |
-| Constants/env vars | SHOUTY_SNAKE_CASE for constants and env var names | HISTORY_DB, RTK_NO_TOML, RTK_TELEMETRY_DISABLED | src/core/constants.rs, src/main.rs, src/core/telemetry.rs |
+| Constants/env vars | SHOUTY_SNAKE_CASE for constants and env var names | HISTORY_DB, RTK_NO_TOML | src/core/constants.rs, src/main.rs |
 
 ### 2) Formatting and Linting
 
@@ -40,8 +40,7 @@
   - Primarily stderr informational/warning output (eprintln! in Rust and shell echo to stderr in hooks).
   - [TODO] No centralized structured logging schema found for all modules.
 - Sensitive-data redaction rules:
-  - Docs state telemetry excludes command args/content and sensitive data.
-  - [TODO] Repository-wide redaction policy outside telemetry docs is not centralized in one config file.
+  - [TODO] Repository-wide redaction policy is not centralized in one config file.
 
 ### 5) Testing Conventions
 

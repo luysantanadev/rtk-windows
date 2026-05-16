@@ -537,7 +537,6 @@ let _ = conn.execute(
 ## Security & Privacy
 
 - **Local storage only**: Tracking database never leaves the machine
-- **Telemetry requires consent**: rtk-windows can send a daily anonymous usage ping (version, OS, command counts, token savings). Disabled by default, requires explicit consent via `rtk-windows init` or `rtk-windows telemetry enable`. Manage with `rtk-windows telemetry status/disable/forget`. Override: `RTK_TELEMETRY_DISABLED=1`
 - **User control**: Users can delete `~/.local/share/rtk/tracking.db` anytime
 - **90-day retention**: Old data automatically purged
 

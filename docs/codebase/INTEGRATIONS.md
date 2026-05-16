@@ -7,7 +7,6 @@
 | System | Type (API/DB/Queue/etc) | Purpose | Auth model | Criticality | Evidence |
 |--------|---------------------------|---------|------------|-------------|----------|
 | Local SQLite DB | Local DB | Persist command history and token savings analytics | Local filesystem access | High | src/core/tracking.rs, src/core/constants.rs |
-| Telemetry endpoint | HTTPS API | Optional anonymous usage ping and erasure requests | Optional compile-time token header + HTTPS | Medium | src/core/telemetry.rs, src/core/telemetry_cmd.rs, docs/TELEMETRY.md |
 | External CLI tools (git/cargo/gh/glab/docker/kubectl/etc.) | Subprocess integrations | Execute user commands through RTK wrappers | Host machine tool auth/context | High | src/main.rs, src/cmds/README.md |
 | LLM agent hook APIs (Claude/Copilot/Cursor/OpenCode/Hermes/etc.) | Hook/plugin integration | Rewrite raw commands to RTK equivalents | Agent-specific hook/plugin mechanism | High | hooks/README.md, hooks/claude/rtk-rewrite.sh |
 
@@ -21,20 +20,17 @@
 ### 3) Secrets and Credentials Handling
 
 - Credential sources:
-  - Compile-time telemetry variables: RTK_TELEMETRY_URL, RTK_TELEMETRY_TOKEN.
   - Runtime env toggles and user config in config.toml.
   - External tool credentials are handled by those external tools, not stored by RTK core.
 - Hardcoding checks:
   - Security scanning configured in CI (semgrep + cargo-audit + pattern checks).
-- Rotation/lifecycle notes:
-  - [TODO] Rotation policy for telemetry token is not defined in repository runtime code.
 
 ### 4) Reliability and Failure Behavior
 
 - Retry/backoff behavior:
-  - Telemetry is fire-and-forget with timeout; no retry queue by design.
+  - None; commands pass through directly.
 - Timeout policy:
-  - Telemetry HTTP send uses explicit timeouts (2s and 5s paths).
+  - Subprocess execution inherits system defaults.
 - Circuit-breaker/fallback behavior:
   - Hooks and filters are designed to pass through when rewrite/filter fails.
 
@@ -45,14 +41,12 @@
 - Metrics/tracing coverage:
   - Token tracking metrics persisted in SQLite and surfaced via gain/session commands.
 - Missing visibility gaps:
-  - [TODO] No unified tracing/event correlation ID strategy found for subprocess + hook + telemetry flows.
+  - [TODO] No unified tracing/event correlation ID strategy found for subprocess + hook flows.
 
 ### 6) Evidence
 
 - src/core/tracking.rs
 - src/core/constants.rs
-- src/core/telemetry.rs
-- src/core/telemetry_cmd.rs
 - src/main.rs
 - src/cmds/README.md
 - hooks/README.md

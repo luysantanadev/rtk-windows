@@ -409,41 +409,9 @@ cargo uninstall rtk-windows          # Remove binary
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** — contribution guide
 - **[SECURITY.md](SECURITY.md)** — security policy
 
-## Privacy & Telemetry
+## Privacy
 
-rtk-windows can collect **anonymous, aggregate usage metrics** once per day. Telemetry is **disabled by default** and requires **explicit opt-in consent** (GDPR Art. 6, 7) during `rtk-windows init` or via `rtk-windows telemetry enable`. This data helps us build a better product: identifying which commands need filters, which filters need improvement, and how much value rtk-windows delivers. For the full list of fields, data handling, and contributor guidelines, see **[docs/TELEMETRY.md](docs/TELEMETRY.md)**.
-
-**What is collected and why:**
-
-| Category | Data | Why |
-|----------|------|-----|
-| Identity | Salted device hash (SHA-256, not reversible) | Count unique installations without tracking individuals |
-| Environment | rtk-windows version, OS, architecture, install method | Know which platforms to support and test |
-| Usage volume | Command count (24h), total commands, tokens saved (24h/30d/total) | Measure adoption and value delivered |
-| Quality | Top 5 passthrough commands (0% savings), parse failure count, commands with <30% savings | Identify missing filters and weak ones to improve |
-| Ecosystem | Command category distribution (e.g. git 45%, cargo 20%, js 15%) | Prioritize filter development for popular ecosystems |
-| Retention | Days since first use, active days in last 30 | Understand engagement and detect churn |
-| Adoption | AI agent hook type (claude/gemini/codex), custom TOML filter count | Track integration coverage and DSL adoption |
-| Configuration | Whether config.toml exists, number of excluded commands, project count | Understand user maturity and customization patterns |
-| Features | Usage counts for meta-commands (gain, discover, proxy, verify) | Know which rtk-windows features are valued vs unused |
-| Economics | Estimated USD savings (based on API token pricing) | Quantify the value rtk-windows provides to users |
-
-All data is **aggregate counts or anonymized command names** (first 3 words, no arguments). Top commands report only tool names (e.g. "git", "cargo"), never full command lines.
-
-**What is NOT collected:** source code, file paths, command arguments, secrets, environment variables, personal data, or repository contents.
-
-**Manage telemetry:**
-```powershell
-rtk-windows telemetry status     # Check current consent state
-rtk-windows telemetry enable     # Give consent (interactive prompt)
-rtk-windows telemetry disable    # Withdraw consent — stops all collection immediately
-rtk-windows telemetry forget     # Withdraw consent + delete all local data + request server-side erasure
-```
-
-**Override via environment:**
-```powershell
-export RTK_TELEMETRY_DISABLED=1   # Blocks telemetry regardless of consent
-```
+rtk-windows **does not collect any telemetry or usage data**. No information is transmitted to remote servers. All tracking is local-only (via `rtk gain`) and stored on your machine.
 
 ## Star History
 

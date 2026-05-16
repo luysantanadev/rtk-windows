@@ -961,7 +961,8 @@ impl Tracker {
         Ok(rows.collect::<Result<Vec<_>, _>>()?)
     }
 
-    /// Count commands since a given timestamp (for telemetry).
+    /// Count commands since a given timestamp.
+    #[allow(dead_code)]
     pub fn count_commands_since(&self, since: chrono::DateTime<chrono::Utc>) -> Result<i64> {
         let ts = since.format("%Y-%m-%dT%H:%M:%S").to_string();
         let count: i64 = self.conn.query_row(
@@ -972,7 +973,8 @@ impl Tracker {
         Ok(count)
     }
 
-    /// Get top N commands by frequency (for telemetry).
+    /// Get top N commands by frequency.
+    #[allow(dead_code)]
     pub fn top_commands(&self, limit: usize) -> Result<Vec<String>> {
         let mut stmt = self.conn.prepare(
             "SELECT rtk_cmd, COUNT(*) as cnt FROM commands
@@ -986,7 +988,8 @@ impl Tracker {
         Ok(rows.filter_map(|r| r.ok()).collect())
     }
 
-    /// Get overall savings percentage (for telemetry).
+    /// Get overall savings percentage.
+    #[allow(dead_code)]
     pub fn overall_savings_pct(&self) -> Result<f64> {
         let (total_input, total_saved): (i64, i64) = self.conn.query_row(
             "SELECT COALESCE(SUM(input_tokens), 0), COALESCE(SUM(saved_tokens), 0) FROM commands",
@@ -1000,7 +1003,8 @@ impl Tracker {
         }
     }
 
-    /// Get total tokens saved across all tracked commands (for telemetry).
+    /// Get total tokens saved across all tracked commands.
+    #[allow(dead_code)]
     pub fn total_tokens_saved(&self) -> Result<i64> {
         let saved: i64 = self.conn.query_row(
             "SELECT COALESCE(SUM(saved_tokens), 0) FROM commands",
@@ -1010,7 +1014,8 @@ impl Tracker {
         Ok(saved)
     }
 
-    /// Get tokens saved in the last 24 hours (for telemetry).
+    /// Get tokens saved in the last 24 hours.
+    #[allow(dead_code)]
     pub fn tokens_saved_24h(&self, since: chrono::DateTime<chrono::Utc>) -> Result<i64> {
         let ts = since.format("%Y-%m-%dT%H:%M:%S").to_string();
         let saved: i64 = self.conn.query_row(
@@ -1022,7 +1027,8 @@ impl Tracker {
     }
 
     /// Top N passthrough commands (0% savings) — commands missing a filter.
-    /// Groups by first word only to avoid leaking arguments into telemetry.
+    /// Groups by first word only to avoid leaking arguments.
+    #[allow(dead_code)]
     pub fn top_passthrough(&self, limit: usize) -> Result<Vec<(String, i64)>> {
         let mut stmt = self.conn.prepare(
             "SELECT TRIM(SUBSTR(original_cmd, 1, INSTR(original_cmd || ' ', ' ') - 1)) as tool,
@@ -1039,6 +1045,7 @@ impl Tracker {
     }
 
     /// Count parse failures in the last 24 hours.
+    #[allow(dead_code)]
     pub fn parse_failures_since(&self, since: chrono::DateTime<chrono::Utc>) -> Result<i64> {
         let ts = since.format("%Y-%m-%dT%H:%M:%S").to_string();
         let count: i64 = self.conn.query_row(
@@ -1050,6 +1057,7 @@ impl Tracker {
     }
 
     /// Count commands with low savings (<30%) — filters that need improvement.
+    #[allow(dead_code)]
     pub fn low_savings_commands(&self, limit: usize) -> Result<Vec<(String, f64)>> {
         let mut stmt = self.conn.prepare(
             "SELECT rtk_cmd, AVG(savings_pct) as avg_sav FROM commands
@@ -1068,6 +1076,7 @@ impl Tracker {
     }
 
     /// Average savings percentage per command (unweighted — each command name counts once).
+    #[allow(dead_code)]
     pub fn avg_savings_per_command(&self) -> Result<f64> {
         let avg: f64 = self.conn.query_row(
             "SELECT COALESCE(AVG(avg_sav), 0.0) FROM (
@@ -1082,6 +1091,7 @@ impl Tracker {
     }
 
     /// Count invocations of a specific meta-command (by rtk_cmd suffix).
+    #[allow(dead_code)]
     pub fn count_meta_command(&self, name: &str) -> Result<i64> {
         let pattern = format!("rtk {}", name);
         let count: i64 = self.conn.query_row(
@@ -1093,6 +1103,7 @@ impl Tracker {
     }
 
     /// Days since first recorded command (installation age).
+    #[allow(dead_code)]
     pub fn first_seen_days(&self) -> Result<i64> {
         let oldest: Option<String> =
             match self
@@ -1117,6 +1128,7 @@ impl Tracker {
     }
 
     /// Number of distinct active days in the last 30 days.
+    #[allow(dead_code)]
     pub fn active_days_30d(&self) -> Result<i64> {
         let since = (chrono::Utc::now() - chrono::Duration::days(30))
             .format("%Y-%m-%dT%H:%M:%S")
@@ -1130,6 +1142,7 @@ impl Tracker {
     }
 
     /// Total number of recorded commands.
+    #[allow(dead_code)]
     pub fn commands_total(&self) -> Result<i64> {
         let count: i64 = self
             .conn
@@ -1138,6 +1151,7 @@ impl Tracker {
     }
 
     /// Ecosystem distribution as percentages (top categories by command prefix).
+    #[allow(dead_code)]
     pub fn ecosystem_mix(&self) -> Result<Vec<(String, f64)>> {
         let total: f64 = self.conn.query_row(
             "SELECT COUNT(*) FROM commands WHERE input_tokens > 0 AND timestamp >= datetime('now', '-90 days')",
@@ -1173,6 +1187,7 @@ impl Tracker {
     }
 
     /// Tokens saved in the last 30 days.
+    #[allow(dead_code)]
     pub fn tokens_saved_30d(&self) -> Result<i64> {
         let since = (chrono::Utc::now() - chrono::Duration::days(30))
             .format("%Y-%m-%dT%H:%M:%S")
@@ -1186,6 +1201,7 @@ impl Tracker {
     }
 
     /// Number of distinct project paths.
+    #[allow(dead_code)]
     pub fn projects_count(&self) -> Result<i64> {
         let count: i64 = self.conn.query_row(
             "SELECT COUNT(DISTINCT project_path) FROM commands WHERE project_path != ''",
@@ -1196,7 +1212,8 @@ impl Tracker {
     }
 }
 
-/// Map an rtk_cmd to an ecosystem category for telemetry.
+/// Map an rtk_cmd to an ecosystem category.
+#[allow(dead_code)]
 fn categorize_command(rtk_cmd: &str) -> String {
     let parts: Vec<&str> = rtk_cmd.split_whitespace().collect();
     let tool = parts.get(1).copied().unwrap_or("other");

@@ -8,7 +8,7 @@
 |----------|---------|----------|--------|------------------|
 | high | High churn in core routing/rewrite files (main.rs, registry.rs) | docs/codebase/.codebase-scan.txt (HIGH-CHURN FILES) | Regressions in command routing can impact most workflows | Split/decouple routing and strengthen targeted tests for changed paths |
 | high | Very large critical files in hot paths (init.rs, registry.rs, main.rs) | docs/codebase/.codebase-scan.txt (Top 10 largest files) | Harder reviewability, hidden side effects, onboarding burden | Incremental modular extraction with behavior-preserving tests |
-| medium | Documentation inconsistency for tracking DB filename/path | src/core/constants.rs vs src/core/tracking.rs comments vs docs/TELEMETRY.md | Ops confusion during troubleshooting/backups/privacy operations | Normalize docs and comments to a single canonical DB path/name |
+| medium | Documentation inconsistency for tracking DB filename/path | src/core/constants.rs vs src/core/tracking.rs comments | Ops confusion during troubleshooting/backups/privacy operations | Normalize docs and comments to a single canonical DB path/name |
 | medium | Filter quality debt explicitly acknowledged below 60% target in pipe tests | docs/codebase/.codebase-scan.txt TODO entries in src/cmds/system/pipe_cmd.rs | Lower savings ROI and possible trust erosion in optimization claims | Prioritize pipe filter grouping improvements and add regression fixtures |
 
 ### 2) Technical Debt

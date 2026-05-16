@@ -19,9 +19,8 @@
 | anyhow | 1.0 | Error propagation with context | Cargo.toml, src/main.rs |
 | regex + lazy_static | 1 / 1.4 | Command classification and output filtering patterns | Cargo.toml, src/discover/registry.rs |
 | rusqlite (bundled) | 0.31 | Local tracking/analytics storage | Cargo.toml, src/core/tracking.rs |
-| serde + serde_json | 1 / 1 | Structured parsing and telemetry payloads | Cargo.toml, src/core/telemetry.rs |
+| serde + serde_json | 1 / 1 | Structured parsing and JSON output | Cargo.toml, src/core/tracking.rs |
 | toml | 0.8 | Config and filter DSL parsing | Cargo.toml, src/core/config.rs, src/core/toml_filter.rs |
-| ureq | 2 | Telemetry HTTP client | Cargo.toml, src/core/telemetry.rs |
 | quick-xml | 0.37 | XML parsing for .NET related command outputs | Cargo.toml |
 
 ### 3) Development Toolchain
@@ -47,10 +46,8 @@ cargo fmt --all --check && cargo clippy --all-targets && cargo test
 
 - Config sources: src/core/config.rs, src/core/toml_filter.rs, .rtk/filters.toml
 - Required env vars:
-  - RTK_TELEMETRY_DISABLED (runtime telemetry override)
   - RTK_NO_TOML (disable TOML filter engine)
   - RTK_TOML_DEBUG (debug TOML filter matching)
-  - RTK_TELEMETRY_URL and RTK_TELEMETRY_TOKEN (compile-time option_env! in telemetry)
   - [TODO] Additional runtime env vars may exist in non-Rust hook/plugin scripts.
 - Deployment/runtime constraints:
   - Single native binary target with release optimization and stripping enabled.
@@ -63,6 +60,5 @@ cargo fmt --all --check && cargo clippy --all-targets && cargo test
 - src/main.rs
 - src/core/config.rs
 - src/core/toml_filter.rs
-- src/core/telemetry.rs
 - .github/workflows/ci.yml
 - docs/codebase/.codebase-scan.txt
