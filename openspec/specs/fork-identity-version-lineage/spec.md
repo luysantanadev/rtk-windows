@@ -1,5 +1,8 @@
+## Purpose
+Define fork identity requirements for binary naming and version-lineage communication.
+## Requirements
 ### Requirement: Fork binary identity
-The fork SHALL identify its distributed executable and release-facing binary references as `rtk-windows`.
+The fork SHALL identify its distributed executable, Copilot-generated command guidance, and release-facing binary references as `rtk-windows`.
 
 #### Scenario: Release artifact naming
 - **WHEN** a release artifact is generated or documented
@@ -10,6 +13,11 @@ The fork SHALL identify its distributed executable and release-facing binary ref
 - **WHEN** installation or usage documentation references the binary
 - **THEN** command examples and text use `rtk-windows`
 - **AND** legacy `rtk` references are either removed or explicitly marked as historical/upstream context
+
+#### Scenario: Copilot instruction output
+- **WHEN** Copilot-facing instruction files or templates generate command examples for the project
+- **THEN** the generated guidance uses `rtk-windows` for executable invocations
+- **AND** the output does not present `rtk` as the default binary name
 
 ### Requirement: Fork version baseline communication
 The fork SHALL document and communicate a reset version baseline independent from upstream lineage.
@@ -23,3 +31,4 @@ The fork SHALL document and communicate a reset version baseline independent fro
 - **WHEN** users run version verification after local install
 - **THEN** documentation explains expected fork version output semantics
 - **AND** avoids implying upstream semantic continuity
+
