@@ -3,11 +3,11 @@ name: CD
 on:
   workflow_dispatch:
   push:
-    branches: [develop, master]
+    branches: [develop, main]
 
 concurrency:
   group: cd-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 permissions:
   contents: write
@@ -21,7 +21,7 @@ jobs:
   pre-release:
     if: >-
       github.ref == 'refs/heads/develop'
-      || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master')
+      || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.tag.outputs.tag }}
@@ -97,11 +97,11 @@ jobs:
     secrets: inherit
 
   # ═══════════════════════════════════════════════
-  # MASTER PATH: Stable release
+  # MAIN PATH: Stable release
   # ═══════════════════════════════════════════════
 
   stable-release:
-    if: github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.tag.outputs.tag }}

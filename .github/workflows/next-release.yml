@@ -69,7 +69,7 @@ jobs:
           NEXT_PR=$(gh pr list \
             --repo "$REPO" \
             --label next-release \
-            --base master \
+            --base main \
             --head develop \
             --state open \
             --json number,body \
@@ -89,7 +89,7 @@ jobs:
 
             PR_CREATE_URL=$(gh pr create \
               --repo "$REPO" \
-              --base master \
+              --base main \
               --head develop \
               --title "Next Release" \
               --label next-release \

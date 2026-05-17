@@ -2,7 +2,7 @@
 
 ## PR Quality Gates (ci.yml)
 
-Trigger: pull_request to develop or master
+Trigger: pull_request to develop or main
 
 ```
                           ┌──────────────────┐
@@ -40,7 +40,7 @@ Trigger: pull_request to develop or master
 
 ## Merge to develop — pre-release (cd.yml)
 
-Trigger: push to develop | workflow_dispatch (not master) | Concurrency: cancel-in-progress
+Trigger: push to develop | workflow_dispatch (not main) | Concurrency: cancel-in-progress
 
 ```
      ┌──────────────────┐
@@ -75,13 +75,13 @@ Trigger: push to develop | workflow_dispatch (not master) | Concurrency: cancel-
      └──────────────────────────┘
 ```
 
-## Merge to master — stable release (cd.yml)
+## Merge to main — stable release (cd.yml)
 
-Trigger: push to master (only) | Concurrency: never cancelled
+Trigger: push to main (only) | Concurrency: never cancelled
 
 ```
      ┌──────────────────┐
-     │ push to master    │
+     │ push to main      │
      └────────┬─────────┘
               │
      ┌────────▼──────────────────┐
