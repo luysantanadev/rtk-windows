@@ -306,7 +306,6 @@ class InstalledRtkRewritePluginTest(unittest.TestCase):
             env = os.environ.copy()
             env["HOME"] = str(home_path)
             env["PATH"] = str(fake_bin) + os.pathsep + env.get("PATH", "")
-            env["RTK_TELEMETRY_DISABLED"] = "1"
             env["CARGO_TERM_COLOR"] = "never"
             env.setdefault("RUSTUP_TOOLCHAIN", "stable")
             if "RUSTUP_HOME" not in env and (real_home / ".rustup").exists():

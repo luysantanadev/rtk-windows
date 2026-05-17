@@ -42,7 +42,10 @@ pub trait SessionProvider {
 pub struct ClaudeProvider;
 
 fn is_terminal_tool_name(name: &str) -> bool {
-    matches!(name, "PowerShell" | "Shell" | "Terminal" | "CommandPrompt" | "Cmd")
+    matches!(
+        name,
+        "PowerShell" | "Shell" | "Terminal" | "CommandPrompt" | "Cmd"
+    )
 }
 
 impl ClaudeProvider {
@@ -182,9 +185,7 @@ impl SessionProvider for ClaudeProvider {
             };
 
             // Pre-filter: skip lines that can't contain terminal tool_use or tool_result
-            if !line.contains("\"PowerShell\"")
-                && !line.contains("\"tool_result\"")
-            {
+            if !line.contains("\"PowerShell\"") && !line.contains("\"tool_result\"") {
                 continue;
             }
 

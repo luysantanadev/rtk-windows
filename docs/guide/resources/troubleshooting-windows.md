@@ -231,20 +231,9 @@ rtk-windows config --create
 code "$env:APPDATA\rtk\config.toml"
 ```
 
-### Disabling telemetry
+### Privacy mode
 
-**Temporary (current session):**
-```powershell
-$env:RTK_TELEMETRY_DISABLED=1
-rtk-windows gain
-```
-
-**Permanent (via config.toml):**
-```powershell
-# Edit: $env:APPDATA\rtk\config.toml
-[telemetry]
-enabled = false
-```
+RTK does not send usage data to remote services.
 
 ### Disabling RTK for specific commands
 
@@ -314,7 +303,6 @@ pwsh ./scripts/check-installation.ps1
 - RTK binary installed and in PATH
 - Correct version (Token Killer, not Type Kit)
 - Hook status for each agent
-- Telemetry configuration
 - PATH environment variable
 
 ## Still Stuck?

@@ -44,14 +44,9 @@ mode = "failures"           # "failures" (default), "always", "never"
 max_files = 20              # rotation: keep last N files
 # directory = "/custom/tee/path"  # optional override
 
-[telemetry]
-enabled = true              # anonymous daily ping — see Telemetry & Privacy for full details
-
 [hooks]
 exclude_commands = []       # commands to never auto-rewrite
 ```
-
-For full details on what is collected, opt-out options, and GDPR rights, see [Telemetry & Privacy](../resources/telemetry.md).
 
 ## Environment variables
 
@@ -59,7 +54,6 @@ For full details on what is collected, opt-out options, and GDPR rights, see [Te
 |----------|-------------|
 | `RTK_DISABLED=1` | Disable RTK for a single command (`RTK_DISABLED=1 git status`) |
 | `RTK_TEE_DIR` | Override the tee directory |
-| `RTK_TELEMETRY_DISABLED=1` | Disable telemetry |
 | `RTK_HOOK_AUDIT=1` | Enable hook audit logging |
 | `SKIP_ENV_VALIDATION=1` | Skip env validation (useful with Next.js) |
 
@@ -108,23 +102,6 @@ Or for a single invocation:
 
 ```bash
 RTK_DISABLED=1 git rebase main
-```
-
-## Telemetry
-
-RTK sends one anonymous ping per day (23h interval). No personal data, no file paths, no command content.
-
-Data sent: device hash, version, OS, architecture, command count/24h, top commands, savings %.
-
-To opt out:
-
-```bash
-# Via environment variable
-export RTK_TELEMETRY_DISABLED=1
-
-# Via config.toml
-[telemetry]
-enabled = false
 ```
 
 ## Per-project filters

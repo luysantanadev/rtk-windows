@@ -47,14 +47,9 @@ mode = "failures"           # "failures" (default), "always", "never"
 max_files = 20              # rotation: keep last N files
 # directory = "C:\custom\tee\path"  # optional override (Windows path)
 
-[telemetry]
-enabled = true              # anonymous daily ping — see Telemetry & Privacy for full details
-
 [hooks]
 exclude_commands = []       # commands to never auto-rewrite
 ```
-
-For full details on what is collected, opt-out options, and GDPR rights, see [Telemetry & Privacy](../resources/telemetry.md).
 
 ## Environment variables (PowerShell)
 
@@ -62,7 +57,6 @@ For full details on what is collected, opt-out options, and GDPR rights, see [Te
 |----------|-------------|
 | `$env:RTK_DISABLED=1` | Disable RTK for a single command |
 | `$env:RTK_TEE_DIR` | Override the tee directory |
-| `$env:RTK_TELEMETRY_DISABLED=1` | Disable telemetry |
 | `$env:RTK_HOOK_AUDIT=1` | Enable hook audit logging |
 | `$env:SKIP_ENV_VALIDATION=1` | Skip env validation (useful with Next.js) |
 
@@ -71,9 +65,6 @@ Usage examples:
 ```powershell
 # Disable RTK for one command
 $env:RTK_DISABLED=1; cargo test; $env:RTK_DISABLED=$null
-
-# Disable telemetry globally (persistent in profile)
-$env:RTK_TELEMETRY_DISABLED=1
 ```
 
 ## Tee system
@@ -121,24 +112,6 @@ Or for a single invocation:
 
 ```powershell
 $env:RTK_DISABLED=1; git rebase main; $env:RTK_DISABLED=$null
-```
-
-## Telemetry
-
-RTK sends one anonymous ping per day (23h interval). No personal data, no file paths, no command content.
-
-Data sent: device hash, version, OS, architecture, command count/24h, top commands, savings %.
-
-To opt out:
-
-```powershell
-# Via environment variable (temporary)
-$env:RTK_TELEMETRY_DISABLED=1
-
-# Via config.toml (persistent)
-# Edit: $env:APPDATA\rtk\config.toml
-[telemetry]
-enabled = false
 ```
 
 ## Per-project filters

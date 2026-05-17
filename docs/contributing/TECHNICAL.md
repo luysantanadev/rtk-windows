@@ -233,8 +233,7 @@ Each filter module follows the same pattern:
 2. Execute the underlying command (`std::process::Command`)
 3. Apply filtering (strip boilerplate, group errors, truncate)
 4. On filter error, fall back to raw output
-5. Track token savings to SQLite
-6. Propagate exit code
+5. Propagate exit code
 
 > **Details**: [`src/cmds/README.md`](../src/cmds/README.md) covers the common pattern, ecosystem organization, cross-command dependencies, and how to add new filters.
 
@@ -259,16 +258,11 @@ Command received
 
 > **Details**: [`src/core/README.md`](../src/core/README.md) covers the TOML filter engine, filter pipeline stages, and trust-gated project filters.
 
-### 3.6 Token Tracking
+### 3.6 Runtime Metrics
 
-Every command execution records metrics to SQLite (`~/.local/share/rtk/tracking.db`):
+RTK can compute token estimates in-process for presentation flows (for example, command output comparisons), and it does not send usage data to remote services.
 
-- Input tokens (raw output size) and output tokens (filtered size)
-- Savings percentage, execution time, project path
-- 90-day automatic retention cleanup
-- Token estimation: `ceil(chars / 4.0)` approximation
-
-Analytics commands (`rtk gain`, `rtk cc-economics`, `rtk session`) query this database to produce dashboards and ROI reports.
+Analytics commands (`rtk gain`, `rtk cc-economics`, `rtk session`) query local data when available to produce dashboards and ROI reports.
 
 > **Details**: [`src/analytics/README.md`](../src/analytics/README.md) covers the analytics modules, and [`src/core/README.md`](../src/core/README.md) covers the tracking database schema.
 

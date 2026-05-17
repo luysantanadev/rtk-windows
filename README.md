@@ -388,7 +388,7 @@ cargo uninstall rtk-windows          # Remove binary
 
 ## Privacy
 
-rtk-windows **does not collect any telemetry or usage data**. No information is transmitted to remote servers. All tracking is local-only (via `rtk gain`) and stored on your machine.
+rtk-windows does not collect or transmit user usage data to remote services.
 
 ## Star History
 
