@@ -41,7 +41,7 @@ Agent runs "cargo test"
 | Codex CLI | AGENTS.md instructions | N/A | ✅ Full support |
 | Kilo Code | Rules file (prompt-level) | N/A | ✅ Full support |
 | Google Antigravity | Rules file (prompt-level) | N/A | ✅ Full support |
-| Mistral Vibe | Planned ([#800](https://github.com/luysantanadev/rtk-windows.git/issues/800)) | Pending upstream |
+| Mistral Vibe | Planned ([#800](https://github.com/luysantanadev/rtk-windows.git/issues/800)) | Not yet available |
 
 ## Installation by agent
 
@@ -141,7 +141,7 @@ Antigravity reads `.agents/rules/` as custom instructions. RTK adds guidance tel
 
 ### Mistral Vibe (planned)
 
-Support is blocked on upstream `BeforeToolCallback` ([mistral-vibe#531](https://github.com/mistralai/mistral-vibe/issues/531)). Tracked in [#800](https://github.com/luysantanadev/rtk-windows.git/issues/800).
+Support is not yet available pending required callback support in Mistral Vibe. Tracked in [#800](https://github.com/luysantanadev/rtk-windows.git/issues/800).
 
 ## Integration tiers explained
 

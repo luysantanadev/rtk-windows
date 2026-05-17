@@ -1,19 +1,15 @@
 <p align="center">
-  <img src="https://avatars.githubusercontent.com/u/258253854?v=4" alt="rtk-windows - Rust Token Killer" width="500">
+  <strong>rtk-windows — Windows向け高性能CLIプロキシ（LLMトークン消費 60-90% 削減）</strong>
 </p>
 
 <p align="center">
-  <strong>LLM トークン消費を 60-90% 削減する高性能 CLI プロキシ</strong>
-</p>
-
-<p align="center">
-  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://github.com/luysantanadev/rtk-windows.git/workflows/Security%20Check/badge.svg" alt="CI"></a>
+  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://img.shields.io/github/actions/workflow/status/luysantanadev/rtk-windows/ci.yml" alt="CI"></a>
   <a href="https://github.com/luysantanadev/rtk-windows.git/releases"><img src="https://img.shields.io/github/v/release/luysantanadev/rtk-windows" alt="Release"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache-2.0"></a>
 </p>
 
 <p align="center">
-  <a href="https://www.rtk-ai.app">ウェブサイト</a> &bull;
+  <a href="#インストール">インストール</a> &bull;
   <a href="#インストール">インストール</a> &bull;
   <a href="docs/TROUBLESHOOTING.md">トラブルシューティング</a> &bull;
   <a href="docs/contributing/ARCHITECTURE.md">アーキテクチャ</a>
@@ -30,7 +26,11 @@
 
 ---
 
-rtk-windows はコマンド出力を LLM コンテキストに届く前にフィルタリング・圧縮します。単一の Rust バイナリ、依存関係ゼロ、オーバーヘッド 10ms 未満。
+**rtk-windows** は Windows 専用フォークで、コマンド出力を LLM コンテキストに到達する前にフィルタリング・圧縮します。単一の Rust バイナリ、依存関係ゼロ、オーバーヘッド 10ms 未満。
+
+> **Windows のみ:** このプロジェクトは Windows 10/11 と PowerShell Core または Command Prompt に限定されています。
+>
+> **独立フォーク:** これは Windows 重視の独立実装です。いかなるアップストリームプロジェクトとも提携していません。
 
 ## トークン節約（30分の Claude Code セッション）
 
@@ -141,15 +141,13 @@ rtk-windows discover                    # 見逃した節約機会を発見
 - **[INSTALL.md](INSTALL.md)** - 詳細インストールガイド
 - **[ARCHITECTURE.md](docs/contributing/ARCHITECTURE.md)** - 技術アーキテクチャ
 
-## コントリビュート
+## コミュニティ
 
-コントリビューション歓迎！[GitHub](https://github.com/luysantanadev/rtk-windows.git) で issue または PR を作成してください。
-
-[Discord]() コミュニティに参加。
+これらは Windows 中心の独立フォークです。エンタープライズまたはカスタムデプロイメントについては [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
 
 ## ライセンス
 
-MIT ライセンス - 詳細は [LICENSE](LICENSE) を参照。
+Apache 2.0 ライセンス - 詳しいことは [LICENSE](LICENSE) を参照。
 
 ## 免責事項
 

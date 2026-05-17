@@ -1,21 +1,17 @@
 <p align="center">
-  <img src="https://avatars.githubusercontent.com/u/258253854?v=4" alt="rtk-windows - Rust Token Killer" width="500">
+  <strong>rtk-windows — High-performance CLI proxy for Windows (60-90% LLM token reduction)</strong>
 </p>
 
 <p align="center">
-  <strong>High-performance CLI proxy that reduces LLM token consumption by 60-90%</strong>
-</p>
-
-<p align="center">
-  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://github.com/luysantanadev/rtk-windows.git/workflows/Security%20Check/badge.svg" alt="CI"></a>
+  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://img.shields.io/github/actions/workflow/status/luysantanadev/rtk-windows/ci.yml" alt="CI"></a>
   <a href="https://github.com/luysantanadev/rtk-windows.git/releases"><img src="https://img.shields.io/github/v/release/luysantanadev/rtk-windows" alt="Release"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache-2.0"></a>
 </p>
 
 <p align="center">
-  <a href="https://www.rtk-ai.app">Website</a> &bull;
   <a href="#installation">Install</a> &bull;
-  <a href="https://www.rtk-ai.app/guide/troubleshooting">Troubleshooting</a> &bull;
+  <a href="#installation">Install</a> &bull;
+  <a href="docs/TROUBLESHOOTING.md">Troubleshooting</a> &bull;
   <a href="docs/contributing/ARCHITECTURE.md">Architecture</a>
 </p>
 
@@ -30,9 +26,11 @@
 
 ---
 
-rtk-windows filters and compresses command outputs before they reach your LLM context. Single Rust binary, 100+ supported commands, <10ms overhead.
+**rtk-windows** is a dedicated Windows fork that filters and compresses command outputs before they reach your LLM context. Single Rust binary, 100+ supported commands, <10ms overhead.
 
-> **Windows-only notice:** This repository supports Windows 10/11 with PowerShell Core or Command Prompt exclusively.
+> **Windows-only:** This project exclusively supports Windows 10/11 with PowerShell Core or Command Prompt.
+>
+> **Independent fork:** This is a standalone Windows-focused implementation. It is not affiliated with any upstream projects or maintainers.
 
 ## Token Savings (30-min Claude Code Session)
 
@@ -347,7 +345,7 @@ rtk-windows supports 13 AI coding tools. Each integration rewrites shell command
 | **Kilo Code** | `rtk-windows init --agent kilocode` | .kilocode/rules/rtk-rules.md (project-scoped) |
 | **Google Antigravity** | `rtk-windows init --agent antigravity` | .agents/rules/antigravity-rtk-rules.md (project-scoped) |
 
-For per-agent setup details, override controls, and graceful degradation, see the [Supported Agents guide](https://www.rtk-ai.app/guide/getting-started/supported-agents). The Hermes plugin source and tests live in `hooks/hermes/`; installed Hermes runtime files still live under `~/.hermes/plugins/rtk-rewrite/`.
+The Hermes plugin source and tests live in `hooks/hermes/`; installed Hermes runtime files live under `~/.hermes/plugins/rtk-rewrite/`. For agent-specific setup, see [docs/guide/getting-started/](docs/guide/getting-started/).
 
 ## Configuration
 
@@ -369,7 +367,7 @@ FAILED: 2/15 tests
 [full output: ~/.local/share/rtk/tee/1707753600_cargo_test.log]
 ```
 
-For the full config reference (all sections, env vars, per-project filters), see the [Configuration guide](https://www.rtk-ai.app/guide/getting-started/configuration).
+For the full config reference (all sections, env vars, per-project filters), see [docs/guide/getting-started/](docs/guide/getting-started/).
 
 ### Uninstall
 
@@ -380,7 +378,7 @@ cargo uninstall rtk-windows          # Remove binary
 
 ## Documentation
 
-- **[rtk-ai.app/guide](https://www.rtk-ai.app/guide)** — full user guide (installation, supported agents, what gets optimized, analytics, configuration, troubleshooting)
+- **[docs/guide/](docs/guide/)** — full user guide (installation, agents, token optimization, analytics, configuration, troubleshooting)
 - **[INSTALL.md](INSTALL.md)** — detailed installation reference
 - **[ARCHITECTURE.md](docs/contributing/ARCHITECTURE.md)** — system design and technical decisions
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** — contribution guide
@@ -390,15 +388,9 @@ cargo uninstall rtk-windows          # Remove binary
 
 rtk-windows does not collect or transmit user usage data to remote services.
 
-## Star History
+## Community
 
-<a href="https://www.star-history.com/?repos=rtk-ai%2Frtk&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=luysantanadev/rtk-windows&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=luysantanadev/rtk-windows&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=luysantanadev/rtk-windows&type=date&legend=top-left" />
- </picture>
-</a>
+This is an independent Windows-focused fork. For enterprise or custom deployments, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## StarMapper
 
@@ -427,7 +419,11 @@ Join the community on [Discord]().
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+Apache License 2.0 - see [LICENSE](LICENSE) for details.
+
+## Fork Compliance
+
+Before publishing releases, complete the legal compliance checklist in [docs/usage/APACHE_FORK_COMPLIANCE.md](docs/usage/APACHE_FORK_COMPLIANCE.md).
 
 ## Disclaimer
 

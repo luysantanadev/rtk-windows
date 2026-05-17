@@ -16,8 +16,7 @@ Two unrelated projects share the name `rtk`. Make sure you install the right one
 
 The easiest way to verify you have the correct one: run `rtk gain`. It should display token savings stats. If it returns "command not found", you either have the wrong package or RTK is not installed.
 
-> Windows-only fork notice: this repository supports Windows native only.
-> For Linux/macOS, use upstream: https://github.com/luysantanadev/rtk-windows.git
+> **Windows-only:** This repository is exclusively for Windows 10/11 with PowerShell Core or Command Prompt. Multi-platform support is not available.
 
 ## Check before installing
 
@@ -66,8 +65,9 @@ Extract the zip and place `rtk.exe` in a directory on your PATH. Run RTK from Co
 
 ## Linux/macOS users
 
-This fork does not provide Linux/macOS support. Use upstream `https://github.com/luysantanadev/rtk-windows.git`:
-https://github.com/luysantanadev/rtk-windows.git
+**rtk-windows is exclusively for Windows.** Multi-platform support is not planned for this fork.
+
+For a similar token optimization tool that supports other platforms, you may search for alternatives.
 
 ## Verify installation
 

@@ -1,19 +1,15 @@
 <p align="center">
-  <img src="https://avatars.githubusercontent.com/u/258253854?v=4" alt="rtk-windows - Rust Token Killer" width="500">
+  <strong>rtk-windows — Windows용 고성능 CLI 프록시 (LLM 토큰 소비 60-90% 감소)</strong>
 </p>
 
 <p align="center">
-  <strong>LLM 토큰 소비를 60-90% 줄이는 고성능 CLI 프록시</strong>
-</p>
-
-<p align="center">
-  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://github.com/luysantanadev/rtk-windows.git/workflows/Security%20Check/badge.svg" alt="CI"></a>
+  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://img.shields.io/github/actions/workflow/status/luysantanadev/rtk-windows/ci.yml" alt="CI"></a>
   <a href="https://github.com/luysantanadev/rtk-windows.git/releases"><img src="https://img.shields.io/github/v/release/luysantanadev/rtk-windows" alt="Release"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache-2.0"></a>
 </p>
 
 <p align="center">
-  <a href="https://www.rtk-ai.app">웹사이트</a> &bull;
+  <a href="#설치">설치</a> &bull;
   <a href="#설치">설치</a> &bull;
   <a href="docs/TROUBLESHOOTING.md">문제 해결</a> &bull;
   <a href="docs/contributing/ARCHITECTURE.md">아키텍처</a>
@@ -30,7 +26,11 @@
 
 ---
 
-rtk는 명령 출력이 LLM 컨텍스트에 도달하기 전에 필터링하고 압축합니다. 단일 Rust 바이너리, 의존성 없음, 10ms 미만의 오버헤드.
+**rtk-windows**는 Windows 전용 포크로, 명령 출력이 LLM 컨텍스트에 도달하기 전에 필터링하고 압축합니다. 단일 Rust 바이너리, 의존성 없음, 10ms 미만의 오버헤드.
+
+> **Windows만:** 이 프로젝트는 Windows 10/11 및 PowerShell Core 또는 Command Prompt 에서만 지원됩니다.
+>
+> **독립적 포크:** 이는 Windows 중심의 독립적 구현입니다. 어떤 업스트림 프로젝트와도 제휴되지 않았습니다.
 
 ## 토큰 절약 (30분 Claude Code 세션)
 
@@ -141,15 +141,13 @@ rtk-windows discover                    # 놓친 절약 기회 발견
 - **[INSTALL.md](INSTALL.md)** - 상세 설치 가이드
 - **[ARCHITECTURE.md](docs/contributing/ARCHITECTURE.md)** - 기술 아키텍처
 
-## 기여
+## 커뮤니티
 
-기여를 환영합니다! [GitHub](https://github.com/luysantanadev/rtk-windows.git)에서 issue 또는 PR을 생성해 주세요.
-
-[Discord]() 커뮤니티에 참여하세요.
+이것은 Windows 중심의 독립적 포크입니다. 엔터프라이즈 또는 사용자 정의 배포는 [CONTRIBUTING.md](CONTRIBUTING.md)를 참고하세요.
 
 ## 라이선스
 
-MIT 라이선스 - 자세한 내용은 [LICENSE](LICENSE)를 참조하세요.
+Apache 2.0 라이선스 - 자세한 내용은 [LICENSE](LICENSE)를 참고하세요.
 
 ## 면책 조항
 

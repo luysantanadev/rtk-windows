@@ -1008,7 +1008,7 @@ Overhead Sources:
 - **Performance**: ~5-15ms overhead per command (negligible for user experience)
 - **Safety**: No runtime errors from null pointers, data races, etc.
 - **Single Binary**: No runtime dependencies (distribute one executable)
-- **Windows-First Fork**: This repository targets Windows-native workflows; non-Windows support remains upstream
+- **Windows-First Fork**: This repository exclusively targets Windows 10/11 with PowerShell Core or Command Prompt
 
 ### Why SQLite for Tracking?
 

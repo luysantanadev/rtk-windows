@@ -92,6 +92,7 @@ jobs:
     with:
       tag: ${{ needs.pre-release.outputs.tag }}
       prerelease: true
+      compliance_evidence: docs/usage/APACHE_FORK_COMPLIANCE.md
     permissions:
       contents: write
     secrets: inherit
@@ -165,6 +166,7 @@ jobs:
     with:
       tag: ${{ needs.stable-release.outputs.tag }}
       prerelease: false
+      compliance_evidence: docs/usage/APACHE_FORK_COMPLIANCE.md
     permissions:
       contents: write
     secrets: inherit

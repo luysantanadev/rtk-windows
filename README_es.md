@@ -1,19 +1,15 @@
 <p align="center">
-  <img src="https://avatars.githubusercontent.com/u/258253854?v=4" alt="rtk-windows - Rust Token Killer" width="500">
+  <strong>rtk-windows — Proxy CLI de alto rendimiento para Windows (reducción LLM token 60-90%)</strong>
 </p>
 
 <p align="center">
-  <strong>Proxy CLI de alto rendimiento que reduce el consumo de tokens LLM en un 60-90%</strong>
-</p>
-
-<p align="center">
-  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://github.com/luysantanadev/rtk-windows.git/workflows/Security%20Check/badge.svg" alt="CI"></a>
+  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://img.shields.io/github/actions/workflow/status/luysantanadev/rtk-windows/ci.yml" alt="CI"></a>
   <a href="https://github.com/luysantanadev/rtk-windows.git/releases"><img src="https://img.shields.io/github/v/release/luysantanadev/rtk-windows" alt="Release"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache-2.0"></a>
 </p>
 
 <p align="center">
-  <a href="https://www.rtk-ai.app">Sitio web</a> &bull;
+  <a href="#instalacion">Instalar</a> &bull;
   <a href="#instalacion">Instalar</a> &bull;
   <a href="docs/TROUBLESHOOTING.md">Solucion de problemas</a> &bull;
   <a href="docs/contributing/ARCHITECTURE.md">Arquitectura</a>
@@ -30,7 +26,11 @@
 
 ---
 
-rtk-windows filtra y comprime las salidas de comandos antes de que lleguen al contexto de tu LLM. Binario Rust unico, cero dependencias, <10ms de overhead.
+**rtk-windows** es un fork dedicado a Windows que filtra y comprime las salidas de comandos antes de que lleguen al contexto de tu LLM. Binario Rust único, cero dependencias, <10ms de overhead.
+
+> **Solo Windows:** Este proyecto soporta exclusivamente Windows 10/11 con PowerShell Core o Command Prompt.
+>
+> **Fork independiente:** Esta es una implementación independiente enfocada en Windows. No está afiliada a ningún proyecto upstream.
 
 ## Ahorro de tokens (sesion de 30 min en Claude Code)
 
@@ -142,15 +142,13 @@ rtk-windows discover                    # Descubrir ahorros perdidos
 - **[INSTALL.md](INSTALL.md)** - Guia de instalacion detallada
 - **[ARCHITECTURE.md](docs/contributing/ARCHITECTURE.md)** - Arquitectura tecnica
 
-## Contribuir
+## Comunidad
 
-Las contribuciones son bienvenidas. Abre un issue o PR en [GitHub](https://github.com/luysantanadev/rtk-windows.git).
-
-Unete a la comunidad en [Discord]().
+Este es un fork independiente enfocado en Windows. Para despliegues empresariales o personalizados, ver [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Licencia
 
-Licencia MIT - ver [LICENSE](LICENSE) para detalles.
+Licencia Apache 2.0 - ver [LICENSE](LICENSE) para detalles.
 
 ## Descargo de responsabilidad
 

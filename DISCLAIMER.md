@@ -10,7 +10,11 @@ In no event shall the authors or copyright holders be liable for any claim, dama
 
 ## Precompiled Binaries
 
-Precompiled binaries are provided solely for convenience and are covered by the same license as the source code (MIT). They are provided without warranties or conditions of any kind. You are responsible for verifying the integrity and suitability of any binary before use. Always verify checksums when available.
+Precompiled binaries are provided solely for convenience and are covered by the same license as the source code (Apache-2.0). They are provided without warranties or conditions of any kind. You are responsible for verifying the integrity and suitability of any binary before use. Always verify checksums when available.
+
+## Fork Identity and Trademarks
+
+This repository is an unofficial fork and is not affiliated with or endorsed by upstream maintainers. Project names may be referenced only to identify origin. No trademark rights are granted beyond nominative use allowed by applicable law.
 
 ## Third-Party Dependencies
 
@@ -26,5 +30,5 @@ This software collects anonymous, aggregate usage metrics by default and can be 
 
 ---
 
-See [LICENSE](LICENSE) for the full terms of the MIT license under which this software is distributed.
+See [LICENSE](LICENSE) for the full terms of the Apache-2.0 license under which this software is distributed.
 

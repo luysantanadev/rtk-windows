@@ -2,9 +2,9 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in RTK, please report it to the maintainers privately:
+If you discover a security vulnerability in RTK, please report it privately by creating a private security advisory on GitHub:
 
-- **Email**: security@rtk-ai.app (or create a private security advisory on GitHub)
+- **Report here**: [GitHub Security Advisory](https://github.com/luysantanadev/rtk-windows.git/security/advisories/new)
 - **Response time**: We aim to acknowledge reports within 48 hours
 - **Disclosure**: We follow responsible disclosure practices (90-day embargo)
 
@@ -208,7 +208,7 @@ Critical vulnerabilities (remote code execution, data exfiltration) may be fast-
 
 ## Contact
 
-- **Security issues**: security@rtk-ai.app
+- **Security issues**: Use GitHub Private Security Advisory (see section above)
 - **General questions**: https://github.com/luysantanadev/rtk-windows.git/discussions
 - **Maintainers**: @FlorianBruniaux (active fork maintainer)
 

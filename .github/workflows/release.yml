@@ -12,6 +12,10 @@ on:
         required: false
         type: boolean
         default: false
+      compliance_evidence:
+        description: 'Path or URL to Apache-2.0 fork compliance evidence'
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       tag:
@@ -21,6 +25,10 @@ on:
         description: 'Mark as pre-release'
         type: boolean
         default: false
+      compliance_evidence:
+        description: 'Path or URL to Apache-2.0 fork compliance evidence'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -90,6 +98,26 @@ jobs:
           fi
           echo "version=$TAG" >> $GITHUB_OUTPUT
 
+      - name: Validate compliance evidence
+        run: |
+          EVIDENCE="${{ inputs.compliance_evidence }}"
+          if [ -z "$EVIDENCE" ]; then
+            echo "::error::compliance_evidence is required before publishing a release"
+            exit 1
+          fi
+
+          if [[ "$EVIDENCE" == http* ]]; then
+            echo "Compliance evidence URL provided: $EVIDENCE"
+            exit 0
+          fi
+
+          if [ ! -f "$EVIDENCE" ]; then
+            echo "::error::Compliance evidence file not found: $EVIDENCE"
+            exit 1
+          fi
+
+          echo "Compliance evidence file found: $EVIDENCE"
+
       - name: Flatten artifacts
         run: |
           mkdir -p release
@@ -106,4 +134,9 @@ jobs:
           tag_name: ${{ steps.version.outputs.version }}
           files: release/*
           prerelease: ${{ inputs.prerelease }}
+          body: |
+            ## Compliance
+            - Apache-2.0 license and attribution notices preserved.
+            - This repository is an unofficial fork and is not endorsed by upstream maintainers.
+            - Evidence: ${{ inputs.compliance_evidence }}
           token: ${{ secrets.GITHUB_TOKEN }}

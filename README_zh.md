@@ -1,19 +1,15 @@
 <p align="center">
-  <img src="https://avatars.githubusercontent.com/u/258253854?v=4" alt="rtk-windows - Rust Token Killer" width="500">
+  <strong>rtk-windows — Windows 高性能 CLI 代理（LLM token 消耗降低 60-90%）</strong>
 </p>
 
 <p align="center">
-  <strong>高性能 CLI 代理，将 LLM token 消耗降低 60-90%</strong>
-</p>
-
-<p align="center">
-  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://github.com/luysantanadev/rtk-windows.git/workflows/Security%20Check/badge.svg" alt="CI"></a>
+  <a href="https://github.com/luysantanadev/rtk-windows.git/actions"><img src="https://img.shields.io/github/actions/workflow/status/luysantanadev/rtk-windows/ci.yml" alt="CI"></a>
   <a href="https://github.com/luysantanadev/rtk-windows.git/releases"><img src="https://img.shields.io/github/v/release/luysantanadev/rtk-windows" alt="Release"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache-2.0"></a>
 </p>
 
 <p align="center">
-  <a href="https://www.rtk-ai.app">官网</a> &bull;
+  <a href="#安装">安装</a> &bull;
   <a href="#安装">安装</a> &bull;
   <a href="docs/TROUBLESHOOTING.md">故障排除</a> &bull;
   <a href="docs/contributing/ARCHITECTURE.md">架构</a>
@@ -30,7 +26,11 @@
 
 ---
 
-rtk-windows 在命令输出到达 LLM 上下文之前进行过滤和压缩。单一 Rust 二进制文件，零依赖，<10ms 开销。
+**rtk-windows** 是 Windows 专用分支，在命令输出到达 LLM 上下文之前进行过滤和压缩。单一 Rust 二进制文件，零依赖，<10ms 开销。
+
+> **仅限 Windows:** 此项目独家支持 Windows 10/11 与 PowerShell Core 或 Command Prompt。
+>
+> **独立分支:** 这是一个 Windows 中心的独立实现。与任何上游项目无关联。
 
 ## Token 节省（30 分钟 Claude Code 会话）
 
@@ -149,15 +149,13 @@ rtk-windows discover                    # 发现遗漏的节省机会
 - **[INSTALL.md](INSTALL.md)** - 详细安装指南
 - **[ARCHITECTURE.md](docs/contributing/ARCHITECTURE.md)** - 技术架构
 
-## 贡献
+## 社区
 
-欢迎贡献！请在 [GitHub](https://github.com/luysantanadev/rtk-windows.git) 上提交 issue 或 PR。
-
-加入 [Discord]() 社区。
+这是一个 Windows 中心的独立分支。对于企业级或自定义部署，请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## 许可证
 
-MIT 许可证 - 详见 [LICENSE](LICENSE)。
+Apache 2.0 许可证 - 详见 [LICENSE](LICENSE)。
 
 ## 免责声明
 
