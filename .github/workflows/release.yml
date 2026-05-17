@@ -59,7 +59,7 @@ jobs:
       - name: Package (Windows)
         run: |
           cd target/${{ matrix.target }}/release
-          7z a ../../../rtk-${{ matrix.target }}.${{ matrix.archive }} rtk.exe
+          7z a ../../../rtk-${{ matrix.target }}.${{ matrix.archive }} rtk-windows.exe
           cd ../../..
 
       - name: Upload artifact
