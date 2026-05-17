@@ -32,8 +32,7 @@
 
 rtk-windows filters and compresses command outputs before they reach your LLM context. Single Rust binary, 100+ supported commands, <10ms overhead.
 
-> **Windows-only fork notice (BREAKING):** This repository supports **Windows native** only (PowerShell/cmd).
-> For Linux/macOS, use the upstream project at https://github.com/rtk-ai/rtk.
+> **Windows-only notice:** This repository supports Windows 10/11 with PowerShell Core or Command Prompt exclusively.
 
 ## Token Savings (30-min Claude Code Session)
 
@@ -57,82 +56,60 @@ rtk-windows filters and compresses command outputs before they reach your LLM co
 
 ## Installation
 
-### Windows binary (recommended)
+**Windows only** (PowerShell Core or Command Prompt)
+
+### Windows Binary (Recommended)
 
 Download `rtk-windows-x86_64-pc-windows-msvc.zip` from [releases](https://github.com/luysantanadev/rtk-windows.git/releases), extract `rtk-windows.exe`, and place it in your PATH.
 
 ```powershell
 # Example user-scoped install directory
-New-Item -ItemType Directory -Force "$env:USERPROFILE\\bin" | Out-Null
-Copy-Item .\rtk-windows.exe "$env:USERPROFILE\\bin\\rtk-windows.exe" -Force
+New-Item -ItemType Directory -Force "$env:USERPROFILE\bin" | Out-Null
+Copy-Item .\rtk-windows.exe "$env:USERPROFILE\bin\rtk-windows.exe" -Force
 ```
 
-Add the install folder to PATH if needed:
+Add to PATH if needed:
 
 ```powershell
 [Environment]::SetEnvironmentVariable(
   "Path",
-  $env:Path + ";$env:USERPROFILE\\bin",
+  $env:Path + ";$env:USERPROFILE\bin",
   "User"
 )
 ```
 
-### Cargo
+### Via Cargo
 
 ```powershell
 cargo install --git https://github.com/luysantanadev/rtk-windows.git
 ```
 
-### Pre-built Binaries
-
-Download from [releases](https://github.com/luysantanadev/rtk-windows.git/releases):
-- Windows: `rtk-windows-x86_64-pc-windows-msvc.zip`
-
-> Extract the zip and place `rtk-windows.exe` somewhere in your PATH. Run rtk-windows from **Command Prompt**, **PowerShell**, or **Windows Terminal**.
-
-### Linux/macOS users
-
-This fork is Windows-only. For Linux/macOS support, use upstream:
-https://github.com/rtk-ai/rtk
-
 ### Verify Installation
 
 ```powershell
-rtk-windows --version   # Should show "rtk-windows 0.28.2"
+rtk-windows --version   # Should show "rtk-windows 0.28.x"
 rtk-windows gain        # Should show token savings stats
 ```
 
-> **Name collision warning**: Another project named "rtk" (Rust Type Kit) exists on crates.io. If `rtk-windows gain` fails, you have the wrong package. Use `cargo install --git` above instead.
+> **Name collision warning**: Another project named "rtk" (Rust Type Kit) exists on crates.io. If installation fails, use `cargo install --git` above instead.
 
 ## Quick Start
 
 ```powershell
-# 1. Install for your AI tool
-rtk-windows init -g                     # Claude Code / Copilot (default)
-rtk-windows init -g --gemini            # Gemini CLI
-rtk-windows init -g --codex             # Codex (OpenAI)
-rtk-windows init -g --agent cursor      # Cursor
-rtk-windows init --agent windsurf       # Windsurf
-rtk-windows init --agent cline          # Cline / Roo Code
-rtk-windows init --agent kilocode       # Kilo Code
-rtk-windows init --agent antigravity    # Google Antigravity
-rtk-windows init --agent hermes         # Hermes
+# 1. Install for your AI tool (Windows agents)
+rtk-windows init                    # VS Code Copilot Chat (default)
+rtk-windows init --agent cursor     # Cursor
+rtk-windows init --agent cline      # Cline / Roo Code
+rtk-windows init --agent opencode   # OpenCode
+rtk-windows init --agent hermes     # Hermes
 
 # 2. Restart your AI tool, then test
 git status  # Automatically rewritten to rtk-windows git status
 ```
 
-Hook-based agents rewrite PowerShell/cmd terminal commands (e.g., `git status` -> `rtk-windows git status`) before execution. Plugin-based agents, including Hermes, use their plugin API to rewrite commands before execution. The agent receives compact output without needing to call `rtk-windows` explicitly.
+Hook-based agents (Copilot, Cursor, Cline) rewrite PowerShell/cmd terminal commands (e.g., `git status` -> `rtk-windows git status`) before execution. Plugin-based agents (OpenCode, Hermes) use their plugin API to rewrite commands before execution.
 
-**Important:** the hook only runs on terminal tool calls. Claude Code built-in tools like `Read`, `Grep`, and `Glob` do not pass through the hook, so they are not auto-rewritten. To get RTK's compact output for those workflows, call `rtk-windows read`, `rtk-windows grep`, or `rtk-windows find` directly.
-
-## Differences from Upstream
-
-This repository is a Windows-only fork of `https://github.com/rtk-ai/rtk`.
-
-- Windows native support only (PowerShell/cmd) in this fork.
-- Linux/macOS support is maintained upstream at https://github.com/rtk-ai/rtk.
-- CI validation in this fork is focused on `windows-latest`.
+**Note:** The hook only runs on terminal commands. Claude Code built-in tools like `Read`, `Grep`, and `Glob` do not pass through the hook, so they are not auto-rewritten. Call `rtk-windows read`, `rtk-windows grep`, or `rtk-windows find` directly for those workflows.
 
 ## How It Works
 

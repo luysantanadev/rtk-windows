@@ -210,9 +210,9 @@ Simular migração legado:
 
 ```powershell
 New-Item -ItemType Directory -Force .github\hooks | Out-Null
-Set-Content .github\hooks\rtk-rewrite.sh "#!/bin/sh`necho legacy"
+Set-Content .github\hooks\rtk-rewrite.ps1 "Write-Output legacy"
 rtk init --copilot
-Test-Path .github\hooks\rtk-rewrite.sh   # esperado: False
+Test-Path .github\hooks\rtk-rewrite.ps1  # esperado: False
 Test-Path .github\hooks\rtk-rewrite.json # esperado: True
 ```
 

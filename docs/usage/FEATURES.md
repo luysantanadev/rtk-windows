@@ -1054,7 +1054,7 @@ Les sous-commandes non reconnues sont transmises directement ou detectees comme 
 
 rtk-windows enregistre chaque execution de commande dans une base SQLite :
 
-- **Emplacement :** `~/.local/share/rtk/tracking.db` (Linux), `~/Library/Application Support/rtk/tracking.db` (macOS)
+- **Emplacement :** `$env:APPDATA\rtk\history.db` (Windows)
 - **Retention :** 90 jours automatique
 - **Metriques :** tokens entree/sortie, pourcentage d'economies, temps d'execution, projet
 
@@ -1118,7 +1118,7 @@ Top commands:
 ```powershell
 rtk-windows discover                          # Projet courant, 30 derniers jours
 rtk-windows discover --all --since 7          # Tous les projets, 7 derniers jours
-rtk-windows discover -p /chemin/projet        # Filtrer par projet
+rtk-windows discover -p C:\chemin\projet     # Filtrer par projet
 rtk-windows discover --limit 20              # Max commandes par section
 rtk-windows discover --format json            # Export JSON
 ```
@@ -1225,9 +1225,9 @@ rtk-windows init -g --uninstall         # Desinstaller
 
 | Fichier | Description |
 |---------|-------------|
-| `~/.claude/hooks/rtk-rewrite.json` | Definition hook (delegue a `rtk-windows rewrite`) |
-| `~/.claude/RTK.md` | Instructions minimales pour le LLM |
-| `~/.claude/settings.json` | Enregistrement du hook PreToolUse |
+| `$env:USERPROFILE\.claude\hooks\rtk-rewrite.json` | Definition hook (delegue a `rtk-windows rewrite`) |
+| `$env:USERPROFILE\.claude\RTK.md` | Instructions minimales pour le LLM |
+| `$env:USERPROFILE\.claude\settings.json` | Enregistrement du hook PreToolUse |
 
 ### `rtk-windows rewrite` -- Recriture de commande
 
@@ -1292,7 +1292,7 @@ exclude_commands = ["curl", "playwright"]
 
 ### Fichier de configuration
 
-**Emplacement :** `~/.config/rtk/config.toml` (Linux) ou `~/Library/Application Support/rtk/config.toml` (macOS)
+**Emplacement :** `$env:APPDATA\rtk\config.toml` (Windows)
 
 **Commandes :**
 ```powershell
@@ -1306,7 +1306,7 @@ rtk-windows config --create       # Creer le fichier avec les valeurs par defaut
 [tracking]
 enabled = true              # Activer/desactiver le suivi
 history_days = 90           # Jours de retention (nettoyage automatique)
-database_path = "/custom/path/tracking.db"  # Chemin personnalise (optionnel)
+database_path = "C:\\custom\\path\\history.db"  # Chemin personnalise (optionnel)
 
 [display]
 colors = true               # Sortie coloree
@@ -1321,7 +1321,7 @@ ignore_files = ["*.lock", "*.min.js", "*.min.css"]
 enabled = true              # Activer la sauvegarde de sortie brute
 mode = "failures"           # "failures" (defaut), "always", ou "never"
 max_files = 20              # Rotation : garder les N derniers fichiers
-# directory = "/custom/tee/path"  # Chemin personnalise (optionnel)
+# directory = "C:\\custom\\tee\\path"  # Chemin personnalise (optionnel)
 
 [hooks]
 exclude_commands = []       # Commandes a exclure de la recriture automatique
@@ -1331,9 +1331,9 @@ exclude_commands = []       # Commandes a exclure de la recriture automatique
 
 | Variable | Description |
 |----------|-------------|
-| `RTK_TEE_DIR` | Surcharge le repertoire tee |
-| `RTK_HOOK_AUDIT=1` | Activer l'audit du hook |
-| `SKIP_ENV_VALIDATION=1` | Desactiver la validation d'env (Next.js, etc.) |
+| `$env:RTK_TEE_DIR` | Surcharge le repertoire tee |
+| `$env:RTK_HOOK_AUDIT=1` | Activer l'audit du hook |
+| `$env:SKIP_ENV_VALIDATION=1` | Desactiver la validation d'env (Next.js, etc.) |
 
 ---
 
@@ -1345,14 +1345,14 @@ Quand une commande echoue, rtk-windows sauvegarde automatiquement la sortie brut
 
 **Fonctionnement :**
 1. La commande echoue (exit code != 0)
-2. rtk-windows sauvegarde la sortie brute dans `~/.local/share/rtk/tee/`
+2. rtk-windows sauvegarde la sortie brute dans `$env:LOCALAPPDATA\rtk\tee\`
 3. Le chemin du fichier est affiche dans la sortie filtree
 4. Le LLM peut lire le fichier si besoin de plus de details
 
 **Sortie :**
 ```
 FAILED: 2/15 tests
-[full output: ~/.local/share/rtk/tee/1707753600_cargo_test.log]
+[full output: C:\Users\Username\AppData\Local\rtk\tee\1707753600_cargo_test.log]
 ```
 
 **Configuration :**

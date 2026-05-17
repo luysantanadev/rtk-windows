@@ -379,8 +379,8 @@ Tests live **in the module file itself** inside a `#[cfg(test)] mod tests` block
 ### How to Write Tests
 
 **1. Create a fixture from real command output** (not synthetic data):
-```bash
-kubectl get pods > tests/fixtures/kubectl_pods_raw.txt
+```powershell
+kubectl get pods | Out-File -Encoding utf8 tests/fixtures/kubectl_pods_raw.txt
 ```
 
 **2. Write your test in the same module file** (`#[cfg(test)] mod tests`):

@@ -114,7 +114,7 @@ pub fn format_text(report: &DiscoverReport, limit: usize, verbose: bool) -> Stri
     out.push_str(&"=".repeat(52));
     out.push('\n');
     out.push_str(&format!(
-        "Scanned: {} sessions (last {} days), {} Bash commands\n",
+        "Scanned: {} sessions (last {} days), {} terminal commands\n",
         report.sessions_scanned, report.since_days, report.total_commands
     ));
     out.push_str(&format!(

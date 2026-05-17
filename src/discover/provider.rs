@@ -41,6 +41,10 @@ pub trait SessionProvider {
 
 pub struct ClaudeProvider;
 
+fn is_terminal_tool_name(name: &str) -> bool {
+    matches!(name, "PowerShell" | "Shell" | "Terminal" | "CommandPrompt" | "Cmd")
+}
+
 impl ClaudeProvider {
     /// Get the base directory for Claude Code projects.
     fn projects_dir() -> Result<PathBuf> {
@@ -164,7 +168,7 @@ impl SessionProvider for ClaudeProvider {
             .unwrap_or("unknown")
             .to_string();
 
-        // First pass: collect all tool_use Bash commands with their IDs and sequence
+        // First pass: collect terminal tool_use commands with their IDs and sequence
         // Second pass (same loop): collect tool_result output lengths, content, and error status
         let mut pending_tool_uses: Vec<(String, String, usize)> = Vec::new(); // (tool_use_id, command, sequence)
         let mut tool_results: HashMap<String, (usize, String, bool)> = HashMap::new(); // (len, content, is_error)
@@ -177,8 +181,10 @@ impl SessionProvider for ClaudeProvider {
                 Err(_) => continue,
             };
 
-            // Pre-filter: skip lines that can't contain Bash tool_use or tool_result
-            if !line.contains("\"Bash\"") && !line.contains("\"tool_result\"") {
+            // Pre-filter: skip lines that can't contain terminal tool_use or tool_result
+            if !line.contains("\"PowerShell\"")
+                && !line.contains("\"tool_result\"")
+            {
                 continue;
             }
 
@@ -191,13 +197,17 @@ impl SessionProvider for ClaudeProvider {
 
             match entry_type {
                 "assistant" => {
-                    // Look for tool_use Bash blocks in message.content
+                    // Look for terminal tool_use blocks in message.content
                     if let Some(content) =
                         entry.pointer("/message/content").and_then(|c| c.as_array())
                     {
                         for block in content {
                             if block.get("type").and_then(|t| t.as_str()) == Some("tool_use")
-                                && block.get("name").and_then(|n| n.as_str()) == Some("Bash")
+                                && block
+                                    .get("name")
+                                    .and_then(|n| n.as_str())
+                                    .map(is_terminal_tool_name)
+                                    .unwrap_or(false)
                             {
                                 if let (Some(id), Some(cmd)) = (
                                     block.get("id").and_then(|i| i.as_str()),
@@ -286,9 +296,9 @@ mod tests {
     }
 
     #[test]
-    fn test_extract_assistant_bash() {
+    fn test_extract_assistant_powershell() {
         let jsonl = make_jsonl(&[
-            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_abc","name":"Bash","input":{"command":"git status"}}]}}"#,
+            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_abc","name":"PowerShell","input":{"command":"git status"}}]}}"#,
             r#"{"type":"user","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_abc","content":"On branch master\nnothing to commit"}]}}"#,
         ]);
 
@@ -304,7 +314,7 @@ mod tests {
     }
 
     #[test]
-    fn test_extract_non_bash_ignored() {
+    fn test_extract_non_terminal_tool_ignored() {
         let jsonl = make_jsonl(&[
             r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_abc","name":"Read","input":{"file_path":"/tmp/foo"}}]}}"#,
         ]);
@@ -327,7 +337,7 @@ mod tests {
     #[test]
     fn test_extract_multiple_tools() {
         let jsonl = make_jsonl(&[
-            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"Bash","input":{"command":"git status"}},{"type":"tool_use","id":"toolu_2","name":"Bash","input":{"command":"git diff"}}]}}"#,
+            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"PowerShell","input":{"command":"git status"}},{"type":"tool_use","id":"toolu_2","name":"PowerShell","input":{"command":"git diff"}}]}}"#,
         ]);
 
         let provider = ClaudeProvider;
@@ -341,7 +351,7 @@ mod tests {
     fn test_extract_malformed_line() {
         let jsonl = make_jsonl(&[
             "this is not json at all",
-            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_ok","name":"Bash","input":{"command":"ls"}}]}}"#,
+            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_ok","name":"PowerShell","input":{"command":"ls"}}]}}"#,
         ]);
 
         let provider = ClaudeProvider;
@@ -474,7 +484,7 @@ mod tests {
     #[test]
     fn test_extract_output_content() {
         let jsonl = make_jsonl(&[
-            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_abc","name":"Bash","input":{"command":"git commit --ammend"}}]}}"#,
+            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_abc","name":"PowerShell","input":{"command":"git commit --ammend"}}]}}"#,
             r#"{"type":"user","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_abc","content":"error: unexpected argument '--ammend'","is_error":true}]}}"#,
         ]);
 
@@ -493,7 +503,7 @@ mod tests {
     #[test]
     fn test_extract_is_error_flag() {
         let jsonl = make_jsonl(&[
-            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"Bash","input":{"command":"ls"}},{"type":"tool_use","id":"toolu_2","name":"Bash","input":{"command":"invalid_cmd"}}]}}"#,
+            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"PowerShell","input":{"command":"ls"}},{"type":"tool_use","id":"toolu_2","name":"PowerShell","input":{"command":"invalid_cmd"}}]}}"#,
             r#"{"type":"user","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"file1.txt","is_error":false},{"type":"tool_result","tool_use_id":"toolu_2","content":"command not found","is_error":true}]}}"#,
         ]);
 
@@ -507,7 +517,7 @@ mod tests {
     #[test]
     fn test_extract_sequence_ordering() {
         let jsonl = make_jsonl(&[
-            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"Bash","input":{"command":"first"}},{"type":"tool_use","id":"toolu_2","name":"Bash","input":{"command":"second"}},{"type":"tool_use","id":"toolu_3","name":"Bash","input":{"command":"third"}}]}}"#,
+            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"PowerShell","input":{"command":"first"}},{"type":"tool_use","id":"toolu_2","name":"PowerShell","input":{"command":"second"}},{"type":"tool_use","id":"toolu_3","name":"PowerShell","input":{"command":"third"}}]}}"#,
         ]);
 
         let provider = ClaudeProvider;

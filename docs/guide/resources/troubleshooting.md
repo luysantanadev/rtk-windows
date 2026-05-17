@@ -45,9 +45,9 @@ rtk gain    # should now show token savings stats
 
 2. Initialize the hook:
    ```bash
-   rtk init --global    # Claude Code
-   rtk init --global --cursor    # Cursor
-   rtk init --global --opencode  # OpenCode
+   rtk init -g    # Claude Code
+   rtk init -g --cursor    # Cursor
+   rtk-windows init -g --opencode  # OpenCode
    ```
 
 3. Restart your AI assistant.
@@ -148,11 +148,13 @@ Minimum required Rust version: 1.70+.
 
 ## OpenCode not using RTK
 
-```bash
-rtk init --global --opencode
+```powershell
+rtk-windows init -g --opencode
 # restart OpenCode
-rtk init --show    # should show "OpenCode: plugin installed"
+rtk-windows init --show    # should show "OpenCode: plugin installed"
 ```
+
+If you run `rtk-windows init --opencode` without `-g`, RTK will reject it because OpenCode plugin installation is global-only.
 
 ## `cargo install rtk` installs the wrong package
 

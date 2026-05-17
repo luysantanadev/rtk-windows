@@ -15,7 +15,7 @@ if (-not (Test-Path $rtkPath)) {
 $benchDir = Join-Path (Get-Location) 'scripts/benchmark'
 if (-not $env:CI) {
     if (Test-Path $benchDir) { Remove-Item -Recurse -Force $benchDir }
-    New-Item -ItemType Directory -Force -Path (Join-Path $benchDir 'unix') | Out-Null
+    New-Item -ItemType Directory -Force -Path (Join-Path $benchDir 'raw') | Out-Null
     New-Item -ItemType Directory -Force -Path (Join-Path $benchDir 'rtk') | Out-Null
     New-Item -ItemType Directory -Force -Path (Join-Path $benchDir 'diff') | Out-Null
 }
@@ -27,16 +27,16 @@ function Count-Tokens([string]$InputText) {
 function Invoke-Bench {
     param(
         [string]$Name,
-        [scriptblock]$UnixCommand,
+        [scriptblock]$RawCommand,
         [scriptblock]$RtkCommand
     )
 
-    $unixOut = ''
+    $rawOut = ''
     $rtkOut = ''
-    try { $unixOut = & $UnixCommand 2>$null | Out-String } catch {}
+    try { $rawOut = & $RawCommand 2>$null | Out-String } catch {}
     try { $rtkOut = & $RtkCommand 2>$null | Out-String } catch {}
 
-    $u = Count-Tokens $unixOut
+    $u = Count-Tokens $rawOut
     $r = Count-Tokens $rtkOut
     $pct = if ($u -gt 0) { [int](($u - $r) * 100 / $u) } else { 0 }
     Write-Output ("{0,-24} | {1,6} -> {2,6} ({3,4}%)" -f $Name, $u, $r, $pct)

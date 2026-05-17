@@ -2,11 +2,11 @@
 
 ## Scope
 
-Windows-only fork scope: these hook artifacts are documented for Windows-native usage in this repository. Linux/macOS users should use upstream docs at https://github.com/luysantanadev/rtk-windows.git.
+**Windows/PowerShell only** — RTK is exclusively designed for Windows 10/11 with PowerShell Core. These hook artifacts are installed and configured on Windows systems only.
 
-**Deployed hook artifacts** — the actual files installed on user machines by `rtk init`. These are native RTK hook commands, TypeScript plugins, and rules files. They are **thin delegates**: parse agent-specific JSON, call rewrite logic, and format agent-specific responses. Zero filtering logic lives here.
+**Deployed hook artifacts** — the actual files installed on user machines by `rtk init`. These are Windows-native RTK hook commands, TypeScript plugins, and PowerShell rules files. They are **thin delegates**: parse agent-specific JSON, call rewrite logic via PowerShell, and format agent-specific responses. Zero filtering logic lives here.
 
-Owns: per-agent hook scripts and configuration files for 8 supported agents (Claude Code, Copilot, Cursor, Cline, Windsurf, Codex, OpenCode, Hermes).
+Owns: per-agent hook configuration for 5 supported Windows agents (Copilot, Cursor, Cline, OpenCode, Hermes).
 
 Does **not** own: hook installation/uninstallation (that's `src/hooks/init.rs`), the rewrite pattern registry (that's `discover/registry`), or integrity verification (that's `src/hooks/integrity.rs`).
 
@@ -46,18 +46,20 @@ Each agent subdirectory has its own README with hook-specific details:
 
 ## Supported Agents
 
-| Agent | Mechanism | Hook Type | Can Modify Command? |
-|-------|-----------|-----------|---------------------|
-| Claude Code | Rust binary (`rtk hook claude`) | Transparent rewrite | Yes (`updatedInput`) |
-| VS Code Copilot Chat | Rust binary (`rtk hook copilot`) | Transparent rewrite | Yes (`updatedInput`) |
-| GitHub Copilot CLI | Rust binary (`rtk hook copilot`) | Deny-with-suggestion | No (agent retries) |
-| Cursor | Rust binary (`rtk hook cursor`) | Transparent rewrite | Yes (`updated_input`) |
-| Gemini CLI | Rust binary (`rtk hook gemini`) | Transparent rewrite | Yes (`hookSpecificOutput`) |
-| Cline / Roo Code | Custom instructions (rules file) | Prompt-level guidance | N/A |
-| Windsurf | Custom instructions (rules file) | Prompt-level guidance | N/A |
-| Codex CLI | AGENTS.md / instructions | Prompt-level guidance | N/A |
-| OpenCode | TypeScript plugin (`tool.execute.before`) | In-place mutation | Yes |
-| Hermes | Python plugin (`pre_tool_call`) | In-place mutation | Yes |
+| Agent | Mechanism | Hook Type | Windows Support |
+|-------|-----------|-----------|-----------------|
+| VS Code Copilot Chat | Rust binary (`rtk hook copilot`) | Transparent rewrite | ✅ Full support |
+| GitHub Copilot CLI | Rust binary (`rtk hook copilot`) | Deny-with-suggestion | ✅ Full support |
+| Cursor | Rust binary (`rtk hook cursor`) | Transparent rewrite | ✅ Full support |
+| Cline / Roo Code | Custom instructions (rules file) | Prompt-level guidance | ✅ Full support |
+| OpenCode | TypeScript plugin (`tool.execute.before`) | In-place mutation | ✅ Full support |
+| Hermes | Python plugin (`pre_tool_call`) | In-place mutation | ✅ Full support |
+
+**Not Supported** (deprecated from this Windows-only version):
+- Claude Code (native Rust hook — available in RTK < v0.27)
+- Windsurf (rules file — available in RTK < v0.27)
+- Codex (instructions file — available in RTK < v0.27)
+- Gemini CLI (Rust hook — available in RTK < v0.27)
 
 ## JSON Formats by Agent
 
@@ -153,7 +155,7 @@ Returns `{}` when no rewrite (Cursor requires JSON for all paths).
 
 Mutates `args.command` in-place via the zx library:
 ```typescript
-const result = await $`rtk rewrite ${command}`.quiet().nothrow()
+const result = await $`rtk-windows rewrite -- ${command}`.quiet().nothrow()
 const rewritten = String(result.stdout).trim()
 if (rewritten && rewritten !== command) {
   (args as Record<string, unknown>).command = rewritten

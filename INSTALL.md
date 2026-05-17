@@ -94,11 +94,11 @@ rtk-windows gain  # Must show token savings stats (not "command not found")
 
 ```powershell
 rtk-windows init -g
-# → Installs hook to ~/.claude/hooks/rtk-rewrite.json
-# → Creates ~/.claude/RTK.md (10 lines, meta commands only)
-# → Adds @RTK.md reference to ~/.claude/CLAUDE.md
+# → Installs hook to $env:USERPROFILE\.claude\hooks\rtk-rewrite.json
+# → Creates $env:USERPROFILE\.claude\RTK.md (10 lines, meta commands only)
+# → Adds @RTK.md reference to $env:USERPROFILE\.claude\CLAUDE.md
 # → Prompts: "Patch settings.json? [y/N]"
-# → If yes: patches + creates backup (~/.claude/settings.json.bak)
+# → If yes: patches + creates backup ($env:USERPROFILE\.claude\settings.json.bak)
 
 # Automated alternatives:
 rtk-windows init -g --auto-patch    # Patch without prompting
@@ -143,7 +143,7 @@ Copy-Item "$HOME/.claude/settings.json.bak" "$HOME/.claude/settings.json" -Force
 **Best for: Single project without hook**
 
 ```powershell
-cd /path/to/your/project
+Set-Location C:\path\to\your\project
 rtk-windows init  # Creates ./CLAUDE.md with full rtk-windows instructions (137 lines)
 ```
 
@@ -207,7 +207,7 @@ rtk-windows init --show | Select-String "Hook:"
 rtk-windows init -g --no-patch
 
 # Review printed JSON snippet
-# Manually edit ~/.claude/settings.json
+# Manually edit $env:USERPROFILE\.claude\settings.json
 # Restart Claude Code
 ```
 
@@ -248,9 +248,9 @@ rtk-windows vitest
 rtk-windows init -g --uninstall
 
 # What gets removed:
-#   - Hook: ~/.claude/hooks/rtk-rewrite.json
-#   - Context: ~/.claude/RTK.md
-#   - Reference: @RTK.md line from ~/.claude/CLAUDE.md
+#   - Hook: $env:USERPROFILE\.claude\hooks\rtk-rewrite.json
+#   - Context: $env:USERPROFILE\.claude\RTK.md
+#   - Reference: @RTK.md line from $env:USERPROFILE\.claude\CLAUDE.md
 #   - Registration: rtk-windows hook entry from settings.json
 
 # Restart Claude Code after uninstall

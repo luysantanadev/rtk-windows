@@ -38,12 +38,12 @@ fn test_git_log_output() {
 
 ### Example Workflow
 
-```bash
+```powershell
 # 1. Create fixture from real command
 git log -20 > tests/fixtures/git_log_raw.txt
 
 # 2. Write test with assert_snapshot!
-cat > src/cmds/git/git.rs <<'EOF'
+@'
 #[cfg(test)]
 mod tests {
     use insta::assert_snapshot;
@@ -55,7 +55,7 @@ mod tests {
         assert_snapshot!(output);
     }
 }
-EOF
+'@ | Set-Content src/cmds/git/git.rs
 
 # 3. Run test (creates snapshot)
 cargo test test_git_log_format
@@ -105,7 +105,7 @@ mod tests {
 
 **Use real command output**, not synthetic data:
 
-```bash
+```powershell
 # Capture real output
 git log -20 > tests/fixtures/git_log_raw.txt
 cargo test 2>&1 > tests/fixtures/cargo_test_raw.txt
@@ -128,23 +128,17 @@ pnpm list > tests/fixtures/pnpm_list_raw.txt
 
 **Release blocker**: If savings drop below 60% for any filter, investigate and fix before merge.
 
-## Cross-Platform Testing (🔴 Critical)
+## Windows Testing (🔴 Critical)
 
 **Priority**: 🔴 **Triggers**: Shell escaping changes, command execution logic
 
-RTK must work on macOS (zsh), Linux (bash), Windows (PowerShell). Shell escaping differs.
+RTK must work on Windows (PowerShell/Core and Command Prompt). Shell escaping differs by shell.
 
 ### Platform-Specific Tests
 
 ```rust
 #[cfg(target_os = "windows")]
 const EXPECTED_SHELL: &str = "cmd.exe";
-
-#[cfg(target_os = "macos")]
-const EXPECTED_SHELL: &str = "zsh";
-
-#[cfg(target_os = "linux")]
-const EXPECTED_SHELL: &str = "bash";
 
 #[test]
 fn test_shell_escaping() {
@@ -154,32 +148,21 @@ fn test_shell_escaping() {
     #[cfg(target_os = "windows")]
     assert_eq!(escaped, r#"git log --format=\"%H %s\""#);
 
-    #[cfg(not(target_os = "windows"))]
-    assert_eq!(escaped, r#"git log --format="%H %s""#);
+    // Windows-only repository: validate Windows escaping behavior
 }
 ```
 
-### Testing Platforms
+### Testing Platform
 
-**macOS (primary)**:
-```bash
-cargo test  # Local testing
+**Windows (local + CI)**:
+```powershell
+cargo test
 ```
-
-**Linux (via Docker)**:
-```bash
-docker run --rm -v $(pwd):/rtk -w /rtk rust:latest cargo test
-```
-
-**Windows (via CI)**:
-Trust GitHub Actions CI/CD pipeline or test manually if Windows machine available.
 
 ### Shell Differences
 
 | Platform | Shell | Quote Escape | Path Sep |
 |----------|-------|--------------|----------|
-| macOS | zsh | `'single'` or `"double"` | `/` |
-| Linux | bash | `'single'` or `"double"` | `/` |
 | Windows | PowerShell | `` `backtick `` or `"double"` | `\` |
 
 ## Integration Tests (🟡 Important)
@@ -214,7 +197,7 @@ fn test_real_git_log() {
 
 ### Running Integration Tests
 
-```bash
+```powershell
 # 1. Install RTK locally
 cargo install --path .
 
@@ -239,9 +222,8 @@ RTK targets <10ms startup time and <5MB memory usage.
 
 ### Benchmark Startup Time
 
-```bash
+```powershell
 # Install hyperfine
-brew install hyperfine  # macOS
 cargo install hyperfine  # or via cargo
 
 # Benchmark RTK vs raw command
@@ -255,32 +237,29 @@ hyperfine 'rtk git status' 'git status' --warmup 3
 
 ### Memory Usage
 
-```bash
-# macOS
-/usr/bin/time -l rtk git status
-# Look for "maximum resident set size" - should be <5MB
-
-# Linux
-/usr/bin/time -v rtk git status
-# Look for "Maximum resident set size" - should be <5000 kbytes
+```powershell
+# Windows PowerShell: approximate runtime/memory check
+Measure-Command { rtk git status }
+# Optional: inspect process memory during benchmark runs
+Get-Process rtk -ErrorAction SilentlyContinue | Select-Object Name, WorkingSet64
 ```
 
 ### Regression Detection
 
 **Before changes**:
-```bash
-hyperfine 'rtk git log -10' --warmup 3 > /tmp/before.txt
+```powershell
+hyperfine 'rtk git log -10' --warmup 3 > $env:TEMP\before.txt
 ```
 
 **After changes**:
-```bash
+```powershell
 cargo build --release
-hyperfine 'target/release/rtk git log -10' --warmup 3 > /tmp/after.txt
+hyperfine 'target/release/rtk git log -10' --warmup 3 > $env:TEMP\after.txt
 ```
 
 **Compare**:
-```bash
-diff /tmp/before.txt /tmp/after.txt
+```powershell
+Compare-Object (Get-Content $env:TEMP\before.txt) (Get-Content $env:TEMP\after.txt)
 # If startup time increased >2ms, investigate
 ```
 
@@ -336,7 +315,7 @@ When adding/modifying a filter:
 - [ ] Create fixture from real command output
 - [ ] Add snapshot test with `assert_snapshot!()`
 - [ ] Add token accuracy test (verify ≥60% savings)
-- [ ] Test cross-platform shell escaping (if applicable)
+- [ ] Test Windows shell escaping behavior (PowerShell/cmd)
 
 ### Quality Checks
 - [ ] Run `cargo test --all` (all tests pass)
@@ -348,14 +327,14 @@ When adding/modifying a filter:
 - [ ] All tests passing (`cargo test --all`)
 - [ ] Snapshots reviewed and accepted (`cargo insta accept`)
 - [ ] Token savings ≥60% verified
-- [ ] Cross-platform tests passed (macOS + Linux)
+- [ ] Windows tests passed
 - [ ] Performance benchmarks passed (<10ms startup)
 
 ### Before Release
 - [ ] Integration tests passed (`cargo test --ignored`)
 - [ ] Performance regression check (hyperfine comparison)
 - [ ] Memory usage verified (<5MB with `time -l`)
-- [ ] Cross-platform CI passed (macOS + Linux + Windows)
+- [ ] Windows CI passed
 
 ## Common Testing Patterns
 
@@ -468,7 +447,7 @@ let output = filter_git_log(input);
 // Real output from `git log -20`
 ```
 
-❌ **DON'T** skip cross-platform tests
+❌ **DON'T** skip Windows shell tests
 ```rust
 // ❌ WRONG - only tests current platform
 #[test]
@@ -478,9 +457,9 @@ fn test_shell_escaping() {
 }
 ```
 
-✅ **DO** test all platforms with cfg
+✅ **DO** test Windows shell behavior explicitly
 ```rust
-// ✅ RIGHT - tests all platforms
+// ✅ RIGHT - tests Windows behavior
 #[test]
 fn test_shell_escaping() {
     let escaped = escape("test");
@@ -488,8 +467,6 @@ fn test_shell_escaping() {
     #[cfg(target_os = "windows")]
     assert_eq!(escaped, "\"test\"");
 
-    #[cfg(not(target_os = "windows"))]
-    assert_eq!(escaped, "test");
 }
 ```
 
@@ -504,13 +481,13 @@ fn test_filter() {
 ```
 
 ✅ **DO** benchmark and track performance
-```bash
+```powershell
 # ✅ RIGHT - benchmark before/after
-hyperfine 'rtk cmd' --warmup 3 > /tmp/before.txt
+hyperfine 'rtk cmd' --warmup 3 > $env:TEMP\before.txt
 # Make changes
 cargo build --release
-hyperfine 'target/release/rtk cmd' --warmup 3 > /tmp/after.txt
-diff /tmp/before.txt /tmp/after.txt
+hyperfine 'target/release/rtk cmd' --warmup 3 > $env:TEMP\after.txt
+Compare-Object (Get-Content $env:TEMP\before.txt) (Get-Content $env:TEMP\after.txt)
 ```
 
 ❌ **DON'T** accept <60% token savings

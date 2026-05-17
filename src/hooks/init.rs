@@ -2735,9 +2735,13 @@ fn ensure_opencode_plugin_installed(path: &Path, ctx: InitContext) -> Result<boo
 
 /// Remove OpenCode plugin file
 fn remove_opencode_plugin(ctx: InitContext) -> Result<Vec<PathBuf>> {
-    let InitContext { verbose, dry_run } = ctx;
     let opencode_dir = resolve_opencode_dir()?;
-    let path = opencode_plugin_path(&opencode_dir);
+    remove_opencode_plugin_at(&opencode_dir, ctx)
+}
+
+fn remove_opencode_plugin_at(opencode_dir: &Path, ctx: InitContext) -> Result<Vec<PathBuf>> {
+    let InitContext { verbose, dry_run } = ctx;
+    let path = opencode_plugin_path(opencode_dir);
     let mut removed = Vec::new();
 
     if path.exists() {
@@ -3859,8 +3863,68 @@ mod tests {
         fs::write(&plugin_path, OPENCODE_PLUGIN).unwrap();
 
         assert!(plugin_path.exists());
-        fs::remove_file(&plugin_path).unwrap();
+        let removed = remove_opencode_plugin_at(&opencode_dir, InitContext::default()).unwrap();
+        assert_eq!(removed.len(), 1);
+        assert_eq!(removed[0], plugin_path);
         assert!(!plugin_path.exists());
+    }
+
+    #[test]
+    fn test_run_rejects_opencode_without_global() {
+        let err = run(
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            PatchMode::Ask,
+            InitContext::default(),
+        )
+        .unwrap_err();
+
+        assert_eq!(
+            err.to_string(),
+            "OpenCode plugin is global-only. Use: rtk init -g --opencode"
+        );
+    }
+
+    #[test]
+    fn test_run_rejects_codex_with_opencode() {
+        let err = run(
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            PatchMode::Ask,
+            InitContext::default(),
+        )
+        .unwrap_err();
+
+        assert_eq!(
+            err.to_string(),
+            "--codex cannot be combined with --opencode"
+        );
+    }
+
+    #[test]
+    fn test_opencode_plugin_mentions_rewrite_contract() {
+        assert!(
+            OPENCODE_PLUGIN.contains("tool.execute.before"),
+            "OpenCode plugin must hook tool.execute.before"
+        );
+        assert!(
+            OPENCODE_PLUGIN.contains("rtk-windows rewrite --"),
+            "OpenCode plugin must delegate to rtk-windows rewrite"
+        );
     }
 
     #[test]

@@ -183,4 +183,4 @@ RTK executes shell commands on behalf of the user, so security is a first-class 
 
 **Permission whitelist.** `is_operational_command()` in `main.rs` uses a whitelist pattern — new commands are *not* integrity-checked until explicitly added. This is an intentional security posture: fail-open with an audit trail is preferred over false confidence.
 
-**`unsafe` code.** Not allowed except for Unix signal handling in proxy mode, which is correctly scoped to `#[cfg(unix)]`.
+**`unsafe` code.** Not allowed except in narrowly scoped, documented Windows API interoperability cases.

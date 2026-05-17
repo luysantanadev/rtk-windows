@@ -30,7 +30,7 @@ impl SessionSummary {
 /// - starts with "rtk " (explicit rtk invocation), or
 /// - would be rewritten by the hook (classify_command returns Supported)
 ///
-/// Chained commands (e.g. "cd ./path && rtk ls") are split so each part
+/// Chained commands (e.g. "Set-Location .\\path; rtk ls") are split so each part
 /// is classified independently — matching the discover module's behavior.
 fn count_rtk_commands(cmds: &[ExtractedCommand]) -> (usize, usize, usize) {
     let mut total: usize = 0;
@@ -140,7 +140,7 @@ pub fn run(_verbose: u8) -> Result<()> {
     }
 
     if summaries.is_empty() {
-        println!("No sessions with Bash commands found.");
+        println!("No sessions with terminal commands found.");
         return Ok(());
     }
 
@@ -349,13 +349,13 @@ mod tests {
 
     #[test]
     fn test_parse_jsonl_session_and_count() {
-        // Simulate a session with 3 Bash commands: 2 rtk, 1 raw
+        // Simulate a session with 3 PowerShell commands: 2 rtk, 1 raw
         let jsonl = [
-            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t1","name":"Bash","input":{"command":"rtk git status"}}]}}"#,
+            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t1","name":"PowerShell","input":{"command":"rtk git status"}}]}}"#,
             r#"{"type":"user","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"t1","content":"On branch main"}]}}"#,
-            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t2","name":"Bash","input":{"command":"git log -5"}}]}}"#,
+            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t2","name":"PowerShell","input":{"command":"git log -5"}}]}}"#,
             r#"{"type":"user","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"t2","content":"commit abc123\ncommit def456"}]}}"#,
-            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t3","name":"Bash","input":{"command":"rtk cargo test"}}]}}"#,
+            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t3","name":"PowerShell","input":{"command":"rtk cargo test"}}]}}"#,
             r#"{"type":"user","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"t3","content":"test result: ok. 5 passed"}]}}"#,
         ];
 
@@ -368,18 +368,18 @@ mod tests {
         let cmds = provider.extract_commands(tmp.path()).expect("parse JSONL");
 
         let (total, rtk, _output) = count_rtk_commands(&cmds);
-        assert_eq!(total, 3, "should find 3 Bash commands");
+        assert_eq!(total, 3, "should find 3 terminal commands");
         // All 3 are RTK-covered: 2 explicit "rtk ..." + 1 hook-rewritten "git log"
         assert_eq!(rtk, 3, "all 3 commands should be RTK-covered");
     }
 
     #[test]
-    fn test_parse_jsonl_ignores_non_bash_tools() {
+    fn test_parse_jsonl_ignores_non_terminal_tools() {
         // Read/Grep/Edit tools should NOT be counted
         let jsonl = [
             r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t1","name":"Read","input":{"file_path":"/tmp/foo"}}]}}"#,
             r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t2","name":"Grep","input":{"pattern":"TODO"}}]}}"#,
-            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t3","name":"Bash","input":{"command":"rtk git status"}}]}}"#,
+            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t3","name":"PowerShell","input":{"command":"rtk git status"}}]}}"#,
             r#"{"type":"user","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"t3","content":"clean"}]}}"#,
         ];
 
@@ -392,13 +392,13 @@ mod tests {
         let cmds = provider.extract_commands(tmp.path()).expect("parse JSONL");
 
         let (total, rtk, _) = count_rtk_commands(&cmds);
-        assert_eq!(total, 1, "only Bash tool should be counted");
-        assert_eq!(rtk, 1, "the one Bash command is rtk");
+        assert_eq!(total, 1, "only terminal tool should be counted");
+        assert_eq!(rtk, 1, "the one terminal command is rtk");
     }
 
     #[test]
     fn test_parse_empty_session() {
-        // Session with no Bash commands at all
+        // Session with no terminal commands at all
         let jsonl = [
             r#"{"type":"user","message":{"role":"user","content":"Hello"}}"#,
             r#"{"type":"assistant","message":{"role":"assistant","content":"Hi there!"}}"#,
@@ -412,15 +412,15 @@ mod tests {
         let provider = ClaudeProvider;
         let cmds = provider.extract_commands(tmp.path()).expect("parse JSONL");
 
-        assert!(cmds.is_empty(), "no Bash commands = empty");
+        assert!(cmds.is_empty(), "no terminal commands = empty");
     }
 
     #[test]
     fn test_parse_jsonl_chained_command() {
-        // Claude often runs "cd ./path && git status" as a single Bash call.
+        // Claude often runs "Set-Location .\\path; git status" as a single terminal call.
         // The adoption metric should split the chain and count each part.
         let jsonl = [
-            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t1","name":"Bash","input":{"command":"cd ./your/app/path && rtk ls"}}]}}"#,
+            r#"{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t1","name":"PowerShell","input":{"command":"Set-Location .\\your\\app\\path; rtk ls"}}]}}"#,
             r#"{"type":"user","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"t1","content":"file1.rs\nfile2.rs"}]}}"#,
         ];
 
@@ -432,7 +432,7 @@ mod tests {
         let provider = ClaudeProvider;
         let cmds = provider.extract_commands(tmp.path()).expect("parse JSONL");
 
-        assert_eq!(cmds.len(), 1, "one Bash tool call");
+        assert_eq!(cmds.len(), 1, "one terminal tool call");
         let (total, rtk, _) = count_rtk_commands(&cmds);
         assert_eq!(total, 2, "chain splits into cd + rtk ls");
         assert_eq!(rtk, 1, "rtk ls is covered, cd is not");

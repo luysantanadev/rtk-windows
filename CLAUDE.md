@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**rtk (Rust Token Killer)** is a high-performance CLI proxy that minimizes LLM token consumption by filtering and compressing command outputs. It achieves 60-90% token savings on common development operations through smart filtering, grouping, truncation, and deduplication.
+**rtk-windows (Rust Token Killer)** is a high-performance Windows CLI proxy that minimizes LLM token consumption by filtering and compressing command outputs. It achieves 60-90% token savings on common development operations through smart filtering, grouping, truncation, and deduplication.
 
-This is a fork with critical fixes for git argument parsing and modern JavaScript stack support (pnpm, vitest, Next.js, TypeScript, Playwright, Prisma).
+This is a Windows-only fork focused exclusively on PowerShell Core and Command Prompt.
 
 ### Name Collision Warning
 
@@ -15,22 +15,22 @@ This is a fork with critical fixes for git argument parsing and modern JavaScrip
 - reachingforthejack/rtk: Rust Type Kit (DIFFERENT - generates Rust types)
 
 **Verify correct installation:**
-```bash
-rtk --version  # Should show "rtk 0.28.2" (or newer)
-rtk gain       # Should show token savings stats (NOT "command not found")
+```powershell
+rtk-windows --version  # Should show "rtk-windows 0.28.x" (or newer)
+rtk-windows gain       # Should show token savings stats
 ```
 
-If `rtk gain` fails, you have the wrong package installed.
+If `rtk-windows gain` fails, you have the wrong package installed.
 
 ## Development Commands
 
-> **Note**: If rtk is installed, prefer `rtk <cmd>` over raw commands for token-optimized output.
-> All commands work with passthrough support even for subcommands rtk doesn't specifically handle.
+> **Note**: If rtk-windows is installed, prefer `rtk-windows <cmd>` over raw commands for token-optimized output.
+> All commands work with passthrough support even for subcommands rtk-windows doesn't specifically handle.
 
 ### Build & Run
-```bash
+```powershell
 cargo build                   # raw
-rtk cargo build               # preferred (token-optimized)
+rtk-windows cargo build       # preferred (token-optimized)
 cargo build --release         # release build (optimized)
 cargo run -- <command>        # run directly
 cargo install --path .        # install locally
@@ -39,7 +39,7 @@ cargo install --path .        # install locally
 ### Testing
 ```powershell
 cargo test                    # all tests
-rtk cargo test                # preferred (token-optimized)
+rtk-windows cargo test        # preferred (token-optimized)
 cargo test <test_name>        # specific test
 cargo test <module_name>::    # module tests
 cargo test -- --nocapture     # with stdout
@@ -47,16 +47,16 @@ pwsh ./scripts/test-all.ps1   # smoke tests (installed binary required)
 ```
 
 ### Linting & Quality
-```bash
-cargo check                   # check without building
-cargo fmt                     # format code
-cargo clippy --all-targets    # all clippy lints
-rtk cargo clippy --all-targets # preferred
+```powershell
+cargo check                      # check without building
+cargo fmt                        # format code
+cargo clippy --all-targets       # all clippy lints
+rtk-windows cargo clippy --all-targets # preferred
 ```
 
 ### Pre-commit Gate
-```bash
-cargo fmt --all && cargo clippy --all-targets && cargo test --all
+```powershell
+cargo fmt --all; cargo clippy --all-targets; cargo test --all
 ```
 
 ### Package Building
@@ -89,13 +89,13 @@ Supported ecosystems: git/gh/gt, cargo, go/golangci-lint, npm/pnpm/npx, ruff/pyt
 - **Guaranteed compatibility**: Always works even if RTK doesn't implement the command
 
 **Examples**:
-```bash
-rtk proxy git log --oneline -20    # Full git log output (no truncation)
-rtk proxy npm install express      # Raw npm output (no filtering)
-rtk proxy curl https://api.example.com/data  # Any command works
+```powershell
+rtk-windows proxy git log --oneline -20    # Full git log output (no truncation)
+rtk-windows proxy npm install express      # Raw npm output (no filtering)
+rtk-windows proxy curl https://api.example.com/data  # Any command works
 ```
 
-All proxy commands appear in `rtk gain --history` with 0% savings (input = output).
+All proxy commands appear in `rtk-windows gain --history` with 0% savings (input = output).
 
 ## Coding Rules
 

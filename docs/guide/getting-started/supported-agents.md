@@ -79,8 +79,8 @@ rtk init --global --gemini
 
 ### OpenCode
 
-```bash
-rtk init --global --opencode
+```powershell
+rtk-windows init -g --opencode
 ```
 
 Creates `~/.config/opencode/plugins/rtk.ts`. Uses the `tool.execute.before` hook.

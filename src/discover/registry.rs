@@ -3868,6 +3868,28 @@ mod tests {
             Some("RUST_BACKTRACE=1 rtk cargo test 2>&1 | grep FAILED && rtk git stash".into())
         );
     }
+    #[test]
+    fn test_opencode_rewrite_parity_for_registry_commands() {
+        // OpenCode delegates to `rtk rewrite`, so parity is guaranteed by registry behavior.
+        assert_eq!(
+            rewrite_command_no_prefixes("git status", &[]),
+            Some("rtk git status".into())
+        );
+        assert_eq!(
+            rewrite_command_no_prefixes("cargo test", &[]),
+            Some("rtk cargo test".into())
+        );
+        assert_eq!(
+            rewrite_command_no_prefixes("ls -la", &[]),
+            Some("rtk ls -la".into())
+        );
+    }
+
+    #[test]
+    fn test_opencode_rewrite_passthrough_for_unsupported_command() {
+        // Unsupported commands are expected to pass through unchanged in OpenCode.
+        assert_eq!(rewrite_command_no_prefixes("htop", &[]), None);
+    }
 
     #[test]
     fn test_rewrite_and_then_pipe() {
